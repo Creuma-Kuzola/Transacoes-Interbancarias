@@ -36,7 +36,7 @@ public class ClienteController extends BaseController {
     {
         
         List<Cliente> lista = clienteServiceImpl.findAll();
-        return this.ok("Cliente encontrados com sucesso!", lista);
+        return this.ok("Clientes encontrados com sucesso!", lista);
     }
 
     @GetMapping("/{id}")

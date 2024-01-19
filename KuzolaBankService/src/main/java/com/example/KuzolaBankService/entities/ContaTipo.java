@@ -6,6 +6,8 @@ package com.example.KuzolaBankService.entities;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,6 +39,7 @@ public class ContaTipo implements Serializable {
     @Column(nullable = false, length = 2147483647)
     private String designacao;
     @OneToMany(mappedBy = "fkContaTipo")
+    @JsonIgnore
     private List<Conta> contaList;
  
 }

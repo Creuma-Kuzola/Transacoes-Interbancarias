@@ -7,6 +7,8 @@ package com.example.KuzolaBankService.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,6 +53,7 @@ public class Pessoa implements Serializable {
     @Column(length = 2147483647)
     private String sexo;
     @OneToMany(mappedBy = "fkPessoa")
+    @JsonIgnore
     private List<Cliente> clienteList;
     @JoinColumn(name = "fk_localizacao", referencedColumnName = "pk_localizacao")
     @ManyToOne

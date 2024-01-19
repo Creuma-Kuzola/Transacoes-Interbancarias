@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,6 +54,7 @@ public class Transferencia implements Serializable {
     @Column(name = "codigo_transferencia", length = 2147483647)
     private String codigoTransferencia;
     @OneToMany(mappedBy = "fkTransferencia")
+    @JsonIgnore
     private List<TokenValidacao> tokenValidacaoList;
     
 }
