@@ -4,10 +4,9 @@
  */
 package com.example.KuzolaBankService.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,17 +35,22 @@ public class Empresa implements Serializable {
     @Basic(optional = false)
     @Column(name = "pk_empresa", nullable = false)
     private Integer pkEmpresa;
+    
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
     private String nome;
+    
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
     private String nif;
+    
     @OneToMany(mappedBy = "fkEmpresa")
     @JsonIgnore
     private List<Cliente> clienteList;
+    
     @JoinColumn(name = "fk_localizacao", referencedColumnName = "pk_localizacao")
     @ManyToOne
     private Localizacao fkLocalizacao;
+
     
 }

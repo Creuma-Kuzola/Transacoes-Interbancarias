@@ -9,6 +9,9 @@ import com.example.KuzolaBankService.https.utils.ResponseBody;
 import com.example.KuzolaBankService.services.implementacao.ClienteServiceImpl;
 import java.util.List;
 import java.util.Optional;
+
+import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +33,11 @@ public class ClienteController extends BaseController {
     
     @Autowired
     ClienteServiceImpl clienteServiceImpl;
-   
+
+    @Autowired
+    ContaBancariaServiceImpl contaBancariServiceImpl;
+
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllClientes()
     {
@@ -51,9 +58,12 @@ public class ClienteController extends BaseController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<ResponseBody> createCliente(@RequestBody Cliente cliente)
     {
-        return this.created("Cliente adicionado com sucesso.", this.clienteServiceImpl.criar(cliente));
+        ResponseEntity<ResponseBody> clienteResponse = this.created("Cliente adicionado com sucesso.", this.clienteServiceImpl.criar(cliente));
+        contaBancariServiceImpl.criar(contaBancariServiceImpl.creatingContaBancariaByFkCliente(cliente));
+        return clienteResponse;
     }
 
     @DeleteMapping("/{id}")

@@ -8,8 +8,11 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
@@ -18,11 +21,13 @@ import lombok.*;
 @Entity
 @Table(name = "conta_bancaria", catalog = "kuzola_bank", schema = "public")
 
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+
 public class ContaBancaria implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,6 +52,4 @@ public class ContaBancaria implements Serializable {
     @ManyToOne(optional = false)
     private Cliente fkCliente;
 
-
-    
 }

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -20,5 +21,5 @@ import java.util.List;
 public interface ContaBancariaRepository extends JpaRepository<ContaBancaria, Integer> {
 
     @Query("SELECT c.numeroDeConta FROM ContaBancaria c ")
-    public List<BigInteger> findAllNumeroConta();
+    public HashSet<BigInteger> findAllNumeroConta();
 }

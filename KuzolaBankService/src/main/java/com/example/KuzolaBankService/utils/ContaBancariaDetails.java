@@ -17,7 +17,6 @@ public class ContaBancariaDetails {
     private int numeroDeConta;
     private String iban;
     private DetalhesBanco identificadorDoBanco = DetalhesBanco.IDENTIFICADOR_DO_BANCO;
-    private HashSet<BigInteger> listaNumerosDeConta = new HashSet<>();
 
     //O número de conta é composto por 11 números (12345678910)
     // Primeiro random de 1000-9000

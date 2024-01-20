@@ -4,10 +4,9 @@
  */
 package com.example.KuzolaBankService.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +20,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(catalog = "kuzola_bank", schema = "public")
+
 
 @Getter
 @Setter
@@ -36,21 +36,25 @@ public class Cliente implements Serializable {
     @Basic(optional = false)
     @Column(name = "pk_cliente", nullable = false)
     private Long pkCliente;
+    
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
     private String telefone;
+    
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
     private String email;
+    
     @JoinColumn(name = "fk_empresa", referencedColumnName = "pk_empresa")
     @ManyToOne
     private Empresa fkEmpresa;
+    
     @JoinColumn(name = "fk_pessoa", referencedColumnName = "pk_pessoa")
     @ManyToOne
     private Pessoa fkPessoa;
+   
     @OneToMany(mappedBy = "fkCliente")
     @JsonIgnore
     private List<Conta> contaList;
-
     
 }

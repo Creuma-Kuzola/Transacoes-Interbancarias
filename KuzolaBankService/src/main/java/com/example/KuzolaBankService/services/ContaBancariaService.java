@@ -4,10 +4,14 @@
  */
 package com.example.KuzolaBankService.services;
 
+import com.example.KuzolaBankService.entities.Cliente;
+import com.example.KuzolaBankService.entities.ContaBancaria;
+
 /**
  *
  * @author creuma
  */
 public interface ContaBancariaService<T,K> {
-    
+
+    ContaBancaria creatingContaBancariaByFkCliente(Cliente cliente);
 }
