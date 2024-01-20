@@ -6,7 +6,11 @@ package com.example.KuzolaBankService.repositories;
 
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.math.BigInteger;
+import java.util.List;
 
 /**
  *
@@ -14,5 +18,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ContaBancariaRepository extends JpaRepository<ContaBancaria, Integer> {
-    
+
+    @Query("SELECT c.numeroDeConta FROM ContaBancaria c ")
+    public List<BigInteger> findAllNumeroConta();
 }
