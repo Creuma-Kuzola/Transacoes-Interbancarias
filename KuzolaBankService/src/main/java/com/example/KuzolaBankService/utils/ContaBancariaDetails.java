@@ -34,6 +34,7 @@ public class ContaBancariaDetails {
         return (int) (Math.random() * (max - min + 1) + min);
     }
 
+
     public BigInteger createNumeroDeConta(HashSet<BigInteger> listaNumerosDeConta){
 
         int min1 = 1000, max1 = 9000, min2 = 1000000, max2= 9000000;
