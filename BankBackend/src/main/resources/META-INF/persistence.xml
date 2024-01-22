@@ -12,8 +12,19 @@
     <class>ucan.edu.entities.Cliente</class>
     <class>ucan.edu.entities.Organizacao_1</class>
     <class>ucan.edu.entities.ContaBancariaTipo</class>
-    <class>ucan.edu.entities.ContaBancaria</class>
     <class>ucan.edu.entities.Cliente_1</class>
+    <class>ucan.edu.entities.Localizacao_1</class>
+    <class>ucan.edu.entities.Pessoa_1</class>
+    <class>ucan.edu.entities.Empresa_1</class>
+    <class>ucan.edu.entities.ContaBancaria_1</class>
+    <class>ucan.edu.entities.ContaBancaria</class>
+    <class>ucan.edu.entities.Transferencia</class>
+    <class>ucan.edu.entities.Empresa</class>
+    <class>ucan.edu.entities.Pessoa</class>
+    <class>ucan.edu.entities.Saldo</class>
+    <class>ucan.edu.entities.HistoricoTransferenciaEmis</class>
+    <class>ucan.edu.entities.TokenValidacao</class>
+    <class>ucan.edu.entities.Localizacao</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/standardbanckdb"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>

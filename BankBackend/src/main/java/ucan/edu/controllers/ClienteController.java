@@ -4,7 +4,6 @@
  */
 package ucan.edu.controllers;
 
-
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
 import ucan.edu.services.implementacao.*;
@@ -28,24 +27,24 @@ import ucan.edu.https.utils.ResponseBody;
  */
 @RestController
 @RequestMapping("/cliente")
-public class ClienteController extends BaseController {
-    
+public class ClienteController extends BaseController
+{
+
     @Autowired
     ClienteServiceImpl clienteServiceImpl;
-    
-    
+
     /* 
     Aqui vai receber todas as urls, parte empresa, conta, pessoa, endereco, conta_bancaria;
-    */
+     */
     public void criarCliente()
     {
-        
+
     }
-   
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllClientes()
     {
-        
+
         List<Cliente> lista = clienteServiceImpl.findAll();
         return this.ok("Cliente encontrados com sucesso!", lista);
     }
@@ -64,7 +63,8 @@ public class ClienteController extends BaseController {
     @PostMapping
     public ResponseEntity<ResponseBody> createCliente(@RequestBody Cliente cliente)
     {
-        return this.created("Cliente adicionado com sucesso.", this.clienteServiceImpl.criar(cliente));
+        return this.created("Cliente e conta bancaria criada com sucesso!", this.clienteServiceImpl.createCustomerAccount(cliente));
+        //return this.created("Cliente adicionado com sucesso.", this.clienteServiceImpl.criar(cliente));
     }
 
     @DeleteMapping("/{id}")

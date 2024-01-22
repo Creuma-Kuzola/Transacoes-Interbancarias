@@ -4,10 +4,13 @@
  */
 package ucan.edu.services;
 
+import ucan.edu.entities.Cliente;
+
 /**
  *
- * @author creuma
+ * @author jussyleite
  */
 public interface ClienteService<T,K> {
     
+  public String  createCustomerAccount(Cliente t);
 }

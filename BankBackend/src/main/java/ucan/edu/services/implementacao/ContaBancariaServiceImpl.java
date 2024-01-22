@@ -4,11 +4,13 @@
  */
 package ucan.edu.services.implementacao;
 
+import java.util.Date;
 import java.util.Random;
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
 import org.springframework.stereotype.Service;
 import ucan.edu.repository.ContaBancariaRepository;
+import ucan.edu.utils.enums.StatusContaBancaria;
 
 /**
  *
@@ -20,6 +22,7 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 {
 
     private Integer numberAccount;
+    private final Integer BANKNUMBER = 0404;
 
     private final ContaBancariaRepository contaBancariaRepository;
 
@@ -40,7 +43,10 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     public String createIban()
     {
-        return " ";
+        String iban = " ";
+        Integer accountCustomerNumber = numberAccount;
+        iban = "E " + BANKNUMBER + " " + accountCustomerNumber;
+        return iban;
     }
 
     public ContaBancaria createAccount(ContaBancaria conta)
@@ -48,17 +54,23 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         try
         {
             Integer accoutNumber = this.creatAccountNumber();
-            conta.setNumeroDeConta(accoutNumber);
+            String iban = createIban();
 
-            //conta.setSaldoList(0.0);
-            conta.setStatus("");
+            conta.setNumeroDeConta(accoutNumber);
+            conta.setIban(iban);
+            conta.setStatus(StatusContaBancaria.INACTIVO);
+            conta.setDataCriacao(new Date());
+            //conta.setFk_cliente(fk_cliente);
+
             ContaBancaria contaCreated = contaBancariaRepository.save(conta);
 
             return contaCreated;
+
         } catch (Exception e)
         {
+            e.printStackTrace();
         }
-
+        return null;
     }
 
 }
