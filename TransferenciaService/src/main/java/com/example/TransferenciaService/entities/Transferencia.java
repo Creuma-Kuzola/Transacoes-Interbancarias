@@ -2,14 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.example.KuzolaBankService.entities;
+package com.example.TransferenciaService.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +21,7 @@ import lombok.ToString;
  * @author creuma
  */
 @Entity
-@Table(catalog = "kuzola_bank", schema = "public")
+@Table(catalog = "transferencia_bd", schema = "public")
 
 @Getter
 @Setter
@@ -43,19 +42,23 @@ public class Transferencia implements Serializable {
     @Basic(optional = false)
     @Column(nullable = false)
     private BigInteger montante;
-    @Column(name = "iban_destinatario", length = 2147483647)
+    @Basic(optional = false)
+    @Column(name = "iban_destinatario", nullable = false, length = 2147483647)
     private String ibanDestinatario;
+    @Basic(optional = false)
+    @Column(name = "fk_conta_origem", nullable = false, length = 2147483647)
+    private String fkContaOrigem;
+    @Basic(optional = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date datahora;
-    @Column(name = "fk_conta_bancaria_origem")
-    private Integer fkContaBancariaOrigem;
-    @Column(name = "tipo_transferencia", length = 2147483647)
-    private String tipoTransferencia;
-    @Column(name = "estado_transferencia", length = 2147483647)
-    private String estadoTransferencia;
-    @Column(name = "codigo_transferencia", length = 2147483647)
-    private String codigoTransferencia;
-    @OneToMany(mappedBy = "fkTransferencia")
+    private Date data;
+    @JoinColumn(name = "fk_canal", referencedColumnName = "pk_canal")
+    @ManyToOne
+    private Canal fkCanal;
+    @JoinColumn(name = "fk_tipo_transferencia_bancaria", referencedColumnName = "pk_tipo_transferencia")
+    @ManyToOne
+    private TipoTransferencia fkTipoTransferenciaBancaria;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkTransferencia")
     @JsonIgnore
     private List<TokenValidacao> tokenValidacaoList;
     
