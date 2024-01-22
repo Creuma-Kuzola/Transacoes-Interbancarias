@@ -5,7 +5,15 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/KuzolaBankService/pom.xml" />
+        <option value="$PROJECT_DIR$/BankBackend/pom.xml" />
+        <option value="$PROJECT_DIR$/TransferenciaService/pom.xml" />
+        <option value="$PROJECT_DIR$/TransferenciaServiceTeste/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/TransferenciaService/pom.xml" />
+      </set>
     </option>
     <option name="workspaceImportForciblyTurnedOn" value="true" />
   </component>

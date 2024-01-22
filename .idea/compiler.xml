@@ -8,12 +8,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="KuzolaBankService" />
+        <module name="BankBackend" />
+        <module name="TransferenciaService" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="BankBackend" options="-parameters" />
       <module name="KuzolaBankService" options="-parameters" />
+      <module name="TransferenciaService" options="-parameters" />
     </option>
   </component>
 </project>

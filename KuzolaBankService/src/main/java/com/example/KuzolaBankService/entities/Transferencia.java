@@ -22,7 +22,9 @@ import lombok.ToString;
  * @author creuma
  */
 @Entity
-@Table(catalog = "kuzola_bank", schema = "public")@Getter
+@Table(catalog = "kuzola_bank", schema = "public")
+
+@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
