@@ -4,16 +4,18 @@
  */
 package ucan.edu.services.implementacao;
 
+import java.math.BigInteger;
 import ucan.edu.entities.Cliente;
 import ucan.edu.services.ClienteService;
 import org.springframework.stereotype.Service;
 import ucan.edu.entities.Conta;
 import ucan.edu.entities.ContaBancaria;
+import ucan.edu.entities.Saldo;
 import ucan.edu.repository.ClienteRepository;
 
 /**
  *
- * @author creuma
+ * @author jussyleitecode
  */
 @Service
 public class ClienteServiceImpl extends AbstractService<Cliente, Integer> implements ClienteService
@@ -22,7 +24,7 @@ public class ClienteServiceImpl extends AbstractService<Cliente, Integer> implem
     private final ContaBancariaServiceImpl contaBancariaServiceImpl;
     private final ClienteRepository clienteRepository;
 
-    private String respoTemp = " ";
+    private String respoTemp = "";
 
     public ClienteServiceImpl(ContaBancariaServiceImpl ContaBancariaServiceImpl,
             ClienteRepository clienteRepository)
@@ -39,7 +41,14 @@ public class ClienteServiceImpl extends AbstractService<Cliente, Integer> implem
         Cliente cliente = clienteRepository.save(t);
         contaBancaria.setFkCliente(cliente);
         //Conta conta = new Conta();
-        contaBancariaServiceImpl.createAccount(contaBancaria);
+        ContaBancaria contaBancariaCreated = contaBancariaServiceImpl.createAccount(contaBancaria);
+
+        Saldo saldo = new Saldo();
+
+        saldo.setFkContaBancaria(contaBancaria);
+        saldo.setMoeda("kz");
+        saldo.setSaldoContabilistic(BigInteger.ONE);
+        saldo.setSaldoDisponivel(BigInteger.ONE);
 
         respoTemp += "Cliente: " + cliente.getFkPessoa().getNome() + " \n"
                 + "Numero de conta: " + contaBancaria.getNumeroDeConta() + " \n"
