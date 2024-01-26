@@ -4,15 +4,33 @@
  */
 package ucan.edu.services.implementacao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
 import org.springframework.stereotype.Service;
+import ucan.edu.exceptions.ContaUsernameExistsException;
+import ucan.edu.repository.ContaRepository;
 
 /**
  *
  * @author creuma
  */
 @Service
-public class ContaServiceImpl extends AbstractService<Conta, Integer> implements ContaService {
-    
+public class ContaServiceImpl extends AbstractService<Conta, Integer> implements ContaService
+{
+
+    @Autowired
+    ContaRepository contaRepository;
+
+    public Conta createAccount(Conta conta)
+    {
+        Conta contaExist = contaRepository.findContaByUsername(conta.getUsername());
+
+        if (contaExist != null)
+        {
+            throw new ContaUsernameExistsException();
+        }
+        return this.criar(conta);
+    }
+
 }

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author creuma
+ * @author jussyleitecode
  */
 @RestController
 @RequestMapping("/empresa")

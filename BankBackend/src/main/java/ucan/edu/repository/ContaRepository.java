@@ -6,13 +6,15 @@ package ucan.edu.repository;
 
 import ucan.edu.entities.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * @author creuma
+ * @author jussyleitecode
  */
 @Repository
 public interface ContaRepository extends JpaRepository<Conta, Integer> {
     
+    public Conta findContaByUsername(@Param("username")  String username);
 }

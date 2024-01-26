@@ -56,7 +56,7 @@ public class ContaController extends BaseController {
     @PostMapping
     public ResponseEntity<ResponseBody> createConta(@RequestBody Conta conta)
     {
-        return this.created("Conta adicionada com sucesso.", this.contaServiceImpl.criar(conta));
+        return this.created("Conta adicionada com sucesso.", this.contaServiceImpl.createAccount(conta));
     }
 
     @DeleteMapping("/{id}")
