@@ -4,7 +4,6 @@
  */
 package ucan.edu.controllers;
 
-
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
 import ucan.edu.services.implementacao.*;
@@ -28,15 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/empresa")
-public class EmpresaController extends BaseController {
-    
+public class EmpresaController extends BaseController
+{
+
     @Autowired
     EmpresaServiceImpl empresaServiceImpl;
-   
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllEmpresa()
     {
-        
+
         List<Empresa> lista = empresaServiceImpl.findAll();
         return this.ok("Empresa encontrada com sucesso!", lista);
     }
@@ -51,11 +51,22 @@ public class EmpresaController extends BaseController {
         }
         return this.naoEncontrado("Empresa não encontrada", null);
     }
+    
+    @GetMapping("/nif/{nif}")
+    public ResponseEntity<ResponseBody> findEmpresByNif(@PathVariable String nif)
+    {
+        Empresa result = this.empresaServiceImpl.findEmpresaByNif(nif);
+        return  result != null
+                ? this.ok(" empresa", result)
+                :
+                this.naoEncontrado("Nenhuma empresa", this);
+        
+    }
 
     @PostMapping
     public ResponseEntity<ResponseBody> createEmpresa(@RequestBody Empresa empresa)
     {
-        return this.created("Empresa adicionada com sucesso.", this.empresaServiceImpl.criar(empresa));
+        return this.created("Empresa adicionada com sucesso.", this.empresaServiceImpl.createEmpresa(empresa));
     }
 
     @DeleteMapping("/{id}")

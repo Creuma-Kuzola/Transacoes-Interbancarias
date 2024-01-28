@@ -5,6 +5,7 @@
 package ucan.edu.services.implementacao;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Random;
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
@@ -47,6 +48,20 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         Integer accountCustomerNumber = numberAccount;
         iban = "E " + BANKNUMBER + " " + accountCustomerNumber;
         return iban;
+    }
+
+    public boolean activateAccount(ContaBancaria contaBancaria)
+    {
+        Optional<ContaBancaria> contaBancariaFound = contaBancariaRepository
+                .findById(contaBancaria.getPkContaBancaria());
+
+        if (contaBancariaFound.isPresent())
+        {
+            contaBancaria.setStatus(StatusContaBancaria.ACTIVO);
+            contaBancariaRepository.save(contaBancaria);
+            return true;
+        }
+        return false;
     }
 
     public ContaBancaria createAccount(ContaBancaria conta)

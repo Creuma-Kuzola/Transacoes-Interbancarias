@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ucan.edu.entities.ContaBancaria;
 import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
 
 /**
@@ -25,7 +26,7 @@ public class ContaBancariaServiceImplTest
 {
 
     @Autowired
-    ContaBancariaServiceImpl ContaBancariaServiceImpl;
+    ContaBancariaServiceImpl contaBancariaServiceImpl;
 
     @Test
     public void createAccountNumberTest()
@@ -33,9 +34,24 @@ public class ContaBancariaServiceImplTest
 
         //cenário
         //acção execução
-        Integer str = ContaBancariaServiceImpl.creatAccountNumber();
+        Integer str = contaBancariaServiceImpl.creatAccountNumber();
 
         //verificação
         Assertions.assertThat(str).isGreaterThan(0);
     }
+
+    // @Test
+    public void activateAccountToStatusActivoAndReturnTrueTest()
+    {
+        //cenario
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria.setPkContaBancaria(2);
+
+        //acção execução
+        boolean isActivated = contaBancariaServiceImpl.activateAccount(contaBancaria);
+
+        //verificação
+        Assertions.assertThat(isActivated).isTrue();
+    }
+
 }

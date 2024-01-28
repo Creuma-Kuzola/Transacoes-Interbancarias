@@ -21,9 +21,9 @@ public class NifControllerException
 {
     
     @ExceptionHandler(value = NifExistException.class)
-    public ResponseEntity<Object> nifAlreadyRecorded(NifControllerException nifex)
+    public ResponseEntity<Object> nifAlreadyRecorded(NifExistException nifex)
     {
-        return new ResponseEntity<>(" ", HttpStatus.CONFLICT);
+        return new ResponseEntity<>("O nif já está associado a uma conta!", HttpStatus.CONFLICT);
     }
     
 }

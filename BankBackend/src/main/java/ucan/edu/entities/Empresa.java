@@ -4,6 +4,7 @@
  */
 package ucan.edu.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import jakarta.persistence.*;
@@ -40,10 +41,13 @@ public class Empresa implements Serializable {
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
     private String nif;
+    
     @OneToMany(mappedBy = "fkEmpresa")
+    @JsonIgnore
     private List<Cliente> clienteList;
     @JoinColumn(name = "fk_localizacao", referencedColumnName = "pk_localizacao")
     @ManyToOne
+    @JsonIgnore
     private Localizacao fkLocalizacao;
     
 }

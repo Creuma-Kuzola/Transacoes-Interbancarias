@@ -7,6 +7,7 @@ package ucan.edu.entities;
 import java.io.Serializable;
 import java.util.Date;
 import jakarta.persistence.*;
+import java.math.BigInteger;
 import ucan.edu.utils.enums.StatusContaBancaria;
 
 /**
@@ -45,8 +46,14 @@ public class ContaBancaria implements Serializable
     private StatusContaBancaria status;
     @Basic(optional = false)
     @Column(name = "data_criacao", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dataCriacao;
+    @Column(name = "saldo_contabilistico")
+    private BigInteger saldoContabilistico;
+    @Column(name = "saldo_disponivel")
+    private BigInteger saldoDisponivel;
+    @Column(length = 2147483647)
+    private String moeda;
     @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente")
     @ManyToOne
     private Cliente fkCliente;
@@ -119,6 +126,38 @@ public class ContaBancaria implements Serializable
     {
         this.fkCliente = fkCliente;
     }
+
+    public BigInteger getSaldoContabilistico()
+    {
+        return saldoContabilistico;
+    }
+
+    public void setSaldoContabilistico(BigInteger saldoContabilistico)
+    {
+        this.saldoContabilistico = saldoContabilistico;
+    }
+
+    public BigInteger getSaldoDisponivel()
+    {
+        return saldoDisponivel;
+    }
+
+    public void setSaldoDisponivel(BigInteger saldoDisponivel)
+    {
+        this.saldoDisponivel = saldoDisponivel;
+    }
+
+    public String getMoeda()
+    {
+        return moeda;
+    }
+
+    public void setMoeda(String moeda)
+    {
+        this.moeda = moeda;
+    }
+    
+    
 
     @Override
     public int hashCode()

@@ -22,9 +22,22 @@ public class EmpresaServiceImpl extends AbstractService<Empresa, Integer> implem
     @Autowired
     EmpresaRepository empresaRepository;
 
+    public Empresa findEmpresaByNif(String nif)
+    {
+        Empresa result = empresaRepository.findEmpresaByNif(nif);
+
+        if (result != null)
+        {
+            throw new NifExistException();
+        }
+
+        return result;
+    }
+
     public Empresa createEmpresa(Empresa empresa)
     {
         Empresa result = empresaRepository.findEmpresaByNif(empresa.getNif());
+
 
         if (result != null)
         {

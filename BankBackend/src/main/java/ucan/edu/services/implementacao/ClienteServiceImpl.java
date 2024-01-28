@@ -8,9 +8,7 @@ import java.math.BigInteger;
 import ucan.edu.entities.Cliente;
 import ucan.edu.services.ClienteService;
 import org.springframework.stereotype.Service;
-import ucan.edu.entities.Conta;
 import ucan.edu.entities.ContaBancaria;
-import ucan.edu.entities.Saldo;
 import ucan.edu.repository.ClienteRepository;
 
 /**
@@ -40,20 +38,25 @@ public class ClienteServiceImpl extends AbstractService<Cliente, Integer> implem
 
         Cliente cliente = clienteRepository.save(t);
         contaBancaria.setFkCliente(cliente);
-        //Conta conta = new Conta();
+        contaBancaria.setSaldoContabilistico(BigInteger.ZERO);
+        contaBancaria.setSaldoDisponivel(BigInteger.ZERO);
+        contaBancaria.setMoeda("KZ");
+       
         ContaBancaria contaBancariaCreated = contaBancariaServiceImpl.createAccount(contaBancaria);
 
-        Saldo saldo = new Saldo();
-
-        saldo.setFkContaBancaria(contaBancaria);
-        saldo.setMoeda("kz");
-        saldo.setSaldoContabilistic(BigInteger.ONE);
-        saldo.setSaldoDisponivel(BigInteger.ONE);
-
-        respoTemp += "Cliente: " + cliente.getFkPessoa().getNome() + " \n"
-                + "Numero de conta: " + contaBancaria.getNumeroDeConta() + " \n"
-                + "IBAN: " + contaBancaria.getIban() + "\n"
-                + "DataAbertura de cont: " + contaBancaria.getDataCriacao();
+        if (cliente.getFkPessoa() != null)
+        {
+            respoTemp += "Cliente: " + cliente.getFkPessoa().getNome() + " \n"
+                    + "Numero de conta: " + contaBancaria.getNumeroDeConta() + " \n"
+                    + "IBAN: " + contaBancaria.getIban() + "\n"
+                    + "DataAbertura de cont: " + contaBancaria.getDataCriacao();
+        } else
+        {
+            respoTemp += "Cliente: " + cliente.getFkEmpresa().getNome() + " \n"
+                    + "Numero de conta: " + contaBancaria.getNumeroDeConta() + " \n"
+                    + "IBAN: " + contaBancaria.getIban() + "\n"
+                    + "DataAbertura de cont: " + contaBancaria.getDataCriacao();
+        }
 
         return respoTemp;
     }

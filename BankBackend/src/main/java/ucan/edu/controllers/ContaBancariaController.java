@@ -27,15 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/ContaBancaria")
-public class ContaBancariaController extends BaseController {
-    
+public class ContaBancariaController extends BaseController
+{
+
     @Autowired
     ContaBancariaServiceImpl contaBancariServiceImpl;
-    
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllContaBancaria()
     {
-        
+
         List<ContaBancaria> lista = contaBancariServiceImpl.findAll();
         return this.ok("Contas Bancarias encontradas com sucesso!", lista);
     }
@@ -67,5 +68,14 @@ public class ContaBancariaController extends BaseController {
     public ResponseEntity<ResponseBody> updateContaBancaria(@PathVariable("id") Integer id, @RequestBody ContaBancaria contaBancaria)
     {
         return this.ok("Conta Bancaria editada com sucesso.", (ContaBancaria) contaBancariServiceImpl.editar(id, contaBancaria));
+    }
+
+    @PutMapping
+    public ResponseEntity<ResponseBody> activarAccount(@RequestBody ContaBancaria contaBancaria)
+    {
+        boolean isContaAcativated = contaBancariServiceImpl.activateAccount(contaBancaria);
+        return isContaAcativated
+                ? this.ok("Conta Bancaria activada com sucesso!", this)
+                : this.naoEncontrado("Erro ao activar a conta bancaria!", this);
     }
 }

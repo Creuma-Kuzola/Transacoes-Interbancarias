@@ -32,13 +32,11 @@ public class ClienteServiceImplTest
     @Autowired
     private ClienteServiceImpl clienteServiceImpl;
 
-    
     @Test
     public void createCustomerAccountTest()
     {
         //cenario
         Cliente cliente = new Cliente();
-
         Pessoa pessoa = new Pessoa();
 
         pessoa.setPkPessoa(1);
