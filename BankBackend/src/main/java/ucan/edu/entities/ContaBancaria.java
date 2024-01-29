@@ -49,9 +49,9 @@ public class ContaBancaria implements Serializable
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataCriacao;
     @Column(name = "saldo_contabilistico")
-    private BigInteger saldoContabilistico;
+    private Integer saldoContabilistico;
     @Column(name = "saldo_disponivel")
-    private BigInteger saldoDisponivel;
+    private Integer saldoDisponivel;
     @Column(length = 2147483647)
     private String moeda;
     @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente")
@@ -127,22 +127,22 @@ public class ContaBancaria implements Serializable
         this.fkCliente = fkCliente;
     }
 
-    public BigInteger getSaldoContabilistico()
+    public Integer getSaldoContabilistico()
     {
         return saldoContabilistico;
     }
 
-    public void setSaldoContabilistico(BigInteger saldoContabilistico)
+    public void setSaldoContabilistico(Integer saldoContabilistico)
     {
         this.saldoContabilistico = saldoContabilistico;
     }
 
-    public BigInteger getSaldoDisponivel()
+    public Integer getSaldoDisponivel()
     {
         return saldoDisponivel;
     }
 
-    public void setSaldoDisponivel(BigInteger saldoDisponivel)
+    public void setSaldoDisponivel(Integer saldoDisponivel)
     {
         this.saldoDisponivel = saldoDisponivel;
     }

@@ -38,7 +38,6 @@ public class EmpresaServiceImpl extends AbstractService<Empresa, Integer> implem
     {
         Empresa result = empresaRepository.findEmpresaByNif(empresa.getNif());
 
-
         if (result != null)
         {
             throw new NifExistException();

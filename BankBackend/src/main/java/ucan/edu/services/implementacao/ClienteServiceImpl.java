@@ -38,8 +38,8 @@ public class ClienteServiceImpl extends AbstractService<Cliente, Integer> implem
 
         Cliente cliente = clienteRepository.save(t);
         contaBancaria.setFkCliente(cliente);
-        contaBancaria.setSaldoContabilistico(BigInteger.ZERO);
-        contaBancaria.setSaldoDisponivel(BigInteger.ZERO);
+        contaBancaria.setSaldoContabilistico(0);
+        contaBancaria.setSaldoDisponivel(0);
         contaBancaria.setMoeda("KZ");
        
         ContaBancaria contaBancariaCreated = contaBancariaServiceImpl.createAccount(contaBancaria);

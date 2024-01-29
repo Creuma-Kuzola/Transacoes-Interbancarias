@@ -6,14 +6,20 @@ to edit this template ...
  */
 package ucan.edu.services.implementacao;
 
+import java.util.Date;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ucan.edu.entities.Cliente;
 import ucan.edu.entities.ContaBancaria;
+import ucan.edu.entities.Pessoa;
 import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
+import ucan.edu.utils.enums.Sexo;
+import ucan.edu.utils.enums.StatusContaBancaria;
 
 /**
  *
@@ -52,6 +58,40 @@ public class ContaBancariaServiceImplTest
 
         //verificação
         Assertions.assertThat(isActivated).isTrue();
+    }
+
+    //@Test
+    public void depositeAmountOfMoneyAndReturnTheAccount()
+    {
+        //Cenario
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria.setNumeroDeConta(5831);
+        contaBancaria.setPkContaBancaria(1);
+        contaBancaria.setIban("E 260 5831");
+        contaBancaria.setStatus(StatusContaBancaria.ACTIVO);
+        contaBancaria.setDataCriacao(new Date());
+        contaBancaria.setSaldoContabilistico(100);
+        contaBancaria.setSaldoDisponivel(100);
+        contaBancaria.setMoeda("KZ");
+
+        Pessoa pessoa = new Pessoa();
+
+        pessoa.setPkPessoa(4);
+        pessoa.setNome("Marta Nuenes");
+        pessoa.setDataNascimento(new Date());
+        pessoa.setNumeroDoBi("192893LAD");
+        pessoa.setNif("192893LAD");
+        pessoa.setSexo(Sexo.MASCULINO);
+
+        Cliente cliente = new Cliente();
+
+        cliente.setPkCliente(2);
+        cliente.setTelefone("93456123");
+        cliente.setEmail("martanunues@gmail.com");
+        cliente.setFkEmpresa(null);
+
+        //Accao
+        Mockito.when(contaBancariaServiceImpl.depositeAmountOfMoney(contaBancaria, 200)).thenReturn(contaBancaria);
     }
 
 }

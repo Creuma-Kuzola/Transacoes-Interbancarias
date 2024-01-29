@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author creuma
+ * @author jussyleitecode
  */
 @RestController
 @RequestMapping("/ContaBancaria")
@@ -78,4 +78,13 @@ public class ContaBancariaController extends BaseController
                 ? this.ok("Conta Bancaria activada com sucesso!", this)
                 : this.naoEncontrado("Erro ao activar a conta bancaria!", this);
     }
+
+    @PutMapping("/deposite/{quantidade}")
+    public ResponseEntity<ResponseBody> depositeAmountOfMoney(@RequestBody ContaBancaria contaBancaria,
+            @PathVariable("quantidade") Integer quantidade)
+    {
+        ContaBancaria conta = contaBancariServiceImpl.depositeAmountOfMoney(contaBancaria, quantidade);
+        return this.ok("Deposito feito com sucesso !", conta);
+    }
+
 }
