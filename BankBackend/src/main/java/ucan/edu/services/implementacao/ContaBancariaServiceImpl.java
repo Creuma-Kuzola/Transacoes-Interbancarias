@@ -5,7 +5,9 @@
 package ucan.edu.services.implementacao;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import ucan.edu.entities.*;
@@ -13,6 +15,8 @@ import ucan.edu.services.*;
 import org.springframework.stereotype.Service;
 import ucan.edu.exceptions.ContaBancariaNotActivatedException;
 import ucan.edu.exceptions.ContaBancariaNotFoundException;
+import ucan.edu.exceptions.ContaBancariaWithInvalidIbanException;
+import ucan.edu.exceptions.SaldoContaBancariaInferiorException;
 import ucan.edu.repository.ContaBancariaRepository;
 import ucan.edu.utils.enums.StatusContaBancaria;
 
@@ -94,11 +98,64 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
     }
 
     //777
-    public ContaBancaria transferMoneyToAccount()
+    public List<ContaBancaria> transferMoneyToAccountSameBank(ContaBancaria contaBancaria, String iban, Integer montante)
     {
+        Optional<ContaBancaria> contaBancariaFoundOrigem = contaBancariaRepository
+                .findContaBancariaByNumeroDeConta(contaBancaria.getNumeroDeConta());
 
-        /// TRANSFERIA BANCO A BANCO :::: ......------ :::::
-        return null;
+        Optional<ContaBancaria> contaBancariaFound = contaBancariaRepository
+                .findContaBancariaByIban(iban);
+
+        ContaBancaria contaBancariaIsActive = contaBancariaRepository.
+                isContaBancariaActived(contaBancaria.getNumeroDeConta(), StatusContaBancaria.ACTIVO);
+
+        ContaBancaria contaBancariaIsActiveOrigem = contaBancariaRepository.
+                isContaBancariaByIbanActived(iban,
+                        StatusContaBancaria.ACTIVO);
+
+        if (!contaBancariaFound.isPresent())
+        {
+            throw new ContaBancariaWithInvalidIbanException();
+        } else if (!contaBancariaFoundOrigem.isPresent())
+        {
+            throw new ContaBancariaNotFoundException();
+        } else if (contaBancariaIsActiveOrigem == null)
+        {
+            throw new ContaBancariaNotActivatedException();
+        } else if (contaBancariaIsActive == null)
+        {
+            throw new ContaBancariaNotActivatedException();
+        }
+
+        if (contaBancariaFoundOrigem.get().getSaldoDisponivel() < montante)
+        {
+            throw new SaldoContaBancariaInferiorException();
+        }
+
+        //get saldoDisponivel da conta do destinatario
+        Integer novoSaldoContaDestinatario = contaBancariaFound.get().getSaldoDisponivel();
+        novoSaldoContaDestinatario += montante;
+
+        //get saldoDisponivel da conta do destinatario
+        Integer novoSaldoContaBancariaOrigem = contaBancariaFoundOrigem.get().getSaldoDisponivel();
+
+        Integer novoSaldoContaBancariaOrigemFinalResult = novoSaldoContaBancariaOrigem - montante;
+        System.out.println(" novoSaldoContaBancariaOrigem: " + novoSaldoContaBancariaOrigemFinalResult);
+
+        contaBancariaFound.get().setSaldoContabilistico(novoSaldoContaDestinatario);
+        contaBancariaFound.get().setSaldoDisponivel(novoSaldoContaDestinatario);
+
+        contaBancariaFoundOrigem.get().setSaldoContabilistico(novoSaldoContaBancariaOrigemFinalResult);
+        contaBancariaFoundOrigem.get().setSaldoDisponivel(novoSaldoContaBancariaOrigemFinalResult);
+
+        List<ContaBancaria> listaContaBancariaList = new ArrayList<>();
+
+        listaContaBancariaList.add(contaBancariaFoundOrigem.get());
+        listaContaBancariaList.add(contaBancariaFound.get());
+
+        List<ContaBancaria> contaBancariaLista = contaBancariaRepository.saveAll(listaContaBancariaList);
+
+        return contaBancariaLista;
     }
 
     public ContaBancaria createAccount(ContaBancaria conta)

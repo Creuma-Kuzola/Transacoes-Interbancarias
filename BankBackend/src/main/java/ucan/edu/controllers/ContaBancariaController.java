@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -85,6 +86,15 @@ public class ContaBancariaController extends BaseController
     {
         ContaBancaria conta = contaBancariServiceImpl.depositeAmountOfMoney(contaBancaria, quantidade);
         return this.ok("Deposito feito com sucesso !", conta);
+    }
+
+    @PatchMapping("/transfer/{montante}/{iban}")
+    public ResponseEntity<ResponseBody> transferMoney(@RequestBody ContaBancaria contaBancaria,
+            @PathVariable("iban") String iban,
+            @PathVariable("montante") Integer montante)
+    {
+        List<ContaBancaria> contaBancarias = contaBancariServiceImpl.transferMoneyToAccountSameBank(contaBancaria, iban, montante);
+        return this.ok("Transferencia feita com sucesso!", contaBancarias);
     }
 
 }
