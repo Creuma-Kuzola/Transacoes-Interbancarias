@@ -1,62 +1,55 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ucan.edu.entities;
 
-import java.io.Serializable;
-import jakarta.persistence.*;
-import java.util.Collection;
-import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+import java.util.Collection;
+import java.util.List;
 import ucan.edu.utils.enums.UserRole;
 
-/**
- *
- * @author jussyleitecode
- */
-@Entity
-@Table(catalog = "kuzola_bank", schema = "public")
-
+@Table()
+@Entity(name = "users")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-
-public class Conta implements UserDetails
+@EqualsAndHashCode(of = "id")
+public class User implements UserDetails
 {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "pk_conta", nullable = false)
-    private Integer pkConta;
-    @Basic(optional = false)
-    @Column(nullable = false, length = 2147483647)
+    private Long id;
+
     private String login;
-    @Basic(optional = false)
-    @Column(nullable = false, length = 2147483647)
+
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente")
     @ManyToOne
     private Cliente fkCliente;
 
-    @JoinColumn(name = "role", referencedColumnName = "role")
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
-
-    public Conta(String username, String password, UserRole role)
+    public User(String login, String password, UserRole role)
     {
-        this.login = username;
+        this.login = login;
         this.password = password;
         this.role = role;
     }
@@ -100,5 +93,4 @@ public class Conta implements UserDetails
     {
         return true;
     }
-
 }

@@ -4,7 +4,6 @@
  */
 package ucan.edu.controllers;
 
-
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
 import ucan.edu.services.implementacao.*;
@@ -29,15 +28,16 @@ import org.springframework.web.servlet.mvc.AbstractController;
  */
 @RestController
 @RequestMapping("/conta")
-public class ContaController extends BaseController {
-    
+public class ContaController extends BaseController
+{
+
     @Autowired
     ContaServiceImpl contaServiceImpl;
-    
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllContas()
     {
-        
+
         List<Conta> lista = contaServiceImpl.findAll();
         return this.ok("Contas encontradas com sucesso!", lista);
     }
@@ -59,6 +59,7 @@ public class ContaController extends BaseController {
         return this.created("Conta adicionada com sucesso.", this.contaServiceImpl.createAccount(conta));
     }
 
+   
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseBody> deleteConta(@PathVariable("id") Integer id)
     {

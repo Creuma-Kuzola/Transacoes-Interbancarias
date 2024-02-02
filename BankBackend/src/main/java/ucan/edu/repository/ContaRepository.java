@@ -7,6 +7,7 @@ package ucan.edu.repository;
 import ucan.edu.entities.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,5 +17,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ContaRepository extends JpaRepository<Conta, Integer> {
     
-    public Conta findContaByUsername(@Param("username")  String username);
+    public UserDetails findContaByLogin(@Param("login")  String username);
+    //public Conta findContaByLogin(@Param("username")  String username);
 }

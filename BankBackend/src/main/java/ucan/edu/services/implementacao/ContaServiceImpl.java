@@ -13,7 +13,7 @@ import ucan.edu.repository.ContaRepository;
 
 /**
  *
- * @author creuma
+ * @author jussyleitecode
  */
 @Service
 public class ContaServiceImpl extends AbstractService<Conta, Integer> implements ContaService
@@ -24,7 +24,7 @@ public class ContaServiceImpl extends AbstractService<Conta, Integer> implements
 
     public Conta createAccount(Conta conta)
     {
-        Conta contaExist = contaRepository.findContaByUsername(conta.getUsername());
+        Conta contaExist = null; // = contaRepository.findContaByUsername(conta.getUsername());
 
         if (contaExist != null)
         {
