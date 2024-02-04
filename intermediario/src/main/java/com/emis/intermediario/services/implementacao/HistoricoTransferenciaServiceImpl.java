@@ -6,6 +6,7 @@ package com.emis.intermediario.services.implementacao;
 
 import com.emis.intermediario.entities.HistoricoTransferencia;
 import com.emis.intermediario.repositories.HistoricoTransferenciaRepository;
+import com.emis.intermediario.services.HistoricoTransferenciaService;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @author jussyleitecode
  */
 @Service
-public class HistoricoTransferenciaServiceImpl
+public class HistoricoTransferenciaServiceImpl implements HistoricoTransferenciaService
 {
 
     private final HistoricoTransferenciaRepository historicoTransferenciaRepository;
@@ -37,7 +38,7 @@ public class HistoricoTransferenciaServiceImpl
 
     public HistoricoTransferencia findTransferenciaByBanco(Integer banco)
     {
-        HistoricoTransferencia historico = this.historicoTransferenciaRepository.findHistoricoTransferenciaByBanco(banco);
+        HistoricoTransferencia historico = this.historicoTransferenciaRepository.findHistoricoTransferenciaPorBanco(banco);
         return historico;
-    }
+    } 
 }

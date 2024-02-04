@@ -6,6 +6,7 @@ package com.emis.intermediario.repositories;
 
 import com.emis.intermediario.entities.HistoricoTransferencia;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +14,10 @@ import org.springframework.stereotype.Repository;
  *
  * @author jussyleitecode
  */
-
 @Repository
 public interface HistoricoTransferenciaRepository extends JpaRepository<HistoricoTransferencia, Integer>
 {
-    public HistoricoTransferencia findHistoricoTransferenciaByBanco(@Param("banco") Integer banco);
+
+    @Query("SELECT t FROM HistoricoTransferencia t WHERE t.fkBanco.pkBanco = :fkBanco")
+    public HistoricoTransferencia findHistoricoTransferenciaPorBanco(@Param("fkBanco") Integer fkBanco);
 }
