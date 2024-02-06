@@ -6,10 +6,13 @@ package com.example.KuzolaBankService.controllers;
 
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
+import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
+import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +33,16 @@ public class TransferenciaController extends BaseController{
     
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
-    
+
+    TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer;
+
+    @Autowired
+    ContaBancariaServiceImpl contaBancariaServiceImpl;
+
+    public TransferenciaController(TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer) {
+        this.transferenciaJsonKafkaProducer = transferenciaJsonKafkaProducer;
+    }
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencia()
     {
@@ -52,7 +64,22 @@ public class TransferenciaController extends BaseController{
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
-        return this.created("Transferencia adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
+        System.out.println("Objecto transferencia"+ transferencia);
+
+       if (contaBancariaServiceImpl.isValidIban(transferencia.getIbanDestinatario())) {
+
+           if (contaBancariaServiceImpl.isValidTheSizeOfIban(transferencia.getIbanDestinatario())) {
+
+               if (contaBancariaServiceImpl.existsIban(transferencia.getIbanDestinatario())) {
+
+                   return this.created("Transferencia enviada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
+               }
+               return this.naoEncontrado("ERRO: Este IBAN não existe", null);
+           }
+           return this.naoEncontrado("ERRO: Este IBAN é inválido. O IBAN deve ter apenas 17 dígitos", null);
+       }
+       return this.naoEncontrado("ERRO: O IBAN é inválido", null);
+
     }
 
     @DeleteMapping("/{id}")

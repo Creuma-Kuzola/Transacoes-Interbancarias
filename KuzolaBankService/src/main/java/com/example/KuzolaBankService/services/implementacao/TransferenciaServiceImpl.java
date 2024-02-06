@@ -6,6 +6,7 @@ package com.example.KuzolaBankService.services.implementacao;
 
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.services.TransferenciaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,5 +16,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class TransferenciaServiceImpl extends AbstractService<Transferencia, Integer>
 implements TransferenciaService{
-    
+
+   @Autowired
+   public ContaBancariaServiceImpl contaBancariaService;
+
+    public boolean verificarContaBancaria(String iban){
+
+        if(contaBancariaService.isValidIban(iban))
+        {
+            return contaBancariaService.existsIban(iban);
+        }
+        return false;
+    }
+
 }

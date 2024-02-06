@@ -6,6 +6,7 @@ package com.example.KuzolaBankService.services.implementacao;
 
 import com.example.KuzolaBankService.entities.Cliente;
 import com.example.KuzolaBankService.entities.ContaBancaria;
+import com.example.KuzolaBankService.enums.DetalhesBanco;
 import com.example.KuzolaBankService.repositories.ContaBancariaRepository;
 import com.example.KuzolaBankService.services.ContaBancariaService;
 import com.example.KuzolaBankService.utils.ContaBancariaDetails;
@@ -28,6 +29,7 @@ implements ContaBancariaService{
     @Autowired
     ContaBancariaRepository contaBancariaRepository;
     private HashSet<BigInteger> listaNumerosDeConta = new HashSet<>();
+    private DetalhesBanco identificadorDoBanco = DetalhesBanco.IDENTIFICADOR_DO_BANCO;
 
     ContaBancariaDetails contaBancariaDetails = new ContaBancariaDetails();
 
@@ -54,4 +56,26 @@ implements ContaBancariaService{
         return  contaBancaria;
 
     }
+
+    public boolean existsIban(String iban){
+
+       ContaBancaria contaBancaria = new ContaBancaria();
+       contaBancaria =  contaBancariaRepository.findByIban(iban);
+
+       return contaBancaria != null;
+
+    }
+
+    public boolean isValidIban(String iban){
+
+       String codigoBanco = iban.substring(0,4);
+       String idBancoValido = String.valueOf(identificadorDoBanco.getIdentificadorDoBanco());
+       return codigoBanco.equals(idBancoValido);
+    }
+
+    public boolean isValidTheSizeOfIban(String iban){
+
+       return iban.length() == 17;
+    }
+
 }

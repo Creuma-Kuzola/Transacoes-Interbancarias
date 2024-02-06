@@ -7,9 +7,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="IntermediarioService" />
+        <module name="TransferenciaService" />
         <module name="KuzolaBankService" />
         <module name="BankBackend" />
-        <module name="TransferenciaService" />
+        <module name="intermediario" />
+        <module name="edu" />
       </profile>
     </annotationProcessing>
   </component>
@@ -18,6 +21,8 @@
       <module name="BankBackend" options="-parameters" />
       <module name="KuzolaBankService" options="-parameters" />
       <module name="TransferenciaService" options="-parameters" />
+      <module name="edu" options="-parameters" />
+      <module name="intermediario" options="-parameters" />
     </option>
   </component>
 </project>
