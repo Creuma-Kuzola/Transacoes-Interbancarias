@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
 /**
  *
  * @author creuma
@@ -28,6 +29,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+
 public class Transferencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,35 +38,36 @@ public class Transferencia implements Serializable {
     @Basic(optional = false)
     @Column(name = "pk_transferencia", nullable = false)
     private Integer pkTransferencia;
+
     @Column(length = 2147483647)
     private String descricao;
+
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @Column(nullable = false, precision = 11, scale = 3)
     private BigDecimal montante;
+
     @Column(name = "iban_destinatario", length = 2147483647)
     private String ibanDestinatario;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonIgnore
     private Date datahora;
     @Column(name = "estado_transferencia", length = 2147483647)
-    
     @JsonIgnore
     private String estadoTransferencia;
-    
+
     @Column(name = "codigo_transferencia", length = 2147483647)
     @JsonIgnore
     private String codigoTransferencia;
-    
+
     @Column(name = "tipo_transferencia", length = 2147483647)
     @JsonIgnore
     private String tipoTransferencia;
-    
+
     @JoinColumn(name = "fk_conta_bancaria_origem", referencedColumnName = "pk_conta_bancaria")
     @ManyToOne
     @JsonIgnore
     private ContaBancaria fkContaBancariaOrigem;
-    
+
     
 }

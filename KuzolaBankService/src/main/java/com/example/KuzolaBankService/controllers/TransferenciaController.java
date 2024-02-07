@@ -4,6 +4,7 @@
  */
 package com.example.KuzolaBankService.controllers;
 
+import com.example.KuzolaBankService.dto.TransferenciaDto;
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
 import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
@@ -56,28 +57,25 @@ public class TransferenciaController extends BaseController{
         Optional<Transferencia> consulta = this.transferenciaServiceImpl.findById(id);
         if (consulta.isPresent())
         {
-            return this.ok("Transferencia encontrada com sucesso.", consulta.get());
+            return this.ok("TransferenciaDto encontrada com sucesso.", consulta.get());
         }
-        return this.naoEncontrado("Transferencia não encontrada", null);
+        return this.naoEncontrado("TransferenciaDto não encontrada", null);
     }
 
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
         System.out.println("Objecto transferencia"+ transferencia);
+        TransferenciaDto transferenciaDto = new TransferenciaDto();
 
-       if (contaBancariaServiceImpl.isValidIban(transferencia.getIbanDestinatario())) {
+       if (transferenciaServiceImpl.isContaBancariaValid(transferencia.getIbanDestinatario())) {
 
-           if (contaBancariaServiceImpl.isValidTheSizeOfIban(transferencia.getIbanDestinatario())) {
+           transferenciaDto =  transferenciaServiceImpl.convertTransferenciaIntoTransferenciaDto(transferencia);
+           transferenciaJsonKafkaProducer.sendMessage(transferenciaDto.toString());
 
-               if (contaBancariaServiceImpl.existsIban(transferencia.getIbanDestinatario())) {
-
-                   return this.created("Transferencia enviada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
-               }
-               return this.naoEncontrado("ERRO: Este IBAN não existe", null);
-           }
-           return this.naoEncontrado("ERRO: Este IBAN é inválido. O IBAN deve ter apenas 17 dígitos", null);
+           return this.created("TransferenciaDto enviada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
        }
+
        return this.naoEncontrado("ERRO: O IBAN é inválido", null);
 
     }
@@ -85,13 +83,13 @@ public class TransferenciaController extends BaseController{
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseBody> deleteTransferencia(@PathVariable("id") Integer id)
     {
-        return this.ok("Transferencia eliminada com sucesso.", this.transferenciaServiceImpl.eliminar(id));
+        return this.ok("TransferenciaDto eliminada com sucesso.", this.transferenciaServiceImpl.eliminar(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseBody> updateTransferencia(@PathVariable("id") Integer id, @RequestBody Transferencia transferencia)
     {
-        return this.ok("Transferencia editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
+        return this.ok("TransferenciaDto editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
     }
 
 }

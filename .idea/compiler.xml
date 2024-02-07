@@ -19,6 +19,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="BankBackend" options="-parameters" />
+      <module name="IntermediarioService" options="-parameters" />
       <module name="KuzolaBankService" options="-parameters" />
       <module name="TransferenciaService" options="-parameters" />
       <module name="edu" options="-parameters" />
