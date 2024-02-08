@@ -42,6 +42,7 @@ public class ContaBancariaDetails {
         Integer numeroTemporario1, numeroTemporario2;
         boolean flag = true;
 
+
         while (flag) {
             numeroTemporario1 = gerarNumeroAleatorio(max1, min1);
             numeroTemporario2 = gerarNumeroAleatorio(max2, min2);
