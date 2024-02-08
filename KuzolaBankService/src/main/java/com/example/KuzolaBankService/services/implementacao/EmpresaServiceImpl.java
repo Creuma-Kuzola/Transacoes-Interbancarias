@@ -4,9 +4,9 @@
  */
 package com.example.KuzolaBankService.services.implementacao;
 
-import com.example.KuzolaBankService.entities.Empresa;
 import com.example.KuzolaBankService.services.EmpresaService;
 import org.springframework.stereotype.Service;
+import com.example.KuzolaBankService.entities.Empresa;
 
 /**
  *

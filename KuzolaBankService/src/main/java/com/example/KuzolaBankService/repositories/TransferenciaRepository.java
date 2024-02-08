@@ -4,8 +4,8 @@
  */
 package com.example.KuzolaBankService.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.KuzolaBankService.entities.Transferencia;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 

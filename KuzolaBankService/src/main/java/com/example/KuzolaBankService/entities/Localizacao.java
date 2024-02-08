@@ -4,10 +4,9 @@
  */
 package com.example.KuzolaBankService.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,13 +20,11 @@ import lombok.ToString;
  */
 @Entity
 @Table(catalog = "kuzola_bank", schema = "public")
-
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class Localizacao implements Serializable {
 
     private static final long serialVersionUID = 1L;

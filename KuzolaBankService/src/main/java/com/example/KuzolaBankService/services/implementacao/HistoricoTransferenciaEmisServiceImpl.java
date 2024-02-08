@@ -4,9 +4,10 @@
  */
 package com.example.KuzolaBankService.services.implementacao;
 
-import com.example.KuzolaBankService.entities.HistoricoTransferenciaEmis;
 import com.example.KuzolaBankService.services.HistoricoTransferenciaEmisService;
 import org.springframework.stereotype.Service;
+import com.example.KuzolaBankService.entities.HistoricoTransferenciaEmis;
+
 
 /**
  *

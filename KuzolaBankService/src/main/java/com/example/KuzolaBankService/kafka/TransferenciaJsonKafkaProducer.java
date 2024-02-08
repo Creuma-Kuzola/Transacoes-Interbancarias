@@ -1,7 +1,5 @@
 package com.example.KuzolaBankService.kafka;
 
-import com.example.KuzolaBankService.dto.TransferenciaDto;
-import com.example.KuzolaBankService.entities.Transferencia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;

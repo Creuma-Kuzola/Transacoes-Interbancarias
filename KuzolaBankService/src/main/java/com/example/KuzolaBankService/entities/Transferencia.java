@@ -8,13 +8,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 
 /**
  *
@@ -23,13 +23,11 @@ import lombok.ToString;
 @Entity
 @Table(catalog = "kuzola_bank", schema = "public")
 
-
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class Transferencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,36 +36,27 @@ public class Transferencia implements Serializable {
     @Basic(optional = false)
     @Column(name = "pk_transferencia", nullable = false)
     private Integer pkTransferencia;
-
     @Column(length = 2147483647)
     private String descricao;
-
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @Column(nullable = false, precision = 11, scale = 3)
     private BigDecimal montante;
-
     @Column(name = "iban_destinatario", length = 2147483647)
     private String ibanDestinatario;
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date datahora;
     @Column(name = "estado_transferencia", length = 2147483647)
-    @JsonIgnore
     private String estadoTransferencia;
-
     @Column(name = "codigo_transferencia", length = 2147483647)
-    @JsonIgnore
     private String codigoTransferencia;
-
     @Column(name = "tipo_transferencia", length = 2147483647)
-    @JsonIgnore
     private String tipoTransferencia;
-
     @JoinColumn(name = "fk_conta_bancaria_origem", referencedColumnName = "pk_conta_bancaria")
     @ManyToOne
-    @JsonIgnore
     private ContaBancaria fkContaBancariaOrigem;
-
+    @OneToMany(mappedBy = "fkTransferencia")
+    @JsonIgnore
+    private List<TokenValidacao> tokenValidacaoList;
     
 }

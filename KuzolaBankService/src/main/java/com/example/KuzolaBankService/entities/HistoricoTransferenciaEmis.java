@@ -4,10 +4,9 @@
  */
 package com.example.KuzolaBankService.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,9 +23,9 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class HistoricoTransferenciaEmis implements Serializable {
 
@@ -41,5 +40,5 @@ public class HistoricoTransferenciaEmis implements Serializable {
     @OneToMany(mappedBy = "fkHistoricoTransferenciaEmis")
     @JsonIgnore
     private List<TokenValidacao> tokenValidacaoList;
-
+    
 }

@@ -4,7 +4,6 @@
  */
 package com.example.KuzolaBankService.controllers;
 
-import com.example.KuzolaBankService.entities.Cliente;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
 import com.example.KuzolaBankService.services.implementacao.ClienteServiceImpl;
 import java.util.List;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.KuzolaBankService.entities.Cliente;
 
 /**
  *

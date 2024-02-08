@@ -23,10 +23,9 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class ContaTipo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,12 +34,11 @@ public class ContaTipo implements Serializable {
     @Basic(optional = false)
     @Column(name = "pk_conta_tipo", nullable = false)
     private Integer pkContaTipo;
-    
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
     private String designacao;
-    
     @OneToMany(mappedBy = "fkContaTipo")
     @JsonIgnore
-    private List<Conta> contaList;    
+    private List<Conta> contaList;
+    
 }

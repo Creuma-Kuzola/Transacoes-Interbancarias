@@ -4,15 +4,14 @@
  */
 package com.example.KuzolaBankService.services.implementacao;
 
-import com.example.KuzolaBankService.entities.Cliente;
-import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.enums.DetalhesBanco;
 import com.example.KuzolaBankService.repositories.ContaBancariaRepository;
 import com.example.KuzolaBankService.services.ContaBancariaService;
 import com.example.KuzolaBankService.utils.ContaBancariaDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import com.example.KuzolaBankService.entities.ContaBancaria;
+import com.example.KuzolaBankService.entities.Cliente;
 
 import java.math.BigInteger;
 import java.util.Date;

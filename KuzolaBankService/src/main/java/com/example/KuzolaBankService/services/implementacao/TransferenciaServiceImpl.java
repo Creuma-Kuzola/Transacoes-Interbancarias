@@ -5,11 +5,10 @@
 package com.example.KuzolaBankService.services.implementacao;
 
 import com.example.KuzolaBankService.dto.TransferenciaDto;
-import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.services.TransferenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.example.KuzolaBankService.entities.Transferencia;
 /**
  *
  * @author creuma

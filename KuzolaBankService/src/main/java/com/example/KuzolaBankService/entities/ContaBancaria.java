@@ -5,6 +5,7 @@
 package com.example.KuzolaBankService.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import jakarta.persistence.*;
@@ -21,13 +22,11 @@ import lombok.ToString;
 @Entity
 @Table(name = "conta_bancaria", catalog = "kuzola_bank", schema = "public")
 
-
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class ContaBancaria implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,10 +45,17 @@ public class ContaBancaria implements Serializable {
     @Column(name = "data_criacao", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dataCriacao;
-    @Column(name = "numero_de_conta")
+    @Basic(optional = false)
+    @Column(name = "numero_de_conta", nullable = false)
     private BigInteger numeroDeConta;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "saldo_contabilistico", precision = 11, scale = 3)
+    private BigDecimal saldoContabilistico;
+    @Column(name = "saldo_disponivel", precision = 11, scale = 3)
+    private BigDecimal saldoDisponivel;
     @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente", nullable = false)
     @ManyToOne(optional = false)
     private Cliente fkCliente;
 
+    
 }

@@ -3,9 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
 package com.example.KuzolaBankService.services;
-
-import com.example.KuzolaBankService.entities.Cliente;
 import com.example.KuzolaBankService.entities.ContaBancaria;
+import com.example.KuzolaBankService.entities.Cliente;
 
 /**
  *

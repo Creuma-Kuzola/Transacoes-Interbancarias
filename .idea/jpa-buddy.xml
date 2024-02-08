@@ -3,5 +3,7 @@
   <component name="JpaBuddyIdeaProjectConfig">
     <option name="defaultUnitInitialized" value="true" />
     <option name="renamerInitialized" value="true" />
+    <option name="reverseEngineeringLastDbConnectionId" value="c08dc68b-cfb3-4ae9-8f0a-46f672cdb884" />
+    <option name="reLastEntityCreationPackage" value="KuzolaBankService/src/main/java/com/example/KuzolaBankService/entities" />
   </component>
 </project>

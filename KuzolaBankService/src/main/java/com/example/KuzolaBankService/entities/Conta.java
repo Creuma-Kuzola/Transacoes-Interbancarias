@@ -21,9 +21,9 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class Conta implements Serializable {
 
@@ -33,19 +33,15 @@ public class Conta implements Serializable {
     @Basic(optional = false)
     @Column(name = "pk_conta", nullable = false)
     private Integer pkConta;
-    
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
     private String username;
-   
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
     private String password;
-    
     @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente")
     @ManyToOne
     private Cliente fkCliente;
-    
     @JoinColumn(name = "fk_conta_tipo", referencedColumnName = "pk_conta_tipo")
     @ManyToOne
     private ContaTipo fkContaTipo;

@@ -18,12 +18,12 @@ import lombok.ToString;
  */
 @Entity
 @Table(name = "token_validacao", catalog = "kuzola_bank", schema = "public")
+
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class TokenValidacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
