@@ -19,24 +19,23 @@ import org.springframework.stereotype.Service;
  *
  * @author jussyleitecode
  */
-
 @Service
 public class KafkaTransferenciaProducer
 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaProducer.class);
 
-    private KafkaTemplate<String, TransferenciaPOJO> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
-    public KafkaTransferenciaProducer(KafkaTemplate<String, TransferenciaPOJO> kafkaTemplate)
+    public KafkaTransferenciaProducer(KafkaTemplate<String, String> kafkaTemplate)
     {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendMessage(TransferenciaPOJO data)
+    public void sendMessage(String data)
     {
         LOGGER.info(String.format("Message sent ==> %s ", data.toString()));
-        Message<TransferenciaPOJO> message = MessageBuilder
+        Message<String> message = MessageBuilder
                 .withPayload(data)
                 .setHeader(KafkaHeaders.TOPIC, "bancowakanda")
                 .build();

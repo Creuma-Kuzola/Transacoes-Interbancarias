@@ -23,8 +23,9 @@ import java.util.HashSet;
  * @author creuma
  */
 @Service
-public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Integer> 
-implements ContaBancariaService{
+public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Integer>
+        implements ContaBancariaService
+{
 
     @Autowired
     ContaBancariaRepository contaBancariaRepository;
@@ -33,13 +34,16 @@ implements ContaBancariaService{
 
     ContaBancariaDetails contaBancariaDetails = new ContaBancariaDetails();
 
-    public void getAllNumerosDeConta(HashSet<BigInteger> listaNumerosDeConta){
+    public void getAllNumerosDeConta(HashSet<BigInteger> listaNumerosDeConta)
+    {
 
         listaNumerosDeConta = contaBancariaRepository.findAllNumeroConta();
 
     }
+
     @Override
-    public ContaBancaria creatingContaBancariaByFkCliente(Cliente cliente) {
+    public ContaBancaria creatingContaBancariaByFkCliente(Cliente cliente)
+    {
 
         BigInteger numeroConta = BigInteger.ZERO;
         Date data = new Date();
@@ -53,29 +57,37 @@ implements ContaBancariaService{
         contaBancaria.setStatus("Activo");
         contaBancaria.setDataCriacao(data);
 
-        return  contaBancaria;
+        return contaBancaria;
 
     }
 
-    public boolean existsIban(String iban){
+    public boolean existsIban(String iban)
+    {
 
-       ContaBancaria contaBancaria = new ContaBancaria();
-       contaBancaria =  contaBancariaRepository.findByIban(iban);
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria = contaBancariaRepository.findByIban(iban);
 
-       return contaBancaria != null;
+        return contaBancaria != null;
 
     }
 
-    public boolean isValidIban(String iban){
-
-       String codigoBanco = iban.substring(0,4);
-       String idBancoValido = String.valueOf(identificadorDoBanco.getIdentificadorDoBanco());
-       return codigoBanco.equals(idBancoValido);
+    public ContaBancaria findContaBancaraByIban(String iban)
+    {
+        return contaBancariaRepository.findByIban(iban);
     }
 
-    public boolean isValidTheSizeOfIban(String iban){
+    public boolean isValidIban(String iban)
+    {
 
-       return iban.length() == 17;
+        String codigoBanco = iban.substring(0, 4);
+        String idBancoValido = String.valueOf(identificadorDoBanco.getIdentificadorDoBanco());
+        return codigoBanco.equals(idBancoValido);
+    }
+
+    public boolean isValidTheSizeOfIban(String iban)
+    {
+
+        return iban.length() == 17;
     }
 
 }

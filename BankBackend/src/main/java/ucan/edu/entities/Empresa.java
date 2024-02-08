@@ -49,5 +49,44 @@ public class Empresa implements Serializable {
     @ManyToOne
     @JsonIgnore
     private Localizacao fkLocalizacao;
-    
+
+    public Integer getPkEmpresa() {
+        return pkEmpresa;
+    }
+
+    public void setPkEmpresa(Integer pkEmpresa) {
+        this.pkEmpresa = pkEmpresa;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getNif() {
+        return nif;
+    }
+
+    public void setNif(String nif) {
+        this.nif = nif;
+    }
+
+    public List<Cliente> getClienteList() {
+        return clienteList;
+    }
+
+    public void setClienteList(List<Cliente> clienteList) {
+        this.clienteList = clienteList;
+    }
+
+    public Localizacao getFkLocalizacao() {
+        return fkLocalizacao;
+    }
+
+    public void setFkLocalizacao(Localizacao fkLocalizacao) {
+        this.fkLocalizacao = fkLocalizacao;
+    }
 }

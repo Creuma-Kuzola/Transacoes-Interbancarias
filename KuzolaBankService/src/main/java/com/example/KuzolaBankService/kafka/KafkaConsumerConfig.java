@@ -1,7 +1,7 @@
-package com.example.TransferenciaService.kafka;
+package com.example.KuzolaBankService.kafka;
 
-import com.example.TransferenciaService.dto.TransferenciaDto;
-import com.example.TransferenciaService.utils.pojos.TransferenciaPOJO;
+
+import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;

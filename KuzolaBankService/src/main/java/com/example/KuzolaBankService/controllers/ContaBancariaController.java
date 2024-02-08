@@ -26,15 +26,16 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/ContaBancaria")
-public class ContaBancariaController extends BaseController {
-    
+public class ContaBancariaController extends BaseController
+{
+
     @Autowired
     ContaBancariaServiceImpl contaBancariServiceImpl;
-    
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllContaBancaria()
     {
-        
+
         List<ContaBancaria> lista = contaBancariServiceImpl.findAll();
         return this.ok("Contas Bancarias encontradas com sucesso!", lista);
     }
@@ -48,6 +49,17 @@ public class ContaBancariaController extends BaseController {
             return this.ok("Conta Bancaria encontrada com sucesso.", consulta.get());
         }
         return this.naoEncontrado("Conta Bancaria não encontrada", null);
+    }
+
+    @GetMapping("/{iban}")
+    public boolean findContaBancariaByIban(@PathVariable String iban)
+    {
+        ContaBancaria consulta = this.contaBancariServiceImpl.findContaBancaraByIban(iban);
+        if (consulta != null)
+        {
+            return true;
+        }
+        return false;
     }
 
     @PostMapping

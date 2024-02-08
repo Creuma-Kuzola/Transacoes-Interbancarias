@@ -38,19 +38,10 @@ public class AuthService implements UserDetailsService
         {
             throw new InvalidJwtException("Username already exists");
         }
-
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        
-        
-        
-
         User newUser = new User(data.login(), encryptedPassword, data.role(), data.fkCliente());
-        
-        
-        System.out.println(" login:  " +newUser.getLogin() + " role" + newUser.getRole().getValue() + "Cliente: " +newUser.getFkCliente().getPkCliente());
-
+        //System.out.println(" login:  " +newUser.getLogin() + " role" + newUser.getRole().getValue() + "Cliente: " +newUser.getFkCliente().getPkCliente());
         return repository.save(newUser);
-
     }
 //
 //    @Autowired

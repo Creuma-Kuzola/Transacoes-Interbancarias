@@ -60,4 +60,68 @@ public class Pessoa implements Serializable {
     @ManyToOne
     @JsonIgnore
     private Localizacao fkLocalizacao;
+
+    public Integer getPkPessoa() {
+        return pkPessoa;
+    }
+
+    public void setPkPessoa(Integer pkPessoa) {
+        this.pkPessoa = pkPessoa;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Date getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(Date dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public String getNumeroDoBi() {
+        return numeroDoBi;
+    }
+
+    public void setNumeroDoBi(String numeroDoBi) {
+        this.numeroDoBi = numeroDoBi;
+    }
+
+    public String getNif() {
+        return nif;
+    }
+
+    public void setNif(String nif) {
+        this.nif = nif;
+    }
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
+    }
+
+    public List<Cliente> getClienteList() {
+        return clienteList;
+    }
+
+    public void setClienteList(List<Cliente> clienteList) {
+        this.clienteList = clienteList;
+    }
+
+    public Localizacao getFkLocalizacao() {
+        return fkLocalizacao;
+    }
+
+    public void setFkLocalizacao(Localizacao fkLocalizacao) {
+        this.fkLocalizacao = fkLocalizacao;
+    }
 }
