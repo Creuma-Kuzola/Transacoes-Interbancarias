@@ -40,8 +40,14 @@ public class AuthService implements UserDetailsService
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+        
+        
+        
 
         User newUser = new User(data.login(), encryptedPassword, data.role());
+        
+        
+        System.out.println(" login:  " +newUser.getLogin() + " role" + newUser.getRole().getValue() + "Cliente: " +newUser.getFkCliente().getPkCliente());
 
         return repository.save(newUser);
 
