@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
  *
  * @author jussyleitecode
  */
+
+@Service
 public class KafkaTransferenciaProducer
 {
 
