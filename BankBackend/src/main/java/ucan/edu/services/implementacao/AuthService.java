@@ -44,7 +44,7 @@ public class AuthService implements UserDetailsService
         
         
 
-        User newUser = new User(data.login(), encryptedPassword, data.role());
+        User newUser = new User(data.login(), encryptedPassword, data.role(), data.fkCliente());
         
         
         System.out.println(" login:  " +newUser.getLogin() + " role" + newUser.getRole().getValue() + "Cliente: " +newUser.getFkCliente().getPkCliente());

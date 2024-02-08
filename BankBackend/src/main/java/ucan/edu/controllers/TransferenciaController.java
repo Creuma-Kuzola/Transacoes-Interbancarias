@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ucan.edu.kafka.KafkaTransferenciaProducer;
+import ucan.edu.utils.pojos.TransferenciaPOJO;
 
 /**
  *
@@ -30,8 +32,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransferenciaController extends BaseController
 {
 
-    @Autowired
-    TransferenciaServiceImpl transferenciaServiceImpl;
+    private final TransferenciaServiceImpl transferenciaServiceImpl;
+
+    private final KafkaTransferenciaProducer KafkaTransferenciaProducer;
+
+    public TransferenciaController(TransferenciaServiceImpl transferenciaServiceImpl, KafkaTransferenciaProducer KafkaTransferenciaProducer)
+    {
+        this.transferenciaServiceImpl = transferenciaServiceImpl;
+        this.KafkaTransferenciaProducer = KafkaTransferenciaProducer;
+    }
+
+    @PostMapping("/publishTransferencia")
+    public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
+    {
+        KafkaTransferenciaProducer.sendMessage(transferencia);
+        return ResponseEntity.ok("Transferencia envida com suceesso no topic");
+    }
 
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencia()

@@ -54,4 +54,6 @@ public class Transferencia implements Serializable {
     @OneToMany(mappedBy = "fkTransferencia")
     private List<TokenValidacao> tokenValidacaoList;
     
+    
+    
 }

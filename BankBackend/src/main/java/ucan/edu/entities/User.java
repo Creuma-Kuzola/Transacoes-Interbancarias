@@ -47,11 +47,12 @@ public class User implements UserDetails
     @ManyToOne
     private Cliente fkCliente;
 
-    public User(String login, String password, UserRole role)
+    public User(String login, String password, UserRole role, Cliente fkCliente)
     {
         this.login = login;
         this.password = password;
         this.role = role;
+        this.fkCliente = fkCliente;
     }
 
     @Override
