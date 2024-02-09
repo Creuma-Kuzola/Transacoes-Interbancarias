@@ -29,8 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/transferencia")
-public class TransferenciaController extends BaseController{
-    
+public class TransferenciaController extends BaseController
+{
+
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
 
@@ -39,8 +40,15 @@ public class TransferenciaController extends BaseController{
     @Autowired
     ContaBancariaServiceImpl contaBancariaServiceImpl;
 
-    public TransferenciaController(TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer) {
+    public TransferenciaController(TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer)
+    {
         this.transferenciaJsonKafkaProducer = transferenciaJsonKafkaProducer;
+    }
+
+    @GetMapping("/teste")
+    public String transferencia()
+    {
+        return "Fazer a transferencia";
     }
 
     @GetMapping
@@ -64,18 +72,19 @@ public class TransferenciaController extends BaseController{
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
-        System.out.println("Objecto transferencia"+ transferencia);
+        System.out.println("Objecto transferencia" + transferencia);
         TransferenciaDto transferenciaDto = new TransferenciaDto();
 
-       if (transferenciaServiceImpl.isContaBancariaValid(transferencia.getIbanDestinatario())) {
+        if (transferenciaServiceImpl.isContaBancariaValid(transferencia.getIbanDestinatario()))
+        {
 
-           transferenciaDto =  transferenciaServiceImpl.convertTransferenciaIntoTransferenciaDto(transferencia);
-           transferenciaJsonKafkaProducer.sendMessage(transferenciaDto.toString());
+            transferenciaDto = transferenciaServiceImpl.convertTransferenciaIntoTransferenciaDto(transferencia);
+            transferenciaJsonKafkaProducer.sendMessage(transferenciaDto.toString());
 
-           return this.created("TransferenciaDto enviada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
-       }
+            return this.created("TransferenciaDto enviada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
+        }
 
-       return this.naoEncontrado("ERRO: O IBAN é inválido", null);
+        return this.naoEncontrado("ERRO: O IBAN é inválido", null);
 
     }
 

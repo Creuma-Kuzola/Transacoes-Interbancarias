@@ -23,5 +23,9 @@ public interface ContaBancariaRepository extends JpaRepository<ContaBancaria, In
     public HashSet<BigInteger> findAllNumeroConta();
 
     public ContaBancaria findByIban(String iban);
+    
+    @Query("SELECT c FROM ContaBancaria c WHERE c.fkCliente.pkCliente =:cliente")
+    public ContaBancaria findByCliente(Integer cliente);
+            
 
 }

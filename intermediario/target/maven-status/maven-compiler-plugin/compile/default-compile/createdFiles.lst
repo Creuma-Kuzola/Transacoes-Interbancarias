@@ -1,0 +1,17 @@
+com/emis/intermediario/https/utils/ResponseBody.class
+com/emis/intermediario/entities/Banco.class
+com/emis/intermediario/services/implementacao/HistoricoTransferenciaServiceImpl.class
+com/emis/intermediario/repositories/BancoRepository.class
+com/emis/intermediario/services/BancoService.class
+com/emis/intermediario/controllers/BaseController.class
+com/emis/intermediario/controllers/BancoController.class
+com/emis/intermediario/services/implementacao/BancoServiceImpl.class
+com/emis/intermediario/services/UserService.class
+com/emis/intermediario/services/HistoricoTransferenciaService.class
+com/emis/intermediario/repositories/HistoricoTransferenciaRepository.class
+com/emis/intermediario/entities/User.class
+com/emis/intermediario/entities/HistoricoTransferencia.class
+com/emis/intermediario/https/utils/ResponseControllerUtils.class
+com/emis/intermediario/IntermediarioApplication.class
+com/emis/intermediario/repositories/UserRepository.class
+com/emis/intermediario/controllers/AuthController.class

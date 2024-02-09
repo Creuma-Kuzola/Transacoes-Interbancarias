@@ -29,14 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/empresa")
 public class EmpresaController extends BaseController
 {
-
     @Autowired
     EmpresaServiceImpl empresaServiceImpl;
-
     @GetMapping
     public ResponseEntity<ResponseBody> findAllEmpresa()
     {
-
         List<Empresa> lista = empresaServiceImpl.findAll();
         return this.ok("Empresa encontrada com sucesso!", lista);
     }

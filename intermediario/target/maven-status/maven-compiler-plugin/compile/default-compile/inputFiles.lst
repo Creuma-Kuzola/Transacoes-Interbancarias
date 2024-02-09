@@ -1,0 +1,17 @@
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/services/implementacao/BancoServiceImpl.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/entities/Banco.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/entities/User.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/services/BancoService.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/controllers/BancoController.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/https/utils/ResponseControllerUtils.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/repositories/UserRepository.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/services/HistoricoTransferenciaService.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/services/UserService.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/IntermediarioApplication.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/services/implementacao/HistoricoTransferenciaServiceImpl.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/entities/HistoricoTransferencia.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/repositories/BancoRepository.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/repositories/HistoricoTransferenciaRepository.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/https/utils/ResponseBody.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/controllers/BaseController.java
+/home/jussyleitecode/Documents/SDP2 Exame/Transacoes-Interbancarias/intermediario/src/main/java/com/emis/intermediario/controllers/AuthController.java

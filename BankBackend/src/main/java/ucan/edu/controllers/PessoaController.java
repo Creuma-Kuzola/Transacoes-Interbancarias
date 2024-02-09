@@ -36,7 +36,6 @@ public class PessoaController extends BaseController {
     @GetMapping
     public ResponseEntity<ResponseBody> findAllPessoa()
     {
-        
         List<Pessoa> lista = pessoaServiceImpl.findAll();
         return this.ok("Pessoas encontradas com sucesso!", lista);
     }

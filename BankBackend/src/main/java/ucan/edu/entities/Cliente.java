@@ -52,9 +52,43 @@ public class Cliente implements Serializable {
     @JsonIgnore
     private List<Conta> contaList;
 
-    
-    
-    
+    public Integer getPkCliente() {
+        return pkCliente;
+    }
 
-    
+    public void setPkCliente(Integer pkCliente) {
+        this.pkCliente = pkCliente;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Empresa getFkEmpresa() {
+        return fkEmpresa;
+    }
+
+    public void setFkEmpresa(Empresa fkEmpresa) {
+        this.fkEmpresa = fkEmpresa;
+    }
+
+    public Pessoa getFkPessoa() {
+        return fkPessoa;
+    }
+
+    public void setFkPessoa(Pessoa fkPessoa) {
+        this.fkPessoa = fkPessoa;
+    }
 }
