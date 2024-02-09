@@ -32,6 +32,7 @@ public class AuthConfig
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/session").permitAll()
                 .requestMatchers(HttpMethod.GET, "/ContaBancaria").permitAll()
                 .requestMatchers(HttpMethod.POST, "/transferencia").hasRole("CLIENTE")
                 .requestMatchers(HttpMethod.GET, "/transferencia").hasRole("CLIENTE")

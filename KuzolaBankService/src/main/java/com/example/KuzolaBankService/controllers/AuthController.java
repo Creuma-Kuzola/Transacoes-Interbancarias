@@ -1,6 +1,7 @@
 package com.example.KuzolaBankService.controllers;
 
 import com.example.KuzolaBankService.config.auth.TokenProvider;
+import com.example.KuzolaBankService.config.component.UserInfo;
 import com.example.KuzolaBankService.dto.JwtDto;
 import com.example.KuzolaBankService.dto.SignInDto;
 import com.example.KuzolaBankService.dto.SignUpDto;
@@ -25,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController
@@ -36,6 +40,9 @@ public class AuthController
     private AuthService service;
     @Autowired
     private TokenProvider tokenService;
+
+    @Autowired
+    UserInfo userInfo;
 
     @Autowired
     ContaBancariaRepository contaBancarioRepository;
@@ -58,18 +65,31 @@ public class AuthController
         var authUser = authenticationManager.authenticate(usernamePassword);
 
         var accessToken = tokenService.generateAccessToken((User) authUser.getPrincipal());
-
         JwtDto jwtdto = null;
-        if (accessToken != " ")
+        if (accessToken != " " )
         {
             User user = (User) authUser.getPrincipal();
             Long clienteId = user.getFkCliente().getPkCliente();
 
             ContaBancaria contaBancaria = contaBancarioRepository.findByCliente(Math.toIntExact(clienteId));
-
+            String username = ((User) authUser.getPrincipal()).getUsername();
+            saveUserInfoTemporary(contaBancaria, username);
             jwtdto = new JwtDto(accessToken, contaBancaria.getIban(), contaBancaria.getNumeroDeConta());
         }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(jwtdto);
+    }
+
+    private void saveUserInfoTemporary(ContaBancaria contaBancaria, String username) {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("username", username);
+        map.put("iban",contaBancaria.getIban());
+        map.put("accountNumber","" +contaBancaria.getNumeroDeConta());
+        map.put("pkCliente",""+contaBancaria.getFkCliente().getPkCliente());
+        userInfo.setUserInfo(map);
+
+        System.out.println("IBAN:"+userInfo.getUserInfo().get("iban"));
     }
 
 }
