@@ -3,7 +3,6 @@ package com.example.KuzolaBankService;
 import com.example.KuzolaBankService.utils.ContaBancariaDetails;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import java.math.BigInteger;
 import java.util.HashSet;
 
