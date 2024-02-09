@@ -29,4 +29,7 @@ public interface ContaBancariaRepository extends JpaRepository<ContaBancaria, In
     
     @Query("SELECT c FROM ContaBancaria c WHERE c.iban =:iban AND c.status =:status")
     public ContaBancaria isContaBancariaByIbanActived(@Param("iban") String iban, @Param("status") StatusContaBancaria status);
+
+    @Query("SELECT c FROM ContaBancaria c WHERE c.numeroDeConta = :accountNumber")
+    public ContaBancaria findSaldoContaBancariaByNumeroDeConta(@Param("accountNumber") Integer accountNumber);
 }

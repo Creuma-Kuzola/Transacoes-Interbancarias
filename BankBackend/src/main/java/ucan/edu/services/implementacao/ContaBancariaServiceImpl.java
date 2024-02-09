@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import ucan.edu.dtos.SaldoContaDTO;
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
 import org.springframework.stereotype.Service;
@@ -61,7 +63,6 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
     {
         Optional<ContaBancaria> contaBancariaFound = contaBancariaRepository
                 .findById(contaBancaria.getPkContaBancaria());
-
         if (contaBancariaFound.isPresent())
         {
             contaBancaria.setStatus(StatusContaBancaria.ACTIVO);
@@ -69,6 +70,28 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
             return true;
         }
         return false;
+    }
+
+    public SaldoContaDTO findSaldoContaByNumeroDeConta(Integer numberAccount)
+    {
+        ContaBancaria conta  = contaBancariaRepository.findSaldoContaBancariaByNumeroDeConta(numberAccount);
+
+        if (conta == null)
+        {
+            return null;
+        }
+        else
+        {
+            SaldoContaDTO saldoContaDTO = new SaldoContaDTO(conta.getNumeroDeConta(),
+                    conta.getSaldoDisponivel(), conta.getSaldoContabilistico(),
+                    conta.getFkCliente().getFkPessoa() == null
+                            ?
+                            conta.getFkCliente().getFkEmpresa().getNome()
+                            :
+                            conta.getFkCliente().getFkPessoa().getNome());
+            return saldoContaDTO;
+        }
+
     }
 
     public ContaBancaria depositeAmountOfMoney(ContaBancaria contaBancaria, Integer quantia)

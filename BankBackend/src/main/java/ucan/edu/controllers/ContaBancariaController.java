@@ -4,6 +4,7 @@
  */
 package ucan.edu.controllers;
 
+import ucan.edu.dtos.SaldoContaDTO;
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
 import ucan.edu.services.implementacao.*;
@@ -30,18 +31,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/ContaBancaria")
 public class ContaBancariaController extends BaseController
 {
-
     @Autowired
     ContaBancariaServiceImpl contaBancariServiceImpl;
-
     @GetMapping
     public ResponseEntity<ResponseBody> findAllContaBancaria()
     {
-
         List<ContaBancaria> lista = contaBancariServiceImpl.findAll();
         return this.ok("Contas Bancarias encontradas com sucesso!", lista);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<ResponseBody> findContaBancariaByID(@PathVariable Integer id)
     {
@@ -95,6 +92,25 @@ public class ContaBancariaController extends BaseController
     {
         List<ContaBancaria> contaBancarias = contaBancariServiceImpl.transferMoneyToAccountSameBank(contaBancaria, iban, montante);
         return this.ok("Transferencia feita com sucesso!", contaBancarias);
+    }
+
+
+    @GetMapping("/saldo/{numeberAccount}")
+    public ResponseEntity<ResponseBody> findSaldoThrouhBanco(@PathVariable("numeberAccount") Integer numeberAccount)
+    {
+        SaldoContaDTO saldoContaDTO = contaBancariServiceImpl.findSaldoContaByNumeroDeConta(numeberAccount);
+        return  saldoContaDTO == null
+                ? this.naoEncontrado("Numero de conta inexsistente",this)
+                : this.ok("Saldo da conta: " +numeberAccount+ " ", saldoContaDTO);
+    }
+
+    @GetMapping("/saldoEmis/{numeberAccount}")
+    public ResponseEntity<ResponseBody> findSaldoThrouhEmisBanco(@PathVariable("numeberAccount") Integer numeberAccount)
+    {
+        SaldoContaDTO saldoContaDTO = contaBancariServiceImpl.findSaldoContaByNumeroDeConta(numeberAccount);
+        return  saldoContaDTO == null
+                ? this.naoEncontrado("Numero de conta inexsistente",this)
+                : this.ok("Saldo da conta: " +numeberAccount+ " ", saldoContaDTO);
     }
 
 }

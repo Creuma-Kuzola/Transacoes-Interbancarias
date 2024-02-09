@@ -39,7 +39,6 @@ public class ClienteController extends BaseController
     {
 
     }
-
     @GetMapping
     public ResponseEntity<ResponseBody> findAllClientes()
     {
