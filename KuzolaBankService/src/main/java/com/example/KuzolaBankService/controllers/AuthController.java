@@ -63,9 +63,9 @@ public class AuthController
         if (accessToken != " ")
         {
             User user = (User) authUser.getPrincipal();
-            Integer clienteId = user.getFkCliente().getPkCliente();
+            Long clienteId = user.getFkCliente().getPkCliente();
 
-            ContaBancaria contaBancaria = contaBancarioRepository.findByCliente(clienteId);
+            ContaBancaria contaBancaria = contaBancarioRepository.findByCliente(Math.toIntExact(clienteId));
 
             jwtdto = new JwtDto(accessToken, contaBancaria.getIban(), contaBancaria.getNumeroDeConta());
         }
