@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +43,7 @@ public class Conta implements UserDetails
     private Integer pkConta;
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
+    @ColumnDefault("")
     private String login;
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
@@ -49,6 +51,10 @@ public class Conta implements UserDetails
     @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente")
     @ManyToOne
     private Cliente fkCliente;
+
+    @JoinColumn(name = "fk_conta_tipo", referencedColumnName = "pk_conta_tipo")
+    @ManyToOne
+    private ContaTipo fkContaTipo;
 
     @JoinColumn(name = "role", referencedColumnName = "role")
     @Enumerated(EnumType.STRING)
@@ -101,4 +107,11 @@ public class Conta implements UserDetails
         return true;
     }
 
+    public ContaTipo getFkContaTipo() {
+        return fkContaTipo;
+    }
+
+    public void setFkContaTipo(ContaTipo fkContaTipo) {
+        this.fkContaTipo = fkContaTipo;
+    }
 }

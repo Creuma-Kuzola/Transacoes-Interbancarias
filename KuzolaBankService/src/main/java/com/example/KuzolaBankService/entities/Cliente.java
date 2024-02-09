@@ -27,8 +27,6 @@ import org.aspectj.lang.annotation.Around;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-
-
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;

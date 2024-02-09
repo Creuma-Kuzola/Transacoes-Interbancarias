@@ -5,6 +5,7 @@
 package ucan.edu.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ucan.edu.entities.*;
 
 
@@ -12,6 +13,8 @@ import ucan.edu.entities.*;
  *
  * @author creuma
  */
+
+@Repository
 public interface HistoricoTransferenciaEmisRepository extends JpaRepository<HistoricoTransferenciaEmis, Integer> {
     
 }

@@ -19,7 +19,6 @@ public class KafkaConsumerConfig
 
     private TransferenciaPOJO transferenciaPOJO;
 
-    @Autowired
     private RestTemplate restTemplate;
 
     public KafkaConsumerConfig()
