@@ -53,5 +53,44 @@ public class Cliente implements Serializable {
     @OneToMany(mappedBy = "fkCliente")
     @JsonIgnore
     private List<User> usersList;
-    
+
+    public Long getPkCliente() {
+        return pkCliente;
+    }
+
+    public void setPkCliente(Long pkCliente) {
+        this.pkCliente = pkCliente;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Empresa getFkEmpresa() {
+        return fkEmpresa;
+    }
+
+    public void setFkEmpresa(Empresa fkEmpresa) {
+        this.fkEmpresa = fkEmpresa;
+    }
+
+    public Pessoa getFkPessoa() {
+        return fkPessoa;
+    }
+
+    public void setFkPessoa(Pessoa fkPessoa) {
+        this.fkPessoa = fkPessoa;
+    }
 }

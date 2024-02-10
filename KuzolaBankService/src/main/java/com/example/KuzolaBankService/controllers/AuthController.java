@@ -53,6 +53,7 @@ public class AuthController
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody @Valid SignUpDto data)
     {
+        //System.out.println("AuthController.pkFuncionario:"+data.fkFuncionario().getPkFuncionario());
         service.signUp(data);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -66,7 +67,7 @@ public class AuthController
 
         var accessToken = tokenService.generateAccessToken((User) authUser.getPrincipal());
         JwtDto jwtdto = null;
-        if (accessToken != " " )
+        if (accessToken != " " && ((User) authUser.getPrincipal()).getRole().getValue().equals("admin") == false)
         {
             User user = (User) authUser.getPrincipal();
             Long clienteId = user.getFkCliente().getPkCliente();
@@ -76,7 +77,9 @@ public class AuthController
             saveUserInfoTemporary(contaBancaria, username);
             jwtdto = new JwtDto(accessToken, contaBancaria.getIban(), contaBancaria.getNumeroDeConta());
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+       else {
+            jwtdto = new JwtDto(accessToken, "", null);
+        }
         return ResponseEntity.ok(jwtdto);
     }
 

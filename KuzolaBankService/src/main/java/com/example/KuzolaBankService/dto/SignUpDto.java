@@ -1,5 +1,6 @@
 package com.example.KuzolaBankService.dto;
 
+import com.example.KuzolaBankService.entities.Funcionario;
 import com.example.KuzolaBankService.enums.UserRole;
 import com.example.KuzolaBankService.entities.Cliente;
 
@@ -9,7 +10,9 @@ public record SignUpDto(
         String login,
         String password,
         UserRole role,
-        Cliente fkCliente)
+        Cliente fkCliente,
+        Funcionario fkFuncionario
+        )
         {
 
     public String getLogin()
@@ -31,7 +34,9 @@ public record SignUpDto(
     {
         return fkCliente;
     }
-    
-    
 
-}
+            @Override
+            public Funcionario fkFuncionario() {
+                return fkFuncionario;
+            }
+        }

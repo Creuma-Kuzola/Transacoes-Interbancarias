@@ -61,9 +61,14 @@ public class User implements UserDetails
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente")
-    @ManyToOne
+    @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente", nullable = true)
+    @ManyToOne(optional = true)
     private Cliente fkCliente;
+
+    @JoinColumn(name = "fk_funcionario", referencedColumnName = "pk_funcionario", nullable = true)
+    @ManyToOne(optional = true)
+    private Funcionario fkFuncionario;
+
 
     public User(String login, String password, UserRole role, Cliente fkCliente)
     {
@@ -71,7 +76,63 @@ public class User implements UserDetails
         this.password = password;
         this.role = role;
         this.fkCliente = fkCliente;
-        
+    }
+
+    public User(String login, String password, UserRole role, Funcionario fkFuncionario) {
+        this.login = login;
+        this.password = password;
+        this.role = role;
+        this.fkFuncionario = fkFuncionario;
+        this.fkCliente = fkCliente;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public Cliente getFkCliente() {
+        return fkCliente;
+    }
+
+    public void setFkCliente(Cliente fkCliente) {
+        this.fkCliente = fkCliente;
+    }
+
+    public Funcionario getFkFuncionario() {
+        return fkFuncionario;
+    }
+
+    public void setFkFuncionario(Funcionario fkFuncionario) {
+        this.fkFuncionario = fkFuncionario;
     }
 
     @Override

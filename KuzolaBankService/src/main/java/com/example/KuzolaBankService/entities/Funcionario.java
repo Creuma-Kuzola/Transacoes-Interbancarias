@@ -25,7 +25,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Funcionario implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,5 +41,35 @@ public class Funcionario implements Serializable {
     @ManyToOne
     private Pessoa fkPessoa;
 
-    
+    public Integer getPkFuncionario() {
+        return pkFuncionario;
+    }
+
+    public void setPkFuncionario(Integer pkFuncionario) {
+        this.pkFuncionario = pkFuncionario;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNumeroTelefone() {
+        return numeroTelefone;
+    }
+
+    public void setNumeroTelefone(String numeroTelefone) {
+        this.numeroTelefone = numeroTelefone;
+    }
+
+    public Pessoa getFkPessoa() {
+        return fkPessoa;
+    }
+
+    public void setFkPessoa(Pessoa fkPessoa) {
+        this.fkPessoa = fkPessoa;
+    }
 }

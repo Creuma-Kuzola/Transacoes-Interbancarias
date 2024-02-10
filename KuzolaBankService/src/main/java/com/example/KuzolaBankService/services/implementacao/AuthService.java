@@ -1,6 +1,7 @@
 package com.example.KuzolaBankService.services.implementacao;
 
 import com.example.KuzolaBankService.dto.SignUpDto;
+import com.example.KuzolaBankService.entities.Cliente;
 import com.example.KuzolaBankService.entities.User;
 import com.example.KuzolaBankService.exceptions.InvalidJwtException;
 import com.example.KuzolaBankService.repositories.UserRepository;
@@ -31,22 +32,23 @@ public class AuthService implements UserDetailsService
 
     public UserDetails signUp(SignUpDto data) throws InvalidJwtException
     {
-
-        System.out.println("FROM DTO: login" + data.login() + "Pass" + data.getPassword() + "Role " + data.role() + "Cliente " + data.fkCliente().getPkCliente());
-
-        if (repository.findByLogin(data.login()) != null)
+       // System.out.println("FROM DTO: login" + data.login() + "Pass" + data.getPassword() + "Role " + data.role() + "Cliente " + "Funcionario" + data.fkFuncionario().getPkFuncionario());
+        if (repository.findByLogin(data.getLogin()) != null)
         {
             throw new InvalidJwtException("Username already exists");
         }
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-
-        User newUser = new User(data.login(), encryptedPassword, data.role(), data.fkCliente());
-
-        System.out.println(" login:  " + newUser.getUsername() + " role" + newUser.getAuthorities() + "Cliente: " + newUser.getFkCliente().getPkCliente());
-
+        User newUser = null;
+        if (data.role().getValue().equals("admin"))
+        {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+            newUser = new User(data.login(), encryptedPassword, data.role(), data.fkFuncionario());
+        }
+        else if (data.role().getValue().equals("cliente"))
+        {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+            newUser = new User(data.login(), encryptedPassword, data.role(), data.fkCliente());
+        }
         return repository.save(newUser);
-
     }
 
 }
