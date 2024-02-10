@@ -25,12 +25,10 @@ import java.util.HashSet;
 public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Integer>
         implements ContaBancariaService
 {
-
     @Autowired
     ContaBancariaRepository contaBancariaRepository;
     private HashSet<BigInteger> listaNumerosDeConta = new HashSet<>();
     private DetalhesBanco identificadorDoBanco = DetalhesBanco.IDENTIFICADOR_DO_BANCO;
-
     ContaBancariaDetails contaBancariaDetails = new ContaBancariaDetails();
 
     public void getAllNumerosDeConta(HashSet<BigInteger> listaNumerosDeConta)
@@ -59,12 +57,20 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     public boolean existsIban(String iban)
     {
-
         ContaBancaria contaBancaria = new ContaBancaria();
         contaBancaria = contaBancariaRepository.findByIban(iban);
 
         return contaBancaria != null;
+    }
 
+    public ContaBancaria isAccountStatus(BigInteger numberAccount,String status)
+    {
+        return contaBancariaRepository.findContaBancariaByStatus(numberAccount,status);
+    }
+
+    public ContaBancaria isAccountStatus(String iban, String status)
+    {
+        return contaBancariaRepository.findContaBancariaByStatus(iban,status);
     }
 
     public ContaBancaria findContaBancaraByIban(String iban)
