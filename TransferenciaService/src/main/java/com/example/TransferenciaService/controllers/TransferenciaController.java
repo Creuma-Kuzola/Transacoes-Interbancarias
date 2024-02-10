@@ -6,9 +6,14 @@ package com.example.TransferenciaService.controllers;
 
 import com.example.TransferenciaService.entities.Transferencia;
 import com.example.TransferenciaService.https.utils.ResponseBody;
+import com.example.TransferenciaService.kafka.KafkaTransferenciaProducer;
 import com.example.TransferenciaService.services.implementacao.TransferenciaServiceImpl;
+
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+
+import com.example.TransferenciaService.utils.pojos.TransferenciaPOJO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +36,9 @@ public class TransferenciaController extends BaseController {
     
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
-    
+
+    @Autowired
+    KafkaTransferenciaProducer kafkaTransferenciaProducer;
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencias()
     {
@@ -51,6 +58,30 @@ public class TransferenciaController extends BaseController {
         return this.naoEncontrado("TransferenciaDto não encontrada", null);
     }
 
+    public String criarStrToJson(TransferenciaPOJO transferenciaPOJO)
+    {
+        String str = "{\n"
+                + "  \"pkTransferencia\": " + transferenciaPOJO.getPkTransferencia() + ",\n"
+                + "   \"descricao\": \"" + transferenciaPOJO.getDescricao() + "\",\n"
+                + "    \"montante\": " + transferenciaPOJO.getMontante() + ",\n"
+                + "    \"ibanDestinatario\": \"" + transferenciaPOJO.getIbanDestinatario() + "\",\n"
+                + "    \"datahora\":\"" + new SimpleDateFormat("yyyy-MM-dd").format(transferenciaPOJO.getDatahora()) + "\",\n"
+                + "    \"fkContaBancariaOrigem\": " +transferenciaPOJO.getFkContaBancariaOrigem() + ",\n"
+                + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
+                + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
+                + "    \"codigoTransferencia\": " + transferenciaPOJO.getCodigoTransferencia() + "\n"
+                + "}";
+        return str;
+    }
+
+    // /transferencia/publishTransferencia
+    @PostMapping("/publishTransferencia")
+    public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
+    {
+        String data = this.criarStrToJson(transferencia);
+        kafkaTransferenciaProducer.sendMessage(data);
+        return ResponseEntity.ok("Transferencia envida com sucesso no topic");
+    }
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {

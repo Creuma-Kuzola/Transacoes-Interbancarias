@@ -14,13 +14,9 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class KafkaConsumerConfig
 {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerConfig.class);
-
     private TransferenciaPOJO transferenciaPOJO;
-
     private RestTemplate restTemplate;
-
     public KafkaConsumerConfig()
     {
         transferenciaPOJO = new TransferenciaPOJO();
@@ -32,7 +28,7 @@ public class KafkaConsumerConfig
         LOGGER.info(String.format("Message received -> %s", message.toString()));
     }
 
-    @KafkaListener(topics = "bancowakanda", groupId = "myGroup")
+    @KafkaListener(topics = "transferencia", groupId = "myGroup")
     public void consumerMessage(String message)
     {
         GsonBuilder builder = new GsonBuilder();

@@ -5,6 +5,8 @@
 package ucan.edu.controllers;
 
 import java.text.SimpleDateFormat;
+
+import ucan.edu.config.component.UserInfo;
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
 import ucan.edu.services.implementacao.*;
@@ -34,6 +36,8 @@ public class TransferenciaController extends BaseController
 {
 
     private final TransferenciaServiceImpl transferenciaServiceImpl;
+      @Autowired
+      private UserInfo userInfo;
 
     private final KafkaTransferenciaProducer KafkaTransferenciaProducer;
 
@@ -45,18 +49,19 @@ public class TransferenciaController extends BaseController
 
     public String criarStrToJson(TransferenciaPOJO transferenciaPOJO)
     {
+
+        System.out.println("Conta Origem: "+ userInfo.getUserInfo().get("accountNumber"));
         String str = "{\n"
                 + "  \"pkTransferencia\": " + transferenciaPOJO.getPkTransferencia() + ",\n"
                 + "   \"descricao\": \"" + transferenciaPOJO.getDescricao() + "\",\n"
                 + "    \"montante\": " + transferenciaPOJO.getMontante() + ",\n"
                 + "    \"ibanDestinatario\": \"" + transferenciaPOJO.getIbanDestinatario() + "\",\n"
                 + "    \"datahora\":\"" + new SimpleDateFormat("yyyy-MM-dd").format(transferenciaPOJO.getDatahora()) + "\",\n"
-                + "    \"fkContaBancariaOrigem\": " + transferenciaPOJO.getFkContaBancariaOrigem() + ",\n"
+                + "    \"fkContaBancariaOrigem\": " +userInfo.getUserInfo().get("accountNumber") + ",\n"
                 + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
                 + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
                 + "    \"codigoTransferencia\": " + transferenciaPOJO.getCodigoTransferencia() + "\n"
                 + "}";
-
         return str;
     }
 

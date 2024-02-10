@@ -16,9 +16,7 @@ public class KafkaConsumerConfig
 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerConfig.class);
-
     private TransferenciaPOJO transferenciaPOJO;
-
     @Autowired
     private RestTemplate restTemplate;
 
@@ -32,7 +30,6 @@ public class KafkaConsumerConfig
     {
         LOGGER.info(String.format("Message received -> %s", message.toString()));
     }
-
     @KafkaListener(topics = "bancowakanda", groupId = "myGroup")
     public void consumerMessage(String message)
     {
@@ -44,6 +41,10 @@ public class KafkaConsumerConfig
         TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
         System.out.println("Descricao " + obj.getDescricao());
         transferenciaPOJO = obj;
+
+        String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
+        System.out.println("Resposta: -> to another bank kusola:-> " +response);
+
     }
 
     public TransferenciaPOJO getTransferenciaPOJO()

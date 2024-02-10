@@ -31,15 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/transferencia")
 public class TransferenciaController extends BaseController
 {
-
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
-
     TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer;
-
     @Autowired
     ContaBancariaServiceImpl contaBancariaServiceImpl;
-
     public TransferenciaController(TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer)
     {
         this.transferenciaJsonKafkaProducer = transferenciaJsonKafkaProducer;
@@ -74,18 +70,13 @@ public class TransferenciaController extends BaseController
     {
         System.out.println("Objecto transferencia" + transferencia);
         TransferenciaDto transferenciaDto = new TransferenciaDto();
-
         if (transferenciaServiceImpl.isContaBancariaValid(transferencia.getIbanDestinatario()))
         {
-
             transferenciaDto = transferenciaServiceImpl.convertTransferenciaIntoTransferenciaDto(transferencia);
             transferenciaJsonKafkaProducer.sendMessage(transferenciaDto.toString());
-
             return this.created("TransferenciaDto enviada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
         }
-
         return this.naoEncontrado("ERRO: O IBAN é inválido", null);
-
     }
 
     @DeleteMapping("/{id}")

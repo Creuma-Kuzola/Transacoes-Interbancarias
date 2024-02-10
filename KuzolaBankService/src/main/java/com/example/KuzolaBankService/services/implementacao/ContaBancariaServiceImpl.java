@@ -35,9 +35,7 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     public void getAllNumerosDeConta(HashSet<BigInteger> listaNumerosDeConta)
     {
-
         listaNumerosDeConta = contaBancariaRepository.findAllNumeroConta();
-
     }
 
     @Override
@@ -57,7 +55,6 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         contaBancaria.setDataCriacao(data);
 
         return contaBancaria;
-
     }
 
     public boolean existsIban(String iban)

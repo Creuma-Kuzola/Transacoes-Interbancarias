@@ -32,4 +32,7 @@ public interface ContaBancariaRepository extends JpaRepository<ContaBancaria, In
 
     @Query("SELECT c FROM ContaBancaria c WHERE c.numeroDeConta = :accountNumber")
     public ContaBancaria findSaldoContaBancariaByNumeroDeConta(@Param("accountNumber") Integer accountNumber);
+
+    @Query("SELECT c FROM ContaBancaria c WHERE c.fkCliente.pkCliente =:cliente")
+    public ContaBancaria findByCliente(Integer cliente);
 }
