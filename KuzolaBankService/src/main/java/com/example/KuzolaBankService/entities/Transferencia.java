@@ -4,11 +4,9 @@
  */
 package com.example.KuzolaBankService.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -55,8 +53,5 @@ public class Transferencia implements Serializable {
     @JoinColumn(name = "fk_conta_bancaria_origem", referencedColumnName = "pk_conta_bancaria")
     @ManyToOne
     private ContaBancaria fkContaBancariaOrigem;
-    @OneToMany(mappedBy = "fkTransferencia")
-    @JsonIgnore
-    private List<TokenValidacao> tokenValidacaoList;
     
 }

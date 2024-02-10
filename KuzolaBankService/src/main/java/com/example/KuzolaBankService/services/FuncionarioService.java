@@ -8,6 +8,6 @@ package com.example.KuzolaBankService.services;
  *
  * @author creuma
  */
-public interface ContaTipoService<T,K> {
+public interface FuncionarioService<T,K> {
     
 }

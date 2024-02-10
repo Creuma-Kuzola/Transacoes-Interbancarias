@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.aspectj.lang.annotation.Around;
 
 /**
  *
@@ -27,6 +26,7 @@ import org.aspectj.lang.annotation.Around;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,6 +52,6 @@ public class Cliente implements Serializable {
     private List<ContaBancaria> contaBancariaList;
     @OneToMany(mappedBy = "fkCliente")
     @JsonIgnore
-    private List<Conta> contaList;
+    private List<User> usersList;
     
 }

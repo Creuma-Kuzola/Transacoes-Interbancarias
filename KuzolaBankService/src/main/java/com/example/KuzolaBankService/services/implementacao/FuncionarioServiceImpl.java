@@ -4,15 +4,15 @@
  */
 package com.example.KuzolaBankService.services.implementacao;
 
-import com.example.KuzolaBankService.services.ContaTipoService;
+import com.example.KuzolaBankService.entities.Funcionario;
+import com.example.KuzolaBankService.services.FuncionarioService;
 import org.springframework.stereotype.Service;
-import com.example.KuzolaBankService.entities.ContaTipo;
 
 /**
  *
  * @author creuma
  */
 @Service
-public class ContaTipoServiceImpl extends AbstractService<ContaTipo, Integer> implements ContaTipoService {
+public class FuncionarioServiceImpl extends AbstractService<Funcionario, Integer> implements FuncionarioService{
     
 }

@@ -4,14 +4,15 @@
  */
 package com.example.KuzolaBankService.repositories;
 
-import com.example.KuzolaBankService.entities.TokenValidacao;
+import com.example.KuzolaBankService.entities.Funcionario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 /**
  *
  * @author creuma
  */
 @Repository
-public interface TokenValidacaoRepository extends JpaRepository<TokenValidacao, Integer> {
+public interface FuncionarioRepository extends JpaRepository<Funcionario, Integer> {
     
 }

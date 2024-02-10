@@ -17,31 +17,30 @@ import lombok.ToString;
  * @author creuma
  */
 @Entity
-@Table(name = "token_validacao", catalog = "kuzola_bank", schema = "public")
+@Table(catalog = "kuzola_bank", schema = "public")
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenValidacao implements Serializable {
+public class Funcionario implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "pk_token_validacao", nullable = false)
-    private Integer pkTokenValidacao;
+    @Column(name = "pk_funcionario", nullable = false)
+    private Integer pkFuncionario;
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
-    private String designacao;
-    @Column(name = "codigo_validacao")
-    private Integer codigoValidacao;
-    @JoinColumn(name = "fk_historico_transferencia_emis", referencedColumnName = "pk_historico_transferencia_emis")
+    private String email;
+    @Basic(optional = false)
+    @Column(name = "numero_telefone", nullable = false, length = 2147483647)
+    private String numeroTelefone;
+    @JoinColumn(name = "fk_pessoa", referencedColumnName = "pk_pessoa")
     @ManyToOne
-    private HistoricoTransferenciaEmis fkHistoricoTransferenciaEmis;
-    @JoinColumn(name = "fk_transferencia", referencedColumnName = "pk_transferencia")
-    @ManyToOne
-    private Transferencia fkTransferencia;
+    private Pessoa fkPessoa;
+
     
 }
