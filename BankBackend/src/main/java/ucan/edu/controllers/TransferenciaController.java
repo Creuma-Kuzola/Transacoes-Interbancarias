@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ucan.edu.kafka.KafkaTransferenciaProducer;
+import ucan.edu.utils.jsonUtils.CustomJsonPojos;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
 
 /**
@@ -47,28 +48,13 @@ public class TransferenciaController extends BaseController
         this.KafkaTransferenciaProducer = KafkaTransferenciaProducer;
     }
 
-    public String criarStrToJson(TransferenciaPOJO transferenciaPOJO)
-    {
 
-        System.out.println("Conta Origem: "+ userInfo.getUserInfo().get("accountNumber"));
-        String str = "{\n"
-                + "  \"pkTransferencia\": " + transferenciaPOJO.getPkTransferencia() + ",\n"
-                + "   \"descricao\": \"" + transferenciaPOJO.getDescricao() + "\",\n"
-                + "    \"montante\": " + transferenciaPOJO.getMontante() + ",\n"
-                + "    \"ibanDestinatario\": \"" + transferenciaPOJO.getIbanDestinatario() + "\",\n"
-                + "    \"datahora\":\"" + new SimpleDateFormat("yyyy-MM-dd").format(transferenciaPOJO.getDatahora()) + "\",\n"
-                + "    \"fkContaBancariaOrigem\": " +userInfo.getUserInfo().get("accountNumber") + ",\n"
-                + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
-                + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
-                + "    \"codigoTransferencia\": " + transferenciaPOJO.getCodigoTransferencia() + "\n"
-                + "}";
-        return str;
-    }
 
     @PostMapping("/publishTransferencia")
     public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
     {
-        String data = this.criarStrToJson(transferencia);
+        transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
+        String data = CustomJsonPojos.criarStrToJson(transferencia);
         KafkaTransferenciaProducer.sendMessage(data);
         return ResponseEntity.ok("Transferencia envida com suceesso no topic");
     }

@@ -47,6 +47,23 @@ public class KafkaConsumerConfig
 
     }
 
+    @KafkaListener(topics = "transfer-kuzolabank", groupId = "kuzolaGroup")
+    public void consumerMessageKuzola(String message)
+    {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson gson = builder.create();
+
+        LOGGER.info(String.format("Message received -> %s", message.toString()));
+        //TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
+        //System.out.println("Descricao " + obj.getDescricao());
+        //transferenciaPOJO = obj;
+
+        //String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
+        //System.out.println("Resposta: -> to another bank kusola:-> " +response);
+
+    }
+
     public TransferenciaPOJO getTransferenciaPOJO()
     {
         return transferenciaPOJO;

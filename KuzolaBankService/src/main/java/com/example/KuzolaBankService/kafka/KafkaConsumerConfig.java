@@ -4,6 +4,7 @@ package com.example.KuzolaBankService.kafka;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
+import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ public class KafkaConsumerConfig
     private RestTemplate restTemplate;
     @Autowired
     private ContaBancariaServiceImpl contaBancariServiceImpl;
+
     public KafkaConsumerConfig()
     {
         transferenciaPOJO = new TransferenciaPOJO();
@@ -47,11 +49,18 @@ public class KafkaConsumerConfig
        ContaBancaria isActiva = contaBancariServiceImpl.isAccountStatus(obj.getIbanDestinatario(), "Activo");
        if (isValidIban && isActiva != null)
        {
-           System.out.println(" Account available to receive transfer money!");
+           TransferenciaResponse transferenciaResponse = new TransferenciaResponse();
+           transferenciaResponse.setDescricao("Conta disponivel");
+           transferenciaResponse.setStatus(true);
+           String availble =  restTemplate.postForObject("http://localhost:8081//transferencia/response", transferenciaResponse,String.class);
+           System.out.println("Response: "+availble);
+
+           
        }
        else
        {
-           System.out.println("Account unavalaible to receive transfer money!");
+           boolean availble =  restTemplate.postForObject("",true,Boolean.class);
+           //System.out.println("Account unavalaible to receive transfer money!");
        }
 
     }

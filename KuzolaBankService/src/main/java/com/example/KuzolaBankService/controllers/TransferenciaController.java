@@ -7,11 +7,15 @@ package com.example.KuzolaBankService.controllers;
 import com.example.KuzolaBankService.dto.TransferenciaDto;
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
+import com.example.KuzolaBankService.kafka.KafkaTransferenciaProducer;
 import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 import java.util.List;
 import java.util.Optional;
+
+import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
+import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +40,9 @@ public class TransferenciaController extends BaseController
     TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer;
     @Autowired
     ContaBancariaServiceImpl contaBancariaServiceImpl;
+
+    @Autowired
+    private KafkaTransferenciaProducer kafkaTransferenciaProducer;
     public TransferenciaController(TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer)
     {
         this.transferenciaJsonKafkaProducer = transferenciaJsonKafkaProducer;
@@ -89,6 +96,16 @@ public class TransferenciaController extends BaseController
     public ResponseEntity<ResponseBody> updateTransferencia(@PathVariable("id") Integer id, @RequestBody Transferencia transferencia)
     {
         return this.ok("TransferenciaDto editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
+    }
+
+
+    // http://localhost:8080//transferencia/response
+    @PostMapping("/response")
+    public ResponseEntity<String> sendResponseTransferencia(@RequestBody TransferenciaResponse response)
+    {
+      String data =  CustomJsonPojos.TransferenciaResponse(response);
+      this.kafkaTransferenciaProducer.sendMessageResponse(data);
+      return  ResponseEntity.ok("Resposta envida com sucesso!") ;
     }
 
 }
