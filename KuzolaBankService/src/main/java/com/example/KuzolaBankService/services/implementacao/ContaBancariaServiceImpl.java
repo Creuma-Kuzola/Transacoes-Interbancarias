@@ -75,6 +75,7 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     public ContaBancaria findContaBancaraByIban(String iban)
     {
+
         return contaBancariaRepository.findByIban(iban);
     }
 
@@ -88,7 +89,6 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     public boolean isValidTheSizeOfIban(String iban)
     {
-
         return iban.length() == 17;
     }
 

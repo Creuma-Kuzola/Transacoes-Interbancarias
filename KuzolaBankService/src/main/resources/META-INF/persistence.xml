@@ -11,6 +11,7 @@
     <class>com.example.KuzolaBankService.entities.Cliente</class>
     <class>com.example.KuzolaBankService.entities.Funcionario</class>
     <class>com.example.KuzolaBankService.entities.Transferencia</class>
+    <class>com.example.KuzolaBankService.entities.Pessoa</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/kuzola_bank"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
