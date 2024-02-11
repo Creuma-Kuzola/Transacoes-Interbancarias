@@ -9,18 +9,18 @@ import java.util.Map;
 @Component
 public class UserInfo {
 
-    Map<String, String> userInfo;
+    HashMap<String, String> userInfo;
 
     public UserInfo() {
 
         userInfo = new HashMap<>();
     }
 
-    public Map<String, String> getUserInfo() {
+    public HashMap<String, String> getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(Map<String, String> userInfo) {
+    public void setUserInfo(HashMap<String, String> userInfo) {
         this.userInfo = userInfo;
     }
 }

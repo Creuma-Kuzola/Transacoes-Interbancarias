@@ -4,10 +4,11 @@
  */
 package com.example.KuzolaBankService.controllers;
 
+import com.example.KuzolaBankService.config.component.UserInfo;
 import com.example.KuzolaBankService.dto.TransferenciaDto;
+import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
-import com.example.KuzolaBankService.kafka.KafkaTransferenciaProducer;
 import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.example.KuzolaBankService.kafka.KafkaTransferenciaProducer;
 /**
  *
  * @author creuma
@@ -40,6 +41,9 @@ public class TransferenciaController extends BaseController
     TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer;
     @Autowired
     ContaBancariaServiceImpl contaBancariaServiceImpl;
+
+    @Autowired
+    UserInfo userInfo;
 
     @Autowired
     private KafkaTransferenciaProducer kafkaTransferenciaProducer;
@@ -75,9 +79,15 @@ public class TransferenciaController extends BaseController
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
+        //ContaBancaria contaBancaria = contaBancariaServiceImpl.findContaBancaraB
+
         System.out.println("Objecto transferencia" + transferencia);
+        String ibanOrigem = userInfo.getUserInfo().get("iban");
+
+        System.out.println("Iban origem"+ ibanOrigem);
+
         TransferenciaDto transferenciaDto = new TransferenciaDto();
-        if (transferenciaServiceImpl.isContaBancariaValid(transferencia.getIbanDestinatario()))
+        if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), ibanOrigem))
         {
             transferenciaDto = transferenciaServiceImpl.convertTransferenciaIntoTransferenciaDto(transferencia);
             transferenciaJsonKafkaProducer.sendMessage(transferenciaDto.toString());

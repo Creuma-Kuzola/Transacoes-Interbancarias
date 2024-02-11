@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.entities.Cliente;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
@@ -87,9 +88,24 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return codigoBanco.equals(idBancoValido);
     }
 
+    // -1, 0, or 1 as this BigDecimal is numerically less than, equal to, or greater than val.
+    public Integer isValidMontante(ContaBancaria contaBancaria, BigDecimal montante){
+
+        BigDecimal saldoContabilistico = contaBancaria.getSaldoContabilistico(); ;
+        System.out.println("saldoContabilistico.compareTo(montante): "+ saldoContabilistico.compareTo(montante));
+        return saldoContabilistico.compareTo(montante);
+    }
+
     public boolean isValidTheSizeOfIban(String iban)
     {
         return iban.length() == 17;
     }
+
+    /*public boolean debitoSaldoContabilistco (ContaBancaria contaBancaria, BigDecimal montante ){
+
+        BigDecimal saldoContabilistico = contaBancaria.getSaldoContabilistico();
+        contaBancaria.setSaldoContabilistico();
+
+    }*/
 
 }

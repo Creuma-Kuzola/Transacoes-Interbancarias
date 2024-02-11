@@ -84,7 +84,7 @@ public class AuthController
     }
 
     private void saveUserInfoTemporary(ContaBancaria contaBancaria, String username) {
-        Map<String, String> map = new HashMap<>();
+        HashMap<String, String> map = new HashMap<>();
 
         map.put("username", username);
         map.put("iban",contaBancaria.getIban());
