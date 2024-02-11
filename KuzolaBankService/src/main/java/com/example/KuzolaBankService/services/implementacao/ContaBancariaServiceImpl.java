@@ -101,11 +101,30 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return iban.length() == 17;
     }
 
-    /*public boolean debitoSaldoContabilistco (ContaBancaria contaBancaria, BigDecimal montante ){
+    public void debitoSaldoContabilistico (String iban, BigDecimal montante ){
 
+        ContaBancaria contaBancaria =  this.findContaBancaraByIban(iban);
         BigDecimal saldoContabilistico = contaBancaria.getSaldoContabilistico();
-        contaBancaria.setSaldoContabilistico();
+        contaBancaria.setSaldoContabilistico(saldoContabilistico.subtract(montante));
+    }
 
-    }*/
+    public void debitoSaldoDisponivel (String iban, BigDecimal montante ){
+
+        ContaBancaria contaBancaria =  this.findContaBancaraByIban(iban);
+        BigDecimal saldoDisponivel = contaBancaria.getSaldoDisponivel();
+        contaBancaria.setSaldoDisponivel(saldoDisponivel.subtract(montante));
+    }
+
+    public void creditoSaldoContaBancaria (String iban, BigDecimal montante ){
+
+        ContaBancaria contaBancaria =  this.findContaBancaraByIban(iban);
+        BigDecimal saldoDisponivel = contaBancaria.getSaldoDisponivel();
+        BigDecimal saldoContabilistico = contaBancaria.getSaldoContabilistico();
+
+        contaBancaria.setSaldoDisponivel(saldoDisponivel.add(montante));
+        contaBancaria.setSaldoContabilistico(saldoContabilistico.add(montante));
+
+    }
+
 
 }
