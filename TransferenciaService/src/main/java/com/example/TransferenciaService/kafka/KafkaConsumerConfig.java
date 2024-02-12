@@ -52,7 +52,6 @@ public class KafkaConsumerConfig
     {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
-        //jussy leite
         Gson gson = builder.create();
 
         LOGGER.info(String.format("Message received -> %s", message.toString()));
