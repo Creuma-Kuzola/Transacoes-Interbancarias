@@ -89,8 +89,9 @@ public class TransferenciaController extends BaseController
         TransferenciaDto transferenciaDto = new TransferenciaDto();
         if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), ibanOrigem))
         {
-            transferenciaDto = transferenciaServiceImpl.convertTransferenciaIntoTransferenciaDto(transferencia);
-            transferenciaJsonKafkaProducer.sendMessage(transferenciaDto.toString());
+            //transferenciaDto = transferenciaServiceImpl.convertTransferenciaIntoTransferenciaDto(transferencia);
+
+            transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferencia.toString());
             return this.created("TransferenciaDto enviada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
         }
         return this.naoEncontrado("ERRO: O IBAN é inválido", null);

@@ -6,10 +6,8 @@ package com.example.KuzolaBankService.utils.pojos;
 
 import java.math.BigInteger;
 import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
 
 /**
  *
@@ -19,6 +17,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+
 public class TransferenciaPOJO
 {
 

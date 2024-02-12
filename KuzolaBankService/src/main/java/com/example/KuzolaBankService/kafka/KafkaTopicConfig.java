@@ -9,9 +9,16 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic Topic(){
+    public NewTopic Topic1(){
         return TopicBuilder
                 .name("transfer-kuzolabank")
+                .build();
+    }
+
+    @Bean
+    public NewTopic Topic2(){
+        return TopicBuilder
+                .name("tr-intrabancarias-kuzolabank")
                 .build();
     }
 }

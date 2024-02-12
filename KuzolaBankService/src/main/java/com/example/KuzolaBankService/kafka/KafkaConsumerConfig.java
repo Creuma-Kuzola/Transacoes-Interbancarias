@@ -5,14 +5,18 @@ import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 
 @Service
 public class KafkaConsumerConfig
@@ -23,8 +27,13 @@ public class KafkaConsumerConfig
     @Autowired
     private ContaBancariaServiceImpl contaBancariServiceImpl;
 
+    @Autowired
+    Gson gson;
+
+
     public KafkaConsumerConfig()
     {
+
         transferenciaPOJO = new TransferenciaPOJO();
     }
 
@@ -68,6 +77,45 @@ public class KafkaConsumerConfig
     public TransferenciaPOJO getTransferenciaPOJO()
     {
         return transferenciaPOJO;
+    }
+
+
+    @KafkaListener(topics = "tr-intrabancarias-kuzolabank", groupId = "consumerBanco")
+    public void consumeMessageTransferenciasIntrabancarias(String message)  {
+
+        String messageReceived = message;
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        gson = builder.create();
+        LOGGER.info(String.format("Message received -> %s", message.toString()));
+
+        TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
+
+        System.out.println("Descricao " + obj.getDescricao());
+        transferenciaPOJO = obj;
+
+       /* try {
+            String fromTransfrerenciaJson = gson.toJson(message);
+
+            TransferenciaPOJO transferenciaPOJO1 = gson.fromJson(fromTransfrerenciaJson, TransferenciaPOJO.class);
+            System.out.println("TransferenciaPojo"+ transferenciaPOJO1);
+            System.out.println("Message received" + messageReceived);
+
+        }catch (IllegalStateException | JsonSyntaxException exception){
+
+            System.out.println("Exception in conversion"+ exception);
+        }
+
+
+        /*GsonBuildere builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson gson = builder.create();
+
+        TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
+        System.out.println("Transferencia POJO " + obj.getDescricao());
+        transferenciaPOJO = obj;*/
+        LOGGER.info(String.format("Message received -> %s", message.toString()));
     }
 
 }
