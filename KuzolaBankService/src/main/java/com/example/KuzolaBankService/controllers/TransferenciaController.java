@@ -11,6 +11,8 @@ import com.example.KuzolaBankService.kafka.KafkaTransferenciaProducer;
 import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,25 +87,18 @@ public class TransferenciaController extends BaseController
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
-        //ContaBancaria contaBancaria = contaBancariaServiceImpl.findContaBancaraB
-
-        System.out.println("Objecto transferencia" + transferencia);
         String ibanOrigem = userInfo.getUserInfo().get("iban");
 
-        System.out.println("Iban origem"+ ibanOrigem);
-
-        TransferenciaDto transferenciaDto = new TransferenciaDto();
         if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), ibanOrigem))
         {
-            //transferenciaDto = transferenciaServiceImpl.convertTransferenciaIntoTransferenciaDto(transferencia);
-
             System.out.println("Transferencia request"+ transferencia + "To String" + transferencia.toString());
-
+            transferencia.setDatahora(new Date(System.currentTimeMillis()));
             //transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferencia.toString());
             return this.created("TransferenciaDto enviada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
         }
         return this.naoEncontrado("ERRO: O IBAN é inválido", null);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseBody> deleteTransferencia(@PathVariable("id") Integer id)

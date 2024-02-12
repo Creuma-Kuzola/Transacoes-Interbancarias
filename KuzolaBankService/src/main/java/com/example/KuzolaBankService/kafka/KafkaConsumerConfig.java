@@ -1,6 +1,7 @@
 package com.example.KuzolaBankService.kafka;
 
 
+import com.example.KuzolaBankService.dto.SignInDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
@@ -10,9 +11,20 @@ import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import com.example.KuzolaBankService.config.component.TransferenciaResponseComponent;
+import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
+import com.example.KuzolaBankService.dto.JwtDto;
+import org.springframework.http.*;
+import java.util.Collections;
+import java.util.HashMap;
 
 @Service
 public class KafkaConsumerConfig
@@ -42,6 +54,14 @@ public class KafkaConsumerConfig
     public void consumeMessage(String message)
     {
         LOGGER.info(String.format("Message received -> %s", message.toString()));
+    }
+
+    public JwtDto createHeader(String login, String password)
+    {
+        RestTemplate restTemplate1 = new RestTemplate();
+        SignInDto signInDto = new SignInDto(login,password);
+        JwtDto token = restTemplate1.postForObject("http://localhost:8081/api/v1/auth/signin", signInDto, JwtDto.class);
+        return token;
     }
 
     @KafkaListener(topics = "transferencia", groupId = "myGroup")
@@ -91,7 +111,7 @@ public class KafkaConsumerConfig
         body.add("body",jsonStr);
         HttpEntity<?> entity = new HttpEntity<>(body, headers);
 
-        Map<String, String > response = new HashMap<>();
+        HashMap<String, String > response = new HashMap<>();
         response.put("descricao",transferenciaResponse.getDescricao());
         response.put("status",""+transferenciaResponse.getStatus());
 

@@ -42,7 +42,7 @@ public class Transferencia implements Serializable {
     private BigDecimal montante;
     @Column(name = "iban_destinatario", length = 2147483647)
     private String ibanDestinatario;
-    @Temporal(TemporalType.TIMESTAMP)
+    //@Temporal(TemporalType.TIMESTAMP)
     private Date datahora;
     @Column(name = "estado_transferencia", length = 2147483647)
     private String estadoTransferencia;
