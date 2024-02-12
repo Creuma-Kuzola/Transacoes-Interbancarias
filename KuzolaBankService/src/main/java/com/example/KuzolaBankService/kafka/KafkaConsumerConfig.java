@@ -90,7 +90,7 @@ public class KafkaConsumerConfig
         gson = builder.create();
         LOGGER.info(String.format("Message received -> %s", message.toString()));
 
-        TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
+        TransferenciaPOJO obj = gson.fromJson(message, TransferenciaPOJO.class);
 
         System.out.println("Descricao " + obj.getDescricao());
         transferenciaPOJO = obj;
