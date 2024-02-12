@@ -9,6 +9,8 @@ import java.util.Map;
 @Component
 public class TransferenciaResponseComponent {
     Map<String, String> transferenciaResponse;
+    //777
+    private String welcome;
 
     public TransferenciaResponseComponent() {
         transferenciaResponse = new HashMap<>();

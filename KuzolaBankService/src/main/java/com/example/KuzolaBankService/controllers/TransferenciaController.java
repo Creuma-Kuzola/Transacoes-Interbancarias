@@ -42,6 +42,9 @@ public class TransferenciaController extends BaseController
     @Autowired
     ContaBancariaServiceImpl contaBancariaServiceImpl;
 
+    //777
+    private String welcome;
+
     @Autowired
     TransferenciaResponseComponent transferenciaResponseComponent;
 

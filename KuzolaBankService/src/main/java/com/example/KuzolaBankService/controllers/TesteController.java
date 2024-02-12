@@ -23,6 +23,9 @@ import java.util.Collections;
 public class TesteController {
 
     private final RestTemplate restTemplate;
+    //777
+    private String welcome;
+
 
     public TesteController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

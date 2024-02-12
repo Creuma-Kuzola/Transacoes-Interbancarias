@@ -37,6 +37,9 @@ public class KafkaConsumerConfig
     @Autowired
     private ContaBancariaServiceImpl contaBancariServiceImpl;
 
+    //777
+    private String welcome;
+
     @Autowired
     TransferenciaResponseComponent transferenciaResponseComponent;
 

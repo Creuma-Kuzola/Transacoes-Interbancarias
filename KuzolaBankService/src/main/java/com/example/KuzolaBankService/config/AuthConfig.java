@@ -50,6 +50,7 @@ public class AuthConfig
                         .requestMatchers(HttpMethod.GET, "/ContaBancaria").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/ContaBancaria").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/ContaBancaria").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/ola/").hasRole("CLIENTE")
                 .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
