@@ -4,6 +4,7 @@
  */
 package com.example.KuzolaBankService.controllers;
 
+import com.example.KuzolaBankService.config.component.TransferenciaResponseComponent;
 import com.example.KuzolaBankService.dto.TransferenciaDto;
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
@@ -40,6 +41,9 @@ public class TransferenciaController extends BaseController
     TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer;
     @Autowired
     ContaBancariaServiceImpl contaBancariaServiceImpl;
+
+    @Autowired
+    TransferenciaResponseComponent transferenciaResponseComponent;
 
     @Autowired
     private KafkaTransferenciaProducer kafkaTransferenciaProducer;
@@ -103,9 +107,13 @@ public class TransferenciaController extends BaseController
     @PostMapping("/response")
     public ResponseEntity<String> sendResponseTransferencia(@RequestBody TransferenciaResponse response)
     {
+        response.setDescricao(transferenciaResponseComponent.getTransferenciaResponse().get("descricao"));
+        response.setStatus(transferenciaResponseComponent.getTransferenciaResponse().get("status").equals("true") ? true : false) ;
+
       String data =  CustomJsonPojos.TransferenciaResponse(response);
-      this.kafkaTransferenciaProducer.sendMessageResponse(data);
-      return  ResponseEntity.ok("Resposta envida com sucesso!") ;
+       this.kafkaTransferenciaProducer.sendMessageResponse(data);
+        System.out.println(" Resposta envida com sucesso! ");
+      return  ResponseEntity.ok("Resposta envida com sucesso!" +data) ;
     }
 
 }
