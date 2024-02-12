@@ -50,6 +50,7 @@ public class AuthConfig {
                 .requestMatchers(HttpMethod.GET, "/empresa/*").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/transferencia/").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/transferencia/").hasRole("CLIENTE")
+                .requestMatchers(HttpMethod.POST, "/ola/").hasRole("CLIENTE")
             .anyRequest().authenticated())
             .exceptionHandling(Customizer.withDefaults())
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
