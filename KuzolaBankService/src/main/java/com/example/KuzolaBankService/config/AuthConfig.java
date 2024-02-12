@@ -33,6 +33,7 @@ public class AuthConfig
                 .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/session").permitAll()
+                        .requestMatchers(HttpMethod.POST.GET,"/deep").permitAll()
                 .requestMatchers(HttpMethod.GET, "/ContaBancaria").permitAll()
                 .requestMatchers(HttpMethod.POST, "/transferencia").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.POST, "/transferencia").hasAnyRole("CLIENTE", "ADMIN")
@@ -49,6 +50,7 @@ public class AuthConfig
                         .requestMatchers(HttpMethod.GET, "/ContaBancaria").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/ContaBancaria").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/ContaBancaria").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/ola/").hasRole("CLIENTE")
                 .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

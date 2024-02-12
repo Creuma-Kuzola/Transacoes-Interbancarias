@@ -5,18 +5,14 @@ import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 
 @Service
 public class KafkaConsumerConfig
@@ -27,13 +23,18 @@ public class KafkaConsumerConfig
     @Autowired
     private ContaBancariaServiceImpl contaBancariServiceImpl;
 
+    //777
+    private String welcome;
+
+    @Autowired
+    TransferenciaResponseComponent transferenciaResponseComponent;
+
     @Autowired
     Gson gson;
 
 
     public KafkaConsumerConfig()
     {
-
         transferenciaPOJO = new TransferenciaPOJO();
     }
 
@@ -72,6 +73,41 @@ public class KafkaConsumerConfig
            //System.out.println("Account unavalaible to receive transfer money!");
        }
 
+    }
+
+    private void sendResposta(TransferenciaResponse transferenciaResponse) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonStr =  CustomJsonPojos.TransferenciaResponse(transferenciaResponse);
+        JwtDto token = createHeader("admin","admin");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE));
+        headers.setBearerAuth(token.accessToken());
+        //headers.add("body",jsonStr);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("body",jsonStr);
+        HttpEntity<?> entity = new HttpEntity<>(body, headers);
+
+        Map<String, String > response = new HashMap<>();
+        response.put("descricao",transferenciaResponse.getDescricao());
+        response.put("status",""+transferenciaResponse.getStatus());
+
+        transferenciaResponseComponent.setTransferenciaResponse(response);
+
+        HttpEntity entityResponse = restTemplate.exchange("http://localhost:8081/transferencia/response", HttpMethod.POST,entity, String.class);
+
+        System.out.println("entity: headers " +entity.getHeaders());
+        System.out.println("entity: body " +entity.getBody());
+        System.out.println("entity: headers " +body.get("body"));
+
+
+        System.out.println( "token: " +token);
+        System.out.println("header:" +headers);
+        System.out.println("entityResponse: "+ entityResponse.getBody());
+        System.out.println("entityResponse: "+ entityResponse.getHeaders());
     }
 
     public TransferenciaPOJO getTransferenciaPOJO()
