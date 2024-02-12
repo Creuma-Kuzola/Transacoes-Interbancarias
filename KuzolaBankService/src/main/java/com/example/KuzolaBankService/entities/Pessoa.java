@@ -4,11 +4,14 @@
  */
 package com.example.KuzolaBankService.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
@@ -16,6 +19,12 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(catalog = "kuzola_bank", schema = "public")
+
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class Pessoa implements Serializable {
 
@@ -40,10 +49,8 @@ public class Pessoa implements Serializable {
     private String nif;
     @Column(length = 2147483647)
     private String sexo;
-    @OneToMany(mappedBy = "fkPessoa")
-    @JsonIgnore
-    private List<Cliente> clienteList;
     @JoinColumn(name = "fk_localizacao", referencedColumnName = "pk_localizacao")
     @ManyToOne
-    private Localizacao fkLocalizacao;    
+    private Localizacao fkLocalizacao;
+
 }
