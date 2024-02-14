@@ -136,7 +136,7 @@ public class KafkaConsumerConfig
     }
 
 
-    @KafkaListener(topics = "tr-intrabancarias-kuzolabank", groupId = "consumerBanco")
+    @KafkaListener(topics = "tr-intrabancarias-kb", groupId = "consumerBanco")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
         String messageReceived = message;
@@ -144,13 +144,11 @@ public class KafkaConsumerConfig
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
         gson = builder.create();
-        LOGGER.info(String.format("Message received -> %s", message.toString()));
 
+        LOGGER.info(String.format("Message received -> %s", message.toString()));
         TransferenciaPOJO obj = gson.fromJson(message, TransferenciaPOJO.class);
 
         System.out.println("Descricao " + obj.getDescricao());
-        transferenciaPOJO = obj;
-
        /* try {
             String fromTransfrerenciaJson = gson.toJson(message);
 
@@ -171,7 +169,7 @@ public class KafkaConsumerConfig
         TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
         System.out.println("Transferencia POJO " + obj.getDescricao());
         transferenciaPOJO = obj;*/
-        LOGGER.info(String.format("Message received -> %s", message.toString()));
+
     }
 
 }

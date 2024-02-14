@@ -43,7 +43,7 @@ public class KafkaConsumerConfig
         transferenciaPOJO = obj;
 
         String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
-        System.out.println("Resposta: -> to another bank kusola:-> " +response);
+        System.out.println("Resposta: -> to another bank kuzola:-> " +response);
 
     }
 

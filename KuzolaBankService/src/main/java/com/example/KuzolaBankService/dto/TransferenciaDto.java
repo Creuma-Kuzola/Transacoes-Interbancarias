@@ -7,6 +7,7 @@ package com.example.KuzolaBankService.dto;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -27,7 +28,7 @@ public class TransferenciaDto{
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     private BigDecimal montante;
     private String ibanDestinatario;
-    private Date datahora;
+    private LocalDateTime datahora;
     private String estadoTransferencia;
     private String codigoTransferencia;
     private String tipoTransferencia;

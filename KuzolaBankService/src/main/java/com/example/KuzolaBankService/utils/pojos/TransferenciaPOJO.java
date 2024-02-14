@@ -4,9 +4,12 @@
  */
 package com.example.KuzolaBankService.utils.pojos;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.example.KuzolaBankService.entities.Transferencia;
 import lombok.*;
 
 /**
@@ -19,14 +22,13 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 
-public class TransferenciaPOJO
-{
+public class TransferenciaPOJO {
 
     private Integer pkTransferencia;
     private String descricao;
-    private BigInteger montante;
+    private BigDecimal montante;
     private String ibanDestinatario;
-    private Date datahora;
+    private LocalDateTime datahora;
     private Integer fkContaBancariaOrigem;
     private String tipoTransferencia;
     private String estadoTransferencia;
@@ -48,11 +50,11 @@ public class TransferenciaPOJO
         this.descricao = descricao;
     }
 
-    public BigInteger getMontante() {
+    public BigDecimal getMontante() {
         return montante;
     }
 
-    public void setMontante(BigInteger montante) {
+    public void setMontante(BigDecimal montante) {
         this.montante = montante;
     }
 
@@ -64,11 +66,11 @@ public class TransferenciaPOJO
         this.ibanDestinatario = ibanDestinatario;
     }
 
-    public Date getDatahora() {
+    public LocalDateTime getDatahora() {
         return datahora;
     }
 
-    public void setDatahora(Date datahora) {
+    public void setDatahora(LocalDateTime datahora) {
         this.datahora = datahora;
     }
 
@@ -103,4 +105,5 @@ public class TransferenciaPOJO
     public void setCodigoTransferencia(String codigoTransferencia) {
         this.codigoTransferencia = codigoTransferencia;
     }
+
 }
