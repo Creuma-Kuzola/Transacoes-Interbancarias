@@ -6,6 +6,7 @@ package ucan.edu.kafka;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ucan.edu.config.component.TransferenciaComponent;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,9 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author jussyleitecode
@@ -22,11 +26,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaTransferenciaProducer
 {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaProducer.class);
-
     private KafkaTemplate<String, String> kafkaTemplate;
-
+    private TransferenciaComponent transferenciaComponent;
     public KafkaTransferenciaProducer(KafkaTemplate<String, String> kafkaTemplate)
     {
         this.kafkaTemplate = kafkaTemplate;
@@ -39,7 +41,6 @@ public class KafkaTransferenciaProducer
                 .withPayload(data)
                 .setHeader(KafkaHeaders.TOPIC, "bancowakanda")
                 .build();
-
         kafkaTemplate.send(message);
     }
 }

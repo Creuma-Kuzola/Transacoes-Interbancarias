@@ -53,7 +53,76 @@ public class Transferencia implements Serializable {
     private String codigoTransferencia;
     @OneToMany(mappedBy = "fkTransferencia")
     private List<TokenValidacao> tokenValidacaoList;
-    
-    
-    
+
+    public Integer getPkTransferencia() {
+        return pkTransferencia;
+    }
+
+    public void setPkTransferencia(Integer pkTransferencia) {
+        this.pkTransferencia = pkTransferencia;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public BigInteger getMontante() {
+        return montante;
+    }
+
+    public void setMontante(BigInteger montante) {
+        this.montante = montante;
+    }
+
+    public String getIbanDestinatario() {
+        return ibanDestinatario;
+    }
+
+    public void setIbanDestinatario(String ibanDestinatario) {
+        this.ibanDestinatario = ibanDestinatario;
+    }
+
+    public Date getDatahora() {
+        return datahora;
+    }
+
+    public void setDatahora(Date datahora) {
+        this.datahora = datahora;
+    }
+
+    public Integer getFkContaBancariaOrigem() {
+        return fkContaBancariaOrigem;
+    }
+
+    public void setFkContaBancariaOrigem(Integer fkContaBancariaOrigem) {
+        this.fkContaBancariaOrigem = fkContaBancariaOrigem;
+    }
+
+    public String getTipoTransferencia() {
+        return tipoTransferencia;
+    }
+
+    public void setTipoTransferencia(String tipoTransferencia) {
+        this.tipoTransferencia = tipoTransferencia;
+    }
+
+    public String getEstadoTransferencia() {
+        return estadoTransferencia;
+    }
+
+    public void setEstadoTransferencia(String estadoTransferencia) {
+        this.estadoTransferencia = estadoTransferencia;
+    }
+
+    public String getCodigoTransferencia() {
+        return codigoTransferencia;
+    }
+
+    public void setCodigoTransferencia(String codigoTransferencia) {
+        this.codigoTransferencia = codigoTransferencia;
+    }
 }

@@ -120,6 +120,28 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return contaBancariaActualizada;
     }
 
+    public ContaBancaria transferInterbancariaDebito(Integer numberAccount, Integer montante)
+    {
+        Optional<ContaBancaria> contaBancariaFoundOrigem = contaBancariaRepository
+                .findContaBancariaByNumeroDeConta(numberAccount);
+
+        System.out.println("Saldo Disponivel: " +contaBancariaFoundOrigem.get().getSaldoDisponivel());
+
+       if (contaBancariaFoundOrigem.get().getSaldoDisponivel() < montante)
+        {
+            throw new SaldoContaBancariaInferiorException();
+        }
+
+        Integer novoSaldoContaBancariaOrigem = contaBancariaFoundOrigem.get().getSaldoDisponivel();
+        Integer novoSaldoContaBancariaOrigemFinalResult = novoSaldoContaBancariaOrigem - montante;
+        System.out.println(" novoSaldoContaBancariaOrigem:  transferInterbancariaDebito() " + novoSaldoContaBancariaOrigemFinalResult);
+
+        contaBancariaFoundOrigem.get().setSaldoContabilistico(novoSaldoContaBancariaOrigemFinalResult);
+        contaBancariaFoundOrigem.get().setSaldoDisponivel(novoSaldoContaBancariaOrigemFinalResult);
+        contaBancariaRepository.save(contaBancariaFoundOrigem.get());
+
+        return contaBancariaFoundOrigem.get();
+    }
     //777
     public List<ContaBancaria> transferMoneyToAccountSameBank(ContaBancaria contaBancaria, String iban, Integer montante)
     {

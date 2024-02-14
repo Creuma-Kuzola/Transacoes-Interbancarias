@@ -4,6 +4,7 @@
  */
 package com.example.TransferenciaService.controllers;
 
+import com.example.TransferenciaService.component.TransferenciaResponseComponent;
 import com.example.TransferenciaService.entities.Transferencia;
 import com.example.TransferenciaService.https.utils.ResponseBody;
 import com.example.TransferenciaService.kafka.KafkaTransferenciaProducer;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.TransferenciaService.utils.pojos.TransferenciaPOJO;
+import com.example.TransferenciaService.utils.pojos.TransferenciaResponse;
+import com.example.TransferenciaService.utils.pojos.jsonUtils.CustomJsonPojos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,6 +42,9 @@ public class TransferenciaController extends BaseController {
 
     @Autowired
     KafkaTransferenciaProducer kafkaTransferenciaProducer;
+
+    @Autowired
+    TransferenciaResponseComponent transferenciaResponseComponent;
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencias()
     {
@@ -98,5 +104,14 @@ public class TransferenciaController extends BaseController {
     public ResponseEntity<ResponseBody> updateTransferencia(@PathVariable("id") Integer id, @RequestBody Transferencia transferencia)
     {
         return this.ok("TransferenciaDto editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
+    }
+
+    @PostMapping("/response")
+    public ResponseEntity<String> sendResponseTransferencia(@RequestBody TransferenciaResponse response)
+    {
+        String data =  CustomJsonPojos.TransferenciaResponse(response);
+        this.kafkaTransferenciaProducer.sendMessageTransferenciaResponse(data);
+        System.out.println(" Resposta envida com sucesso wakanda bank! ");
+        return  ResponseEntity.ok("Resposta envida com sucesso! para o wakanda bank" +data) ;
     }
 }

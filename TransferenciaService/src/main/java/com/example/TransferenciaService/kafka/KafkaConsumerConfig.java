@@ -1,7 +1,9 @@
 package com.example.TransferenciaService.kafka;
 
+import com.example.TransferenciaService.component.TransferenciaResponseComponent;
 import com.example.TransferenciaService.dto.TransferenciaDto;
 import com.example.TransferenciaService.utils.pojos.TransferenciaPOJO;
+import com.example.TransferenciaService.utils.pojos.TransferenciaResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
@@ -17,6 +19,9 @@ public class KafkaConsumerConfig
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerConfig.class);
     private TransferenciaPOJO transferenciaPOJO;
+
+    @Autowired
+    private TransferenciaResponseComponent transferenciaResponseComponent;
     @Autowired
     private RestTemplate restTemplate;
 
@@ -43,8 +48,7 @@ public class KafkaConsumerConfig
         transferenciaPOJO = obj;
 
         String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
-        System.out.println("Resposta: -> to another bank kuzola:-> " +response);
-
+        System.out.println("Resposta: -> to another bank kusola:-> " +response);
     }
 
     @KafkaListener(topics = "transfer-kuzolabank", groupId = "kuzolaGroup")
@@ -54,15 +58,17 @@ public class KafkaConsumerConfig
         builder.setPrettyPrinting();
         //jussy leite
         Gson gson = builder.create();
+        RestTemplate restTemplate1 = new RestTemplate();
 
-        LOGGER.info(String.format("Message received -> %s", message.toString()));
-        //TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
-        //System.out.println("Descricao " + obj.getDescricao());
-        //transferenciaPOJO = obj;
+        LOGGER.info(String.format("Message received - Response: -> %s", message.toString()));
 
-        //String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
-        //System.out.println("Resposta: -> to another bank kusola:-> " +response);
+        TransferenciaResponse response = gson.fromJson(message.toString(), TransferenciaResponse.class);
+        System.out.println(" --------------- TRANSFERENCIAS RESPONSE ----------------------");
+        System.out.println("Descricao " + response.getDescricao());
+        System.out.println("Status " + response.getStatus());
 
+        String strResponse = restTemplate1.postForObject("http://localhost:8082/transferencia/response",response, String.class);
+        System.out.println("Resposta: -> to another bank wakanda:-> " +strResponse);
     }
 
     public TransferenciaPOJO getTransferenciaPOJO()

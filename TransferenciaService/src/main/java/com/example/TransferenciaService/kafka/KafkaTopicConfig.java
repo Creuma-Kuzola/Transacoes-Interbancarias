@@ -21,6 +21,15 @@ public class KafkaTopicConfig
     public NewTopic intermediario()
     {
         return TopicBuilder.name("transferencia")
+                .partitions(5)
+                .build();
+    }
+
+    @Bean
+    public NewTopic intermediarioResponse()
+    {
+        return TopicBuilder.name("response")
+                .partitions(5)
                 .build();
     }
 }

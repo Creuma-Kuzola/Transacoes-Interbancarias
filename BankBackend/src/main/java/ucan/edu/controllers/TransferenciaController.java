@@ -6,13 +6,15 @@ package ucan.edu.controllers;
 
 import java.text.SimpleDateFormat;
 
+import ucan.edu.config.component.TransferenciaComponent;
 import ucan.edu.config.component.UserInfo;
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
 import ucan.edu.services.implementacao.*;
 import ucan.edu.https.utils.ResponseBody;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,6 +42,9 @@ public class TransferenciaController extends BaseController
       @Autowired
       private UserInfo userInfo;
 
+      @Autowired
+    TransferenciaComponent transferenciaComponent;
+
     private final KafkaTransferenciaProducer KafkaTransferenciaProducer;
 
     public TransferenciaController(TransferenciaServiceImpl transferenciaServiceImpl, KafkaTransferenciaProducer KafkaTransferenciaProducer)
@@ -54,9 +59,25 @@ public class TransferenciaController extends BaseController
     public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
     {
         transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
+        saveTransferComponent(transferencia);
         String data = CustomJsonPojos.criarStrToJson(transferencia);
         KafkaTransferenciaProducer.sendMessage(data);
         return ResponseEntity.ok("Transferencia envida com suceesso no topic");
+    }
+
+    private void saveTransferComponent(TransferenciaPOJO transferencia) {
+        Map<String, String> transferenciaItems = new HashMap<>();
+
+        transferenciaItems.put("descricao", transferencia.getDescricao());
+        transferenciaItems.put("montante", transferencia.getMontante().toString());
+        transferenciaItems.put("ibanDestinatario", transferencia.getIbanDestinatario());
+        transferenciaItems.put("datahora","" + new Date());
+        transferenciaItems.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem());
+        transferenciaItems.put("tipoTransferencia", transferencia.getTipoTransferencia());
+        transferenciaItems.put("estadoTransferencia", transferencia.getEstadoTransferencia());
+        transferenciaItems.put("codigoTransferencia", transferencia.getCodigoTransferencia());
+
+        transferenciaComponent.setTransferenciaResponse(transferenciaItems);
     }
 
     @GetMapping
