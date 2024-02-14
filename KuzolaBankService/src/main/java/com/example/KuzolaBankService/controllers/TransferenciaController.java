@@ -104,32 +104,14 @@ public class TransferenciaController extends BaseController
     {
         TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferencia, userInfo.getUserInfo().get("iban"));
         String data = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
-
+        System.out.println("Data Json"+ data);
         if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")));
         {
             transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaPOJO.toString());
             return this.created("Transferencia criada com sucesso",transferencia);
         }
 
-       //return this.naoEncontrado("ERRO: O IBAN é inválido", null);
-
     }
-
-    /*@PostMapping
-    public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
-    {
-        String ibanOrigem = userInfo.getUserInfo().get("iban");
-
-        if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), ibanOrigem))
-        {
-            System.out.println("Transferencia request"+ transferencia + "To String" + transferencia.toString());
-            transferencia.setDatahora(new Date(System.currentTimeMillis()));
-            //transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferencia.toString());
-            return this.created("TransferenciaDto enviada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
-        }
-        return this.naoEncontrado("ERRO: O IBAN é inválido", null);
-    }*/
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseBody> deleteTransferencia(@PathVariable("id") Integer id)

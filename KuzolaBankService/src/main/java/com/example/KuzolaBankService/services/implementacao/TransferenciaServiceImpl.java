@@ -67,7 +67,6 @@ implements TransferenciaService {
         TransferenciaPOJO transferenciaPOJO = new TransferenciaPOJO();
         ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
 
-
         transferenciaPOJO.setPkTransferencia(transferencia.getPkTransferencia());
         transferenciaPOJO.setDatahora(formattingDateTime(transferencia.getDatahora()));
         transferenciaPOJO.setDescricao(transferencia.getDescricao());

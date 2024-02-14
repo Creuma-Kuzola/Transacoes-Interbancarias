@@ -1,39 +1,48 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.KuzolaBankService.utils.pojos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.Date;
-
-import com.example.KuzolaBankService.entities.Transferencia;
-import lombok.*;
-
-/**
- *
- * @author jussyleitecode
- */
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
 
 public class TransferenciaPOJO {
-
+    @JsonProperty("pkTransferencia")
     private Integer pkTransferencia;
+
+    @JsonProperty("descricao")
     private String descricao;
+
+    @JsonProperty("montante")
     private BigDecimal montante;
+
+    @JsonProperty("ibanDestinatario")
     private String ibanDestinatario;
+
+    @JsonProperty("datahora")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime datahora;
-    private Integer fkContaBancariaOrigem;
+
+    @JsonProperty("fkContaBancariaOrigem")
+    private int fkContaBancariaOrigem;
+
+    @JsonProperty("tipoTransferencia")
     private String tipoTransferencia;
+
+    @JsonProperty("estadoTransferencia")
     private String estadoTransferencia;
+
+    @JsonProperty("codigoTransferencia")
     private String codigoTransferencia;
 
+    // Getters and setters
     public Integer getPkTransferencia() {
         return pkTransferencia;
     }
@@ -74,11 +83,11 @@ public class TransferenciaPOJO {
         this.datahora = datahora;
     }
 
-    public Integer getFkContaBancariaOrigem() {
+    public int getFkContaBancariaOrigem() {
         return fkContaBancariaOrigem;
     }
 
-    public void setFkContaBancariaOrigem(Integer fkContaBancariaOrigem) {
+    public void setFkContaBancariaOrigem(int fkContaBancariaOrigem) {
         this.fkContaBancariaOrigem = fkContaBancariaOrigem;
     }
 
@@ -106,4 +115,20 @@ public class TransferenciaPOJO {
         this.codigoTransferencia = codigoTransferencia;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("\"pkTransferencia\": ").append(pkTransferencia).append(",");
+        sb.append("\"descricao\": \"").append(descricao).append("\",");
+        sb.append("\"montante\": ").append(montante).append(",");
+        sb.append("\"ibanDestinatario\": \"").append(ibanDestinatario).append("\",");
+        sb.append("\"datahora\": \"").append(datahora).append("\",");
+        sb.append("\"fkContaBancariaOrigem\": ").append(fkContaBancariaOrigem).append(",");
+        sb.append("\"tipoTransferencia\": \"").append(tipoTransferencia).append("\",");
+        sb.append("\"estadoTransferencia\": \"").append(estadoTransferencia).append("\",");
+        sb.append("\"codigoTransferencia\": \"").append(codigoTransferencia).append("\"");
+        sb.append("}");
+        return sb.toString();
+    }
 }

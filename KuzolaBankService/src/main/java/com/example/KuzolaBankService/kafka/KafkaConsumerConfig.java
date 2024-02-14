@@ -6,6 +6,8 @@ import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
@@ -139,16 +141,23 @@ public class KafkaConsumerConfig
     @KafkaListener(topics = "tr-intrabancarias-kb", groupId = "consumerBanco")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
+        System.out.println("Message in Consumer"+ message);
         String messageReceived = message;
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
-        GsonBuilder builder = new GsonBuilder();
-        builder.setPrettyPrinting();
-        gson = builder.create();
+        try {
+            TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
+            System.out.println("ID: " + transferenciaPOJO);
+            // Access other properties as needed
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         LOGGER.info(String.format("Message received -> %s", message.toString()));
-        TransferenciaPOJO obj = gson.fromJson(message, TransferenciaPOJO.class);
 
-        System.out.println("Descricao " + obj.getDescricao());
+        //TransferenciaPOJO obj = gson.fromJson(message, TransferenciaPOJO.class);
+       // System.out.println("Descricao " + obj.getDescricao());
        /* try {
             String fromTransfrerenciaJson = gson.toJson(message);
 
@@ -160,8 +169,6 @@ public class KafkaConsumerConfig
 
             System.out.println("Exception in conversion"+ exception);
         }
-
-
         /*GsonBuildere builder = new GsonBuilder();
         builder.setPrettyPrinting();
         Gson gson = builder.create();
