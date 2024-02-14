@@ -8,9 +8,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import ucan.edu.config.component.TransferenciaComponent;
+import ucan.edu.entities.ContaBancaria;
+import ucan.edu.entities.Transferencia;
+import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
+import ucan.edu.utils.pojos.TransferenciaResponse;
+
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 /**
  *
@@ -20,6 +32,10 @@ import ucan.edu.services.implementacao.TransferenciaServiceImpl;
 public class KafkaTransferenciaConsumer
 {
     private final TransferenciaServiceImpl transferenciaServiceImpl;
+    @Autowired
+    private TransferenciaComponent transferenciaComponent;
+    @Autowired
+    ContaBancariaServiceImpl contaBancariServiceImpl;
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaConsumer.class);
     public KafkaTransferenciaConsumer(TransferenciaServiceImpl transferenciaServiceImpl)
     {
@@ -38,12 +54,44 @@ public class KafkaTransferenciaConsumer
     }
 
     @KafkaListener(topics = "response")
-    public void consumerMessageResponse(String message)
-    {
+    public void consumerMessageResponse(String message) throws ParseException {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
-        //jussy leite
         Gson gson = builder.create();
+        TransferenciaResponse transferenciaResponse = gson.fromJson(message.toString(), TransferenciaResponse.class);
+
+        if(transferenciaResponse.getStatus() == true)
+        {
+          Integer numeroDeConta  = Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
+          Integer montante =  Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("montante"));
+           // transferenciaServiceImpl;
+         ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);
+         if (contaBancaria != null)
+         {
+             System.out.println("Debto feito com sucesso!");
+             //Transferencia transferencia =  builderTransferencia(transferenciaComponent.getTransferenciaResponse());
+             //transferenciaServiceImpl.criar(transferencia);
+         }
+
+        }
+        else
+        {
+            System.out.println(" Não é possivel completar a operação!");
+        }
         LOGGER.info(String.format("Message received response transferencia status from transferencia topic-> %s", message.toString()));
+    }
+
+    private Transferencia builderTransferencia(Map<String, String> transferenciaResponse) throws ParseException {
+        Transferencia transferencia = new Transferencia();
+        //transferencia.setEstadoTransferencia("FEITA COM SUCESSO");
+        transferencia.setDescricao(transferenciaResponse.get("descricao"));
+        transferencia.setMontante( new BigInteger(transferenciaResponse.get("montante")));
+        transferencia.setIbanDestinatario(transferenciaResponse.get("ibanDestinatario"));
+        transferencia.setDatahora(new SimpleDateFormat("yyyy-MM-dd").parse(transferenciaResponse.get("datahora")));
+        transferencia.setFkContaBancariaOrigem(Integer.parseInt(transferenciaResponse.get("ibanDestinatario")));
+        transferencia.setEstadoTransferencia("SUCESSO");
+        transferencia.setTipoTransferencia(transferenciaResponse.get("tipoTransferencia"));
+        transferencia.setCodigoTransferencia(transferenciaResponse.get("codigoTransferencia"));
+        return transferencia;
     }
 }
