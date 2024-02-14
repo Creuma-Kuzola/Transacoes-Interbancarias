@@ -4,25 +4,27 @@
  */
 package ucan.edu.kafka;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
 
 /**
  *
  * @author jussyleitecode
  */
+@Service
 public class KafkaTransferenciaConsumer
 {
-    
-    //s
     private final TransferenciaServiceImpl transferenciaServiceImpl;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaConsumer.class);
     public KafkaTransferenciaConsumer(TransferenciaServiceImpl transferenciaServiceImpl)
     {
         this.transferenciaServiceImpl = transferenciaServiceImpl;
     }
-    
-    
-    //@KafkaListen
     public void readTransferenciaFrom()
     {
         /*
@@ -33,7 +35,15 @@ public class KafkaTransferenciaConsumer
            se nao
                 - não persistir
         */
-        
-      
+    }
+
+    @KafkaListener(topics = "response")
+    public void consumerMessageResponse(String message)
+    {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        //jussy leite
+        Gson gson = builder.create();
+        LOGGER.info(String.format("Message received response transferencia status from transferencia topic-> %s", message.toString()));
     }
 }

@@ -64,7 +64,7 @@ public class KafkaConsumerConfig
         return token;
     }
 
-    @KafkaListener(topics = "transferencia", groupId = "myGroup")
+    @KafkaListener(topics = "transferencia", groupId = "transferenciaGroup")
     public void consumerMessage(String message)
     {
         GsonBuilder builder = new GsonBuilder();
@@ -82,19 +82,15 @@ public class KafkaConsumerConfig
            TransferenciaResponse transferenciaResponse = new TransferenciaResponse();
            transferenciaResponse.setDescricao("Conta disponivel");
            transferenciaResponse.setStatus(true);
-           String availble =  restTemplate.postForObject("http://localhost:8081//transferencia/response", transferenciaResponse,String.class);
-           System.out.println("Response: "+availble);
-
-           
+           sendResposta(transferenciaResponse);
        }
        else
        {
-           boolean availble =  restTemplate.postForObject("",true,Boolean.class);
-           //System.out.println("Account unavalaible to receive transfer money!");
+           //boolean availble =  restTemplate.postForObject("",true,Boolean.class);
+           System.out.println("account unavaible");
+
        }
-
     }
-
     private void sendResposta(TransferenciaResponse transferenciaResponse) {
 
         RestTemplate restTemplate = new RestTemplate();
@@ -133,6 +129,16 @@ public class KafkaConsumerConfig
     public TransferenciaPOJO getTransferenciaPOJO()
     {
         return transferenciaPOJO;
+    }
+
+    @KafkaListener(topics = "response", groupId = "transferenciaGroup")
+    public void consumerMessageResponse(String message)
+    {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson gson = builder.create();
+
+        LOGGER.info(String.format("Message kuzola received response transferencia status from transferencia topic-> %s", message.toString()));
     }
 
 
