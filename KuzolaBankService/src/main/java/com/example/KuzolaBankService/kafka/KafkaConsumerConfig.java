@@ -1,6 +1,5 @@
 package com.example.KuzolaBankService.kafka;
 
-
 import com.example.KuzolaBankService.dto.SignInDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
