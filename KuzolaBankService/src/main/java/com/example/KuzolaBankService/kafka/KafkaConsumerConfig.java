@@ -149,45 +149,30 @@ public class KafkaConsumerConfig
     @KafkaListener(topics = "tr-intrabancarias-kb", groupId = "consumerBanco")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
-        System.out.println("Message in Consumer"+ message);
-        String messageReceived = message;
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
         try {
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
-            Optional<ContaBancaria> contaBancaria = contaBancariServiceImpl.findById(transferenciaPOJO.getFkContaBancariaOrigem());
+            transferenciaPOJO.fillTransferenciaTransactionInformationField(transferenciaPOJO);
 
+            Optional<ContaBancaria> contaBancaria = contaBancariServiceImpl.findById(transferenciaPOJO.getFkContaBancariaOrigem());
             contaBancariServiceImpl.debito(contaBancaria.get().getIban(), transferenciaPOJO.getMontante());
             contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
-            System.out.println("ID: " + transferenciaPOJO);
-            // Access other properties as needed
+
+            LOGGER.info(String.format(" Transferencia efectuada com sucesso ", message.toString()));
+
+            System.out.println("\nTransferencia efectuada com sucesso: "+
+                    "\n"+ "Data-Hora: "+ transferenciaPOJO.getDatahora()+ "\n"+
+                    "Montante (Kz): "+ transferenciaPOJO.getMontante()+ "\n"+
+                    "Estado: "+ transferenciaPOJO.getEstadoTransferencia()+ "\n"+
+                    "Iban do Destinatario: "+ transferenciaPOJO.getIbanDestinatario()
+            );
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        LOGGER.info(String.format("Message received -> %s", message.toString()));
-
-        //TransferenciaPOJO obj = gson.fromJson(message, TransferenciaPOJO.class);
-       // System.out.println("Descricao " + obj.getDescricao());
-       /* try {
-            String fromTransfrerenciaJson = gson.toJson(message);
-
-            TransferenciaPOJO transferenciaPOJO1 = gson.fromJson(fromTransfrerenciaJson, TransferenciaPOJO.class);
-            System.out.println("TransferenciaPojo"+ transferenciaPOJO1);
-            System.out.println("Message received" + messageReceived);
-
-        }catch (IllegalStateException | JsonSyntaxException exception){
-
-            System.out.println("Exception in conversion"+ exception);
-        }
-        /*GsonBuildere builder = new GsonBuilder();
-        builder.setPrettyPrinting();
-        Gson gson = builder.create();
-
-        TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
-        System.out.println("Transferencia POJO " + obj.getDescricao());
-        transferenciaPOJO = obj;*/
 
     }
 

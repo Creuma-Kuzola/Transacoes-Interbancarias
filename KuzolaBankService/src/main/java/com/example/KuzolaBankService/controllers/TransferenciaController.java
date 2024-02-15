@@ -102,6 +102,7 @@ public class TransferenciaController extends BaseController
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
+        System.out.println("TRAnsferencia"+ transferencia);
         TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferencia, userInfo.getUserInfo().get("iban"));
         String data = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
         System.out.println("Data Json"+ data);

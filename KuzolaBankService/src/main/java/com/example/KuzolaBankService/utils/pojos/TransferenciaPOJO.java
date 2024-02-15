@@ -137,4 +137,9 @@ public class TransferenciaPOJO {
         sb.append("}");
         return sb.toString();
     }
+
+    public  void fillTransferenciaTransactionInformationField(TransferenciaPOJO transferenciaPOJO){
+        transferenciaPOJO.setEstadoTransferencia("Realizado");
+        transferenciaPOJO.setTipoTransferencia("Transferencia Intrabancaria");
+    }
 }
