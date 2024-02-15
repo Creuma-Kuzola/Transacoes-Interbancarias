@@ -26,6 +26,7 @@ import com.example.KuzolaBankService.dto.JwtDto;
 import org.springframework.http.*;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 public class KafkaConsumerConfig
@@ -153,6 +154,10 @@ public class KafkaConsumerConfig
 
         try {
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
+            Optional<ContaBancaria> contaBancaria = contaBancariServiceImpl.findById(transferenciaPOJO.getFkContaBancariaOrigem());
+
+            contaBancariServiceImpl.debito(contaBancaria.get().getIban(), transferenciaPOJO.getMontante());
+            contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
             System.out.println("ID: " + transferenciaPOJO);
             // Access other properties as needed
         } catch (Exception e) {

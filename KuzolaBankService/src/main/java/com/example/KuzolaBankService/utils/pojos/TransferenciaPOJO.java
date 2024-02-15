@@ -1,5 +1,6 @@
 package com.example.KuzolaBankService.utils.pojos;
 
+import com.example.KuzolaBankService.entities.Transferencia;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -114,6 +115,11 @@ public class TransferenciaPOJO {
     public void setCodigoTransferencia(String codigoTransferencia) {
         this.codigoTransferencia = codigoTransferencia;
     }
+
+    /*public Transferencia convertingIntoTransferencia(TransferenciaPOJO transferenciaPOJO){
+        Transferencia transferencia = new Transferencia();
+        transferencia.
+    }*/
 
     @Override
     public String toString() {
