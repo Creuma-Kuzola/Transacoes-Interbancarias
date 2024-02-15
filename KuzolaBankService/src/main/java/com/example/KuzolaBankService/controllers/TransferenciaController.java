@@ -83,7 +83,7 @@ public class TransferenciaController extends BaseController
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencia()
     {
-        List<Transferencia> lista = transferenciaServiceImpl.findAll();
+        List<Transferencia> lista = transferenciaServiceImpl.findAllDesc();
         return this.ok("Transferencias encontradas com sucesso!", lista);
     }
 
@@ -93,16 +93,16 @@ public class TransferenciaController extends BaseController
         Optional<Transferencia> consulta = this.transferenciaServiceImpl.findById(id);
         if (consulta.isPresent())
         {
-            return this.ok("TransferenciaDto encontrada com sucesso.", consulta.get());
+            return this.ok("Transferencia encontrada com sucesso.", consulta.get());
         }
-        return this.naoEncontrado("TransferenciaDto não encontrada", null);
+        return this.naoEncontrado("Transferencia não encontrada", null);
     }
 
 
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
-        System.out.println("TRAnsferencia"+ transferencia);
+        System.out.println("Transferencia"+ transferencia);
 
         if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")));
         {
@@ -116,7 +116,7 @@ public class TransferenciaController extends BaseController
             System.out.println("Data Json"+ transferenciaJson);
 
             transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
-            return this.createdTransferencia(transferenciaCreated);
+            return this.transferenciaEfectuada(transferenciaCreated);
         }
 
     }
@@ -124,13 +124,13 @@ public class TransferenciaController extends BaseController
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseBody> deleteTransferencia(@PathVariable("id") Integer id)
     {
-        return this.ok("TransferenciaDto eliminada com sucesso.", this.transferenciaServiceImpl.eliminar(id));
+        return this.ok("Transferencia eliminada com sucesso.", this.transferenciaServiceImpl.eliminar(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseBody> updateTransferencia(@PathVariable("id") Integer id, @RequestBody Transferencia transferencia)
     {
-        return this.ok("TransferenciaDto editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
+        return this.ok("Transferencia editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
     }
 
 

@@ -7,6 +7,7 @@ package com.example.KuzolaBankService.services.implementacao;
 import com.example.KuzolaBankService.config.component.UserInfo;
 import com.example.KuzolaBankService.dto.TransferenciaDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
+import com.example.KuzolaBankService.repositories.TransferenciaRepository;
 import com.example.KuzolaBankService.services.TransferenciaService;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.google.gson.JsonDeserializationContext;
@@ -20,6 +21,7 @@ import com.example.KuzolaBankService.entities.Transferencia;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  *
@@ -35,6 +37,8 @@ implements TransferenciaService {
     @Autowired
     UserInfo userInfo;
 
+    @Autowired
+    TransferenciaRepository transferenciaRepository;
 
     //-1, 0, or 1 as this BigDecimal is numerically less than, equal to, or greater than val.
 
@@ -95,6 +99,9 @@ implements TransferenciaService {
         return LocalDateTime.parse(dateTimeFormatted, formatter);
     }
 
+    public List<Transferencia> findAllDesc(){
+       return transferenciaRepository.findAllDesc();
+    }
 
 
 

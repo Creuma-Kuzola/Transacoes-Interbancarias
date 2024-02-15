@@ -37,15 +37,13 @@ public class ResponseControllerUtils
         return ResponseEntity.status( HttpStatus.NOT_FOUND ).body(responseBody );
     }
 
-    public ResponseEntity<ResponseBody> createdTransferencia(Transferencia transferencia) {
-        String mensagem = "Transferencia efectuada com sucesso";
+    public ResponseEntity<ResponseBody> transferenciaEfectuada(Transferencia transferencia) {
 
         ResponseBody responseBody = new ResponseBody();
         responseBody.setTimestamp(LocalDateTime.now() );
-        responseBody.setStatus(HttpStatus.CREATED);
-        responseBody.setMensagem( mensagem );
-
+        responseBody.setStatus(HttpStatus.OK);
+        responseBody.setMensagem( "Transferencia efectuada com sucesso" );
         responseBody.setData(transferenciaResponseKuzolaBank.convertingIntoTransferenciaKuzolaBank(transferencia));
-        return ResponseEntity.status( HttpStatus.CREATED).body(responseBody );
+        return ResponseEntity.status( HttpStatus.OK).body(responseBody );
     }
 }
