@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class TransferenciaResponseKuzolaBank {
 
-    LocalDateTime dataHora;
-    BigDecimal montante;
-    String estadoTransferencia;
-    String IbanDestinatario;
-    Integer pkTransferencia;
+   private LocalDateTime dataHora;
+   private BigDecimal montante;
+   private String estadoTransferencia;
+   private String IbanDestinatario;
+   private Integer pkTransferencia;
 
     public TransferenciaResponseKuzolaBank convertingIntoTransferenciaKuzolaBank(Transferencia transferencia){
 

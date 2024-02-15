@@ -76,7 +76,6 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     public ContaBancaria findContaBancaraByIban(String iban)
     {
-
         return contaBancariaRepository.findByIban(iban);
     }
 
@@ -100,12 +99,6 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return iban.length() == 17;
     }
 
-    /*public boolean debitoSaldoContabilistco (ContaBancaria contaBancaria, BigDecimal montante ){
-
-        BigDecimal saldoContabilistico = contaBancaria.getSaldoContabilistico();
-        contaBancaria.setSaldoContabilistico();
-
-    }*/
 
     public ContaBancaria credito(String iban, BigDecimal montante){
 
@@ -115,7 +108,6 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().add(montante));
 
         this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
-
         return contaBancaria;
     }
 
@@ -128,7 +120,6 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().subtract(montante));
 
         this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
-
         return contaBancaria;
     }
 

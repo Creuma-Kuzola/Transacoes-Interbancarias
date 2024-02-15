@@ -4,11 +4,14 @@
  */
 package com.example.KuzolaBankService.controllers;
 
+import com.example.KuzolaBankService.config.component.UserInfo;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import java.util.List;
 import java.util.Optional;
+
+import com.example.KuzolaBankService.utils.ContaBancariaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,10 +35,20 @@ public class ContaBancariaController extends BaseController
     @Autowired
     ContaBancariaServiceImpl contaBancariServiceImpl;
 
-    @GetMapping
+    @Autowired
+    UserInfo userInfo;
+
+   // ContaBancariaResponse contaBancariaResponse = new ContaBancariaResponse();
+    @GetMapping()
+    public ResponseEntity<ResponseBody> findUserContaBancariaInformations()
+    {
+        ContaBancaria contaBancaria = contaBancariServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+        return this.ok("Informações da sua conta",ContaBancariaResponse.convertingIntoContaBancariaResponse(contaBancaria));
+    }
+
+    @GetMapping("/all")
     public ResponseEntity<ResponseBody> findAllContaBancaria()
     {
-
         List<ContaBancaria> lista = contaBancariServiceImpl.findAll();
         return this.ok("Contas Bancarias encontradas com sucesso!", lista);
     }
