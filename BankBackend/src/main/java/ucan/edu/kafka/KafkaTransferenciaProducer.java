@@ -43,4 +43,14 @@ public class KafkaTransferenciaProducer
                 .build();
         kafkaTemplate.send(message);
     }
+
+    public void sendTransferenciaIntrabancaria(String transferencia){
+        LOGGER.info(String.format("Message sent -> %s", transferencia.toString()));
+        Message<String> message = MessageBuilder
+                .withPayload(transferencia)
+                .setHeader(KafkaHeaders.TOPIC, "tr-intrabancarias-wd")
+                .build();
+        kafkaTemplate.send(message);
+
+    }
 }

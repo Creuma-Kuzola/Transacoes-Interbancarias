@@ -65,9 +65,6 @@ implements TransferenciaService {
     public TransferenciaPOJO convertingIntoTransferenciaPOJO(Transferencia transferencia, String IbanOrigem)
     {
         TransferenciaPOJO transferenciaPOJO = new TransferenciaPOJO();
-
-        fillingTransactionFields(transferencia);
-
         transferenciaPOJO.setPkTransferencia(transferencia.getPkTransferencia());
         transferenciaPOJO.setDatahora(transferencia.getDatahora());
         transferenciaPOJO.setDescricao(transferencia.getDescricao());
@@ -83,6 +80,7 @@ implements TransferenciaService {
     public void fillingTransactionFields(Transferencia transferencia){
 
         ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+
         transferencia.setFkContaBancariaOrigem(contaBancaria);
         transferencia.setDatahora(formattingDateTime());
         transferencia.setEstadoTransferencia("Realizado");

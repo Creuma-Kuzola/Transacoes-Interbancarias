@@ -4,12 +4,17 @@
  */
 package ucan.edu.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import ucan.edu.component.TransferenciaMessage;
 import ucan.edu.config.component.TransferenciaComponent;
@@ -25,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  *
@@ -105,4 +111,35 @@ public class KafkaTransferenciaConsumer
         transferencia.setCodigoTransferencia(transferenciaResponse.get("codigoTransferencia"));
         return transferencia;
     }
+
+   /* @KafkaListener(topics = "tr-intrabancarias-kb", groupId = "consumerBanco")
+    public void consumeMessageTransferenciasIntrabancarias(String message)  {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        try {
+
+            TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
+
+            Optional<ContaBancaria> contaBancaria = contaBancariServiceImpl.findById(transferenciaPOJO.getFkContaBancariaOrigem());
+            contaBancariServiceImpl.debito(contaBancaria.get().getIban(), transferenciaPOJO.getMontante());
+            contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
+
+            LOGGER.info(String.format(" Transferencia efectuada com sucesso ", message.toString()));
+
+            System.out.println("\nTransferencia efectuada com sucesso: "+
+                    "\n"+ "Data-Hora: "+ transferenciaPOJO.getDatahora()+ "\n"+
+                    "Montante (Kz): "+ transferenciaPOJO.getMontante()+ "\n"+
+                    "Estado: "+ transferenciaPOJO.getEstadoTransferencia()+ "\n"+
+                    "Iban do Destinatario: "+ transferenciaPOJO.getIbanDestinatario()
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }*/
+
 }

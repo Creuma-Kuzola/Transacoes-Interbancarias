@@ -67,8 +67,8 @@ public class TransferenciaController extends BaseController
     @Autowired
     private KafkaTransferenciaProducer kafkaTransferenciaProducer;
 
-    @Autowired
-    GsonLocalDateAdapter gsonLocalDateAdapter;
+    Transferencia transferenciaCreated;
+
     public TransferenciaController(TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer)
     {
         this.transferenciaJsonKafkaProducer = transferenciaJsonKafkaProducer;
@@ -103,14 +103,20 @@ public class TransferenciaController extends BaseController
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
         System.out.println("TRAnsferencia"+ transferencia);
-        TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferencia, userInfo.getUserInfo().get("iban"));
 
-        String data = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
-        System.out.println("Data Json"+ data);
         if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")));
         {
-            transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaPOJO.toString());
-            return this.created("Transferencia criada com sucesso",this.transferenciaServiceImpl.criar(transferencia));
+            transferenciaCreated = new Transferencia();
+            transferenciaServiceImpl.fillingTransactionFields(transferencia);
+            transferenciaCreated = this.transferenciaServiceImpl.criar(transferencia);
+
+            TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated, userInfo.getUserInfo().get("iban"));
+
+            String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
+            System.out.println("Data Json"+ transferenciaJson);
+
+            transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
+            return this.createdTransferencia(transferenciaCreated);
         }
 
     }
