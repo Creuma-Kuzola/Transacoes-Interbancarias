@@ -6,6 +6,9 @@ package com.example.TransferenciaService.kafka;
 
 import com.example.TransferenciaService.utils.pojos.TransferenciaPOJO;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.example.TransferenciaService.utils.pojos.jsonUtils.CustomJsonPojos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -40,10 +43,10 @@ public class KafkaTransferenciaProducer
     {
         String str = "{\n"
                 + "  \"pkTransferencia\": " + transferenciaPOJO.getPkTransferencia() + ",\n"
-                + "   \"descricao\": \"" + transferenciaPOJO.getDescricao() + "\",\n"
+                + "   \"descricao\": \"" +  transferenciaPOJO.getDescricao() + "\",\n"
                 + "    \"montante\": " + transferenciaPOJO.getMontante() + ",\n"
                 + "    \"ibanDestinatario\": \"" + transferenciaPOJO.getIbanDestinatario() + "\",\n"
-                + "    \"datahora\":\"" + new SimpleDateFormat("yyyy-MM-dd").format(transferenciaPOJO.getDatahora()) + "\",\n"
+                + "    \"datahora\":\"" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferenciaPOJO.getDatahora()) + "\",\n"
                 + "    \"fkContaBancariaOrigem\": " + transferenciaPOJO.getFkContaBancariaOrigem() + ",\n"
                 + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
                 + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
@@ -55,9 +58,7 @@ public class KafkaTransferenciaProducer
 
     public void sendMessage(String data)
     {
-
-        data = this.criarStrToJson(kafkaConsumerConfig.getTransferenciaPOJO());
-
+        data = CustomJsonPojos.criarStrToJson(kafkaConsumerConfig.getTransferenciaPOJO());
         LOGGER.info(String.format("Message sent ==> %s ", data.toString()));
         Message<String> message = MessageBuilder
                 .withPayload(data)

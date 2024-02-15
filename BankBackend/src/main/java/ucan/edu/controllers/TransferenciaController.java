@@ -4,8 +4,10 @@
  */
 package ucan.edu.controllers;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import ucan.edu.component.TransferenciaMessage;
 import ucan.edu.config.component.TransferenciaComponent;
 import ucan.edu.config.component.UserInfo;
 import ucan.edu.entities.*;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ucan.edu.kafka.KafkaTransferenciaProducer;
+import ucan.edu.utils.dates.DateUtils;
 import ucan.edu.utils.jsonUtils.CustomJsonPojos;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
 
@@ -39,11 +42,15 @@ public class TransferenciaController extends BaseController
 {
 
     private final TransferenciaServiceImpl transferenciaServiceImpl;
+    @Autowired
+    ContaBancariaServiceImpl contaBancariaServiceImpl;
       @Autowired
       private UserInfo userInfo;
 
       @Autowired
-    TransferenciaComponent transferenciaComponent;
+    private TransferenciaComponent transferenciaComponent;
+      @Autowired
+      private TransferenciaMessage transferenciaMessage;
 
     private final KafkaTransferenciaProducer KafkaTransferenciaProducer;
 
@@ -58,26 +65,49 @@ public class TransferenciaController extends BaseController
     @PostMapping("/publishTransferencia")
     public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
     {
-        transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
-        saveTransferComponent(transferencia);
-        String data = CustomJsonPojos.criarStrToJson(transferencia);
-        KafkaTransferenciaProducer.sendMessage(data);
-        return ResponseEntity.ok("Transferencia envida com suceesso no topic");
+        String montaneStr = transferencia.getMontante().toString();
+        System.out.println("valor: " +montaneStr);
+        boolean isSaldoEnought = contaBancariaServiceImpl
+                .isSaldoPositiveToTransfer(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")), Integer.parseInt(montaneStr));
+        if (isSaldoEnought)
+        {
+            transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
+            transferencia.setDatahora(new Date());
+
+            saveTransferComponent(transferencia);
+            String data = CustomJsonPojos.criarStrToJson(transferencia);
+            KafkaTransferenciaProducer.sendMessage(data);
+            try {
+                Thread.sleep(9000);
+                return ResponseEntity.ok("Message: "+transferenciaMessage.getMessage().get("message"));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else
+        {
+            return ResponseEntity.ok("Message:  Você possui saldo insuficiente, para efectuar a transfências!" +isSaldoEnought);
+        }
     }
 
-    private void saveTransferComponent(TransferenciaPOJO transferencia) {
+
+
+    //"datahora":"2024-02-10 16:11:20",
+
+    private void saveTransferComponent(TransferenciaPOJO transferencia)  {
         Map<String, String> transferenciaItems = new HashMap<>();
 
         transferenciaItems.put("descricao", transferencia.getDescricao());
         transferenciaItems.put("montante", transferencia.getMontante().toString());
         transferenciaItems.put("ibanDestinatario", transferencia.getIbanDestinatario());
-        transferenciaItems.put("datahora","" + new Date());
+        transferenciaItems.put("datahora","" + transferencia.getDatahora());
+
         transferenciaItems.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem());
         transferenciaItems.put("tipoTransferencia", transferencia.getTipoTransferencia());
         transferenciaItems.put("estadoTransferencia", transferencia.getEstadoTransferencia());
         transferenciaItems.put("codigoTransferencia", transferencia.getCodigoTransferencia());
-
         transferenciaComponent.setTransferenciaResponse(transferenciaItems);
+        System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
     }
 
     @GetMapping

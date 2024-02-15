@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import ucan.edu.component.TransferenciaMessage;
 import ucan.edu.config.component.TransferenciaComponent;
 import ucan.edu.entities.ContaBancaria;
 import ucan.edu.entities.Transferencia;
@@ -22,6 +23,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,6 +38,9 @@ public class KafkaTransferenciaConsumer
     private TransferenciaComponent transferenciaComponent;
     @Autowired
     ContaBancariaServiceImpl contaBancariServiceImpl;
+
+    @Autowired
+    private TransferenciaMessage transferenciaMessage;
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaConsumer.class);
     public KafkaTransferenciaConsumer(TransferenciaServiceImpl transferenciaServiceImpl)
     {
@@ -59,23 +64,29 @@ public class KafkaTransferenciaConsumer
         builder.setPrettyPrinting();
         Gson gson = builder.create();
         TransferenciaResponse transferenciaResponse = gson.fromJson(message.toString(), TransferenciaResponse.class);
+        Map<String, String> messageT = new HashMap<>();
 
         if(transferenciaResponse.getStatus() == true)
         {
           Integer numeroDeConta  = Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
           Integer montante =  Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("montante"));
-           // transferenciaServiceImpl;
          ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);
+
+
+
          if (contaBancaria != null)
          {
+             messageT.put("message","Transferência efectuada com sucesso!");
+             transferenciaMessage.setMessage(messageT);
              System.out.println("Debto feito com sucesso!");
              //Transferencia transferencia =  builderTransferencia(transferenciaComponent.getTransferenciaResponse());
              //transferenciaServiceImpl.criar(transferencia);
          }
-
         }
         else
         {
+            messageT.put("message","Transferência efectuada com sucesso!");
+            transferenciaMessage.setMessage(messageT);
             System.out.println(" Não é possivel completar a operação!");
         }
         LOGGER.info(String.format("Message received response transferencia status from transferencia topic-> %s", message.toString()));
@@ -87,7 +98,7 @@ public class KafkaTransferenciaConsumer
         transferencia.setDescricao(transferenciaResponse.get("descricao"));
         transferencia.setMontante( new BigInteger(transferenciaResponse.get("montante")));
         transferencia.setIbanDestinatario(transferenciaResponse.get("ibanDestinatario"));
-        transferencia.setDatahora(new SimpleDateFormat("yyyy-MM-dd").parse(transferenciaResponse.get("datahora")));
+        transferencia.setDatahora(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(transferenciaResponse.get("datahora")));
         transferencia.setFkContaBancariaOrigem(Integer.parseInt(transferenciaResponse.get("ibanDestinatario")));
         transferencia.setEstadoTransferencia("SUCESSO");
         transferencia.setTipoTransferencia(transferenciaResponse.get("tipoTransferencia"));

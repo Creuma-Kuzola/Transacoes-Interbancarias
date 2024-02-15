@@ -69,6 +69,8 @@ public class KafkaConsumerConfig
     {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
+        //builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
+        builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
         Gson gson = builder.create();
         LOGGER.info(String.format("Message received -> %s", message.toString()));
         TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);

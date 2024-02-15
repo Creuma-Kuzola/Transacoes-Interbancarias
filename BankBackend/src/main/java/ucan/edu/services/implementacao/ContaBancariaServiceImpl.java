@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import ucan.edu.component.TransferenciaMessage;
 import ucan.edu.dtos.SaldoContaDTO;
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
@@ -33,6 +35,9 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     private Integer numberAccount;
     private final Integer BANKNUMBER = 0404;
+
+    @Autowired
+    private TransferenciaMessage transferenciaMessage;
 
     private final ContaBancariaRepository contaBancariaRepository;
 
@@ -120,6 +125,15 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return contaBancariaActualizada;
     }
 
+    public boolean isSaldoPositiveToTransfer(Integer numberAccount, Integer montante)
+    {
+        Optional<ContaBancaria> contaBancariaFoundOrigem = contaBancariaRepository
+                .findContaBancariaByNumeroDeConta(numberAccount);
+        System.out.println("Saldo Disponivel: " +contaBancariaFoundOrigem.get().getSaldoDisponivel());
+
+         return  montante < contaBancariaFoundOrigem.get().getSaldoDisponivel()  ? true : false;
+    }
+
     public ContaBancaria transferInterbancariaDebito(Integer numberAccount, Integer montante)
     {
         Optional<ContaBancaria> contaBancariaFoundOrigem = contaBancariaRepository
@@ -129,7 +143,9 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
        if (contaBancariaFoundOrigem.get().getSaldoDisponivel() < montante)
         {
-            throw new SaldoContaBancariaInferiorException();
+            //throw new SaldoContaBancariaInferiorException();
+
+            return null;
         }
 
         Integer novoSaldoContaBancariaOrigem = contaBancariaFoundOrigem.get().getSaldoDisponivel();

@@ -68,23 +68,25 @@ public class TransferenciaController extends BaseController {
     {
         String str = "{\n"
                 + "  \"pkTransferencia\": " + transferenciaPOJO.getPkTransferencia() + ",\n"
-                + "   \"descricao\": \"" + transferenciaPOJO.getDescricao() + "\",\n"
+                + "   \"descricao\": \"" +  transferenciaPOJO.getDescricao() + "\",\n"
                 + "    \"montante\": " + transferenciaPOJO.getMontante() + ",\n"
                 + "    \"ibanDestinatario\": \"" + transferenciaPOJO.getIbanDestinatario() + "\",\n"
-                + "    \"datahora\":\"" + new SimpleDateFormat("yyyy-MM-dd").format(transferenciaPOJO.getDatahora()) + "\",\n"
-                + "    \"fkContaBancariaOrigem\": " +transferenciaPOJO.getFkContaBancariaOrigem() + ",\n"
+                + "    \"datahora\":\"" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferenciaPOJO.getDatahora()) + "\",\n"
+                + "    \"fkContaBancariaOrigem\": " + transferenciaPOJO.getFkContaBancariaOrigem() + ",\n"
                 + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
                 + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
                 + "    \"codigoTransferencia\": " + transferenciaPOJO.getCodigoTransferencia() + "\n"
                 + "}";
+
         return str;
     }
+
 
     // /transferencia/publishTransferencia
     @PostMapping("/publishTransferencia")
     public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
     {
-        String data = this.criarStrToJson(transferencia);
+        String data = CustomJsonPojos.criarStrToJson(transferencia);
         kafkaTransferenciaProducer.sendMessage(data);
         return ResponseEntity.ok("Transferencia envida com sucesso no topic");
     }

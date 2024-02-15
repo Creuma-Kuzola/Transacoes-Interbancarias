@@ -40,13 +40,16 @@ public class KafkaConsumerConfig
     {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
+        builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
         Gson gson = builder.create();
 
         LOGGER.info(String.format("Message received -> %s", message.toString()));
+
         TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
         System.out.println("Descricao " + obj.getDescricao());
         transferenciaPOJO = obj;
 
+        System.out.println("Data: " +transferenciaPOJO.getDatahora()+ "Data: " +obj.getDatahora());
         String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
         System.out.println("Resposta: -> to another bank kusola:-> " +response);
     }
