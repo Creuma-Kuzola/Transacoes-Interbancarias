@@ -5,6 +5,7 @@
 package com.example.KuzolaBankService.controllers;
 
 import com.example.KuzolaBankService.dto.TransferenciaDto;
+import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
 import com.example.KuzolaBankService.kafka.KafkaTransferenciaProducer;
@@ -12,12 +13,22 @@ import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 
+import java.lang.reflect.Type;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.KuzolaBankService.utils.GsonLocalDateAdapter;
 import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
+import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
+import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,6 +66,9 @@ public class TransferenciaController extends BaseController
 
     @Autowired
     private KafkaTransferenciaProducer kafkaTransferenciaProducer;
+
+    @Autowired
+    GsonLocalDateAdapter gsonLocalDateAdapter;
     public TransferenciaController(TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer)
     {
         this.transferenciaJsonKafkaProducer = transferenciaJsonKafkaProducer;
@@ -84,21 +98,20 @@ public class TransferenciaController extends BaseController
         return this.naoEncontrado("TransferenciaDto não encontrada", null);
     }
 
+
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
-        String ibanOrigem = userInfo.getUserInfo().get("iban");
-
-        if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), ibanOrigem))
+        TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferencia, userInfo.getUserInfo().get("iban"));
+        String data = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
+        System.out.println("Data Json"+ data);
+        if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")));
         {
-            System.out.println("Transferencia request"+ transferencia + "To String" + transferencia.toString());
-            transferencia.setDatahora(new Date(System.currentTimeMillis()));
-            //transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferencia.toString());
-            return this.created("TransferenciaDto enviada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
+            transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaPOJO.toString());
+            return this.created("Transferencia criada com sucesso",transferencia);
         }
-        return this.naoEncontrado("ERRO: O IBAN é inválido", null);
-    }
 
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseBody> deleteTransferencia(@PathVariable("id") Integer id)

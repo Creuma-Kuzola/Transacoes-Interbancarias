@@ -18,7 +18,7 @@ public class KafkaTopicConfig {
     @Bean
     public NewTopic Topic2(){
         return TopicBuilder
-                .name("tr-intrabancarias-kuzolabank")
+                .name("tr-intrabancarias-kb")
                 .build();
     }
 }

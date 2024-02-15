@@ -1,11 +1,12 @@
 package com.example.KuzolaBankService.kafka;
 
-
 import com.example.KuzolaBankService.dto.SignInDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import com.example.KuzolaBankService.dto.JwtDto;
 import org.springframework.http.*;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 public class KafkaConsumerConfig
@@ -144,21 +146,30 @@ public class KafkaConsumerConfig
     }
 
 
-    @KafkaListener(topics = "tr-intrabancarias-kuzolabank", groupId = "consumerBanco")
+    @KafkaListener(topics = "tr-intrabancarias-kb", groupId = "consumerBanco")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
+        System.out.println("Message in Consumer"+ message);
         String messageReceived = message;
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
-        GsonBuilder builder = new GsonBuilder();
-        builder.setPrettyPrinting();
-        gson = builder.create();
+        try {
+            TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
+            Optional<ContaBancaria> contaBancaria = contaBancariServiceImpl.findById(transferenciaPOJO.getFkContaBancariaOrigem());
+
+            contaBancariServiceImpl.debito(contaBancaria.get().getIban(), transferenciaPOJO.getMontante());
+            contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
+            System.out.println("ID: " + transferenciaPOJO);
+            // Access other properties as needed
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         LOGGER.info(String.format("Message received -> %s", message.toString()));
 
-        TransferenciaPOJO obj = gson.fromJson(message, TransferenciaPOJO.class);
-
-        System.out.println("Descricao " + obj.getDescricao());
-        transferenciaPOJO = obj;
-
+        //TransferenciaPOJO obj = gson.fromJson(message, TransferenciaPOJO.class);
+       // System.out.println("Descricao " + obj.getDescricao());
        /* try {
             String fromTransfrerenciaJson = gson.toJson(message);
 
@@ -170,8 +181,6 @@ public class KafkaConsumerConfig
 
             System.out.println("Exception in conversion"+ exception);
         }
-
-
         /*GsonBuildere builder = new GsonBuilder();
         builder.setPrettyPrinting();
         Gson gson = builder.create();
@@ -179,7 +188,7 @@ public class KafkaConsumerConfig
         TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
         System.out.println("Transferencia POJO " + obj.getDescricao());
         transferenciaPOJO = obj;*/
-        LOGGER.info(String.format("Message received -> %s", message.toString()));
+
     }
 
 }

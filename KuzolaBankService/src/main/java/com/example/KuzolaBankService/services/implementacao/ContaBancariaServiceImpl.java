@@ -108,4 +108,31 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     }*/
 
+    public ContaBancaria credito(String iban, BigDecimal montante){
+
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria = findContaBancaraByIban(iban);
+        contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().add(montante));
+        contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().add(montante));
+
+        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
+
+        return contaBancaria;
+    }
+
+
+    public ContaBancaria debito(String iban, BigDecimal montante){
+
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria = findContaBancaraByIban(iban);
+        contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().subtract(montante));
+        contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().subtract(montante));
+
+        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
+
+        return contaBancaria;
+    }
+
+
+
 }

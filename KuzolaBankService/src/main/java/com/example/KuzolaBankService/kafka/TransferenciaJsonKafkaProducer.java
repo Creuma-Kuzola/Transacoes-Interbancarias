@@ -35,7 +35,7 @@ public class TransferenciaJsonKafkaProducer {
 
         Message<String> message = MessageBuilder
                 .withPayload(transferencia)
-                .setHeader(KafkaHeaders.TOPIC, "tr-intrabancarias-kuzolabank")
+                .setHeader(KafkaHeaders.TOPIC, "tr-intrabancarias-kb")
                 .build();
         kafkaTemplate.send(message);
     }
