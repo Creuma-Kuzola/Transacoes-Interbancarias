@@ -17,11 +17,8 @@ public class CustomJsonPojos {
                 + "   \"descricao\": \"" + transferenciaPOJO.getDescricao() + "\",\n"
                 + "    \"montante\": " + transferenciaPOJO.getMontante() + ",\n"
                 + "    \"ibanDestinatario\": \"" + transferenciaPOJO.getIbanDestinatario() + "\",\n"
-<<<<<<< HEAD
                 + "    \"datahora\":\"" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferenciaPOJO.getDatahora()) + "\",\n"
-=======
                 + "    \"datahora\":\"" + transferenciaPOJO.getDatahora() + "\",\n"
->>>>>>> 1f5945342bdae690bb1ca9d86339cb6417a241d3
                 + "    \"fkContaBancariaOrigem\": " +transferenciaPOJO.getFkContaBancariaOrigem() +",\n"
                 + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
                 + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
