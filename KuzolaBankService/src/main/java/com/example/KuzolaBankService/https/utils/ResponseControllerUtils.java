@@ -46,4 +46,15 @@ public class ResponseControllerUtils
         responseBody.setData(transferenciaResponseKuzolaBank.convertingIntoTransferenciaKuzolaBank(transferencia));
         return ResponseEntity.status( HttpStatus.OK).body(responseBody );
     }
+
+    public ResponseEntity<ResponseBody> erro (String message) {
+
+        ResponseBody responseBody = new ResponseBody();
+        responseBody.setTimestamp(LocalDateTime.now() );
+        responseBody.setStatus(HttpStatus.BAD_REQUEST);
+        responseBody.setMensagem( message);
+
+        return ResponseEntity.status( HttpStatus.BAD_REQUEST).body(responseBody );
+    }
+
 }

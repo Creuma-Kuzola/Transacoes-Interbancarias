@@ -42,28 +42,32 @@ implements TransferenciaService {
 
     //-1, 0, or 1 as this BigDecimal is numerically less than, equal to, or greater than val.
 
+    public  Integer isValidInformationIban(String iban){
+
+        if(contaBancariaService.isValidTheSizeOfIban(iban)){
+            if (contaBancariaService.isKuzolaBankIban(iban)){
+                return 1;
+            }
+            return 2;
+        }
+        return 3;
+    }
+
     public boolean isTransferenciaInformationValid(String ibanDestino, BigDecimal montante, String ibanOrigem) {
 
-        if (contaBancariaService.isValidIban(ibanDestino)) {
-            if (contaBancariaService.isValidTheSizeOfIban(ibanDestino)) {
-                if (contaBancariaService.existsIban(ibanDestino)) {
-                    if (ibanDestino != ibanOrigem) {
+        if (contaBancariaService.existsIban(ibanDestino)) {
+            if (ibanDestino != ibanOrigem) {
+                ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(ibanOrigem);
 
-                        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(ibanOrigem);
-
-                        if (contaBancariaService.isValidMontante(contaBancaria, montante) != -1) {
-                            return true;
-                        }
-
-                        return false;
-                    }
-                    return false;
+                if (contaBancariaService.isValidMontante(contaBancaria, montante) != -1) {
+                    return true;
                 }
                 return false;
             }
             return false;
         }
         return false;
+
     }
 
     public TransferenciaPOJO convertingIntoTransferenciaPOJO(Transferencia transferencia, String IbanOrigem)
@@ -102,7 +106,5 @@ implements TransferenciaService {
     public List<Transferencia> findAllDesc(){
        return transferenciaRepository.findAllDesc();
     }
-
-
 
 }

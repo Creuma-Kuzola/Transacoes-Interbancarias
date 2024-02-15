@@ -80,9 +80,8 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return contaBancariaRepository.findByIban(iban);
     }
 
-    public boolean isValidIban(String iban)
+    public boolean isKuzolaBankIban(String iban)
     {
-
         String codigoBanco = iban.substring(0, 4);
         String idBancoValido = String.valueOf(identificadorDoBanco.getIdentificadorDoBanco());
         return codigoBanco.equals(idBancoValido);

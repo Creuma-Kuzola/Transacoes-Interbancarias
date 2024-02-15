@@ -103,21 +103,36 @@ public class TransferenciaController extends BaseController
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
         System.out.println("Transferencia"+ transferencia);
+        Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario());
 
-        if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")));
+        // 1 - Transferencias Intrabancaria
+        if(responseVerification == 1)
         {
-            transferenciaCreated = new Transferencia();
-            transferenciaServiceImpl.fillingTransactionFields(transferencia);
-            transferenciaCreated = this.transferenciaServiceImpl.criar(transferencia);
+            if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")))
+            {
+                transferenciaCreated = new Transferencia();
+                transferenciaServiceImpl.fillingTransactionFields(transferencia);
+                transferenciaCreated = this.transferenciaServiceImpl.criar(transferencia);
 
-            TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated, userInfo.getUserInfo().get("iban"));
+                TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated, userInfo.getUserInfo().get("iban"));
 
-            String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
-            System.out.println("Data Json"+ transferenciaJson);
+                String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
+                System.out.println("Data Json" + transferenciaJson);
 
-            transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
-            return this.transferenciaEfectuada(transferenciaCreated);
+                transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
+                return this.transferenciaEfectuada(transferenciaCreated);
+            }
+            return  this.erro("ERRO: Informação inválida");
         }
+        // 1 - Transferencias Interbancaria
+        else if(responseVerification == 2){
+
+        }
+        else{
+            return this.erro("ERRO: IBAN inválido");
+        }
+
+        return this.erro("Erro!!");
 
     }
 
