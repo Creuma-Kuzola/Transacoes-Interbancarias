@@ -153,8 +153,8 @@ public class KafkaConsumerConfig
         objectMapper.registerModule(new JavaTimeModule());
 
         try {
+
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
-            transferenciaPOJO.fillTransferenciaTransactionInformationField(transferenciaPOJO);
 
             Optional<ContaBancaria> contaBancaria = contaBancariServiceImpl.findById(transferenciaPOJO.getFkContaBancariaOrigem());
             contaBancariServiceImpl.debito(contaBancaria.get().getIban(), transferenciaPOJO.getMontante());

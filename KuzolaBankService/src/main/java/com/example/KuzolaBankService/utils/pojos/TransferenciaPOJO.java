@@ -138,8 +138,4 @@ public class TransferenciaPOJO {
         return sb.toString();
     }
 
-    public  void fillTransferenciaTransactionInformationField(TransferenciaPOJO transferenciaPOJO){
-        transferenciaPOJO.setEstadoTransferencia("Realizado");
-        transferenciaPOJO.setTipoTransferencia("Transferencia Intrabancaria");
-    }
 }

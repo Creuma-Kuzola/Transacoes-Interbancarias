@@ -65,25 +65,34 @@ implements TransferenciaService {
     public TransferenciaPOJO convertingIntoTransferenciaPOJO(Transferencia transferencia, String IbanOrigem)
     {
         TransferenciaPOJO transferenciaPOJO = new TransferenciaPOJO();
-        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+
+        fillingTransactionFields(transferencia);
 
         transferenciaPOJO.setPkTransferencia(transferencia.getPkTransferencia());
-        transferenciaPOJO.setDatahora(formattingDateTime(transferencia.getDatahora()));
+        transferenciaPOJO.setDatahora(transferencia.getDatahora());
         transferenciaPOJO.setDescricao(transferencia.getDescricao());
         transferenciaPOJO.setIbanDestinatario(transferencia.getIbanDestinatario());
         transferenciaPOJO.setMontante(transferencia.getMontante());
         transferenciaPOJO.setEstadoTransferencia(transferencia.getEstadoTransferencia());
-        transferenciaPOJO.setFkContaBancariaOrigem(contaBancaria.getPkContaBancaria());
+        transferenciaPOJO.setFkContaBancariaOrigem(transferencia.getFkContaBancariaOrigem().getPkContaBancaria());
         transferenciaPOJO.setCodigoTransferencia(transferencia.getCodigoTransferencia());
 
         return transferenciaPOJO;
     }
 
+    public void fillingTransactionFields(Transferencia transferencia){
 
-    public LocalDateTime formattingDateTime(LocalDateTime localDateTime){
+        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+        transferencia.setFkContaBancariaOrigem(contaBancaria);
+        transferencia.setDatahora(formattingDateTime());
+        transferencia.setEstadoTransferencia("Realizado");
+        transferencia.setTipoTransferencia("Transferencia Intrabancaria");
+    }
+
+    public LocalDateTime formattingDateTime() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        localDateTime = LocalDateTime.now();
+        LocalDateTime localDateTime = LocalDateTime.now();
         String dateTimeFormatted = localDateTime.format(formatter);
         return LocalDateTime.parse(dateTimeFormatted, formatter);
     }

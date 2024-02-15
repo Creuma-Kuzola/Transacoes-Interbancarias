@@ -104,8 +104,10 @@ public class TransferenciaController extends BaseController
     {
         System.out.println("TRAnsferencia"+ transferencia);
         TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferencia, userInfo.getUserInfo().get("iban"));
+
         String data = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
         System.out.println("Data Json"+ data);
+
         if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")));
         {
             transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaPOJO.toString());
