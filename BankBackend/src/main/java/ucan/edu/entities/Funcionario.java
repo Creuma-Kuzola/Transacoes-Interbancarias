@@ -88,18 +88,6 @@ public class Funcionario implements Serializable {
         return hash;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Funcionario)) {
-            return false;
-        }
-        Funcionario other = (Funcionario) object;
-        if ((this.pkFuncionario == null && other.pkFuncionario != null) || (this.pkFuncionario != null && !this.pkFuncionario.equals(other.pkFuncionario))) {
-            return false;
-        }
-        return true;
-    }
 
     @Override
     public String toString() {
