@@ -1,0 +1,32 @@
+Credenciais Kuzola_Bank
+
+/*{
+    "login": "usuario3",
+    "password": "usuario3",
+    "role":"CLIENTE"
+}*/
+
+/*{
+     "login":"Ped12Cvr0",
+    "password": "ctlient#",
+    "role": "CLIENTE"
+}*/
+
+/*{
+     "login":"Mati12/&",
+    "password": "c#ft12",
+    "role":"CLIENTE",
+}*/
+
+/*{
+    "login":"AD-Z12##",
+    "password": "AD-Z12%%",
+    "role":"ADMIN"
+}*/
+
+{
+    "login": "admin",
+    "password": "admin",
+    "role":"ADMIN"
+}
+
