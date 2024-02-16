@@ -32,6 +32,8 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
     private DetalhesBanco identificadorDoBanco = DetalhesBanco.IDENTIFICADOR_DO_BANCO;
     ContaBancariaDetails contaBancariaDetails = new ContaBancariaDetails();
 
+    private final BigDecimal  SALDO_DEFAULT = new BigDecimal(15000.000);
+
     public void getAllNumerosDeConta(HashSet<BigInteger> listaNumerosDeConta)
     {
         listaNumerosDeConta = contaBancariaRepository.findAllNumeroConta();
@@ -40,18 +42,19 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
     @Override
     public ContaBancaria creatingContaBancariaByFkCliente(Cliente cliente)
     {
-
         BigInteger numeroConta = BigInteger.ZERO;
         Date data = new Date();
-        ContaBancaria contaBancaria = new ContaBancaria();
-        contaBancaria.setFkCliente(cliente);
 
+        ContaBancaria contaBancaria = new ContaBancaria();
         numeroConta = contaBancariaDetails.createNumeroDeConta(listaNumerosDeConta);
 
+        contaBancaria.setFkCliente(cliente);
         contaBancaria.setNumeroDeConta(numeroConta);
         contaBancaria.setIban(contaBancariaDetails.createIban(numeroConta));
         contaBancaria.setStatus("Activo");
         contaBancaria.setDataCriacao(data);
+        contaBancaria.setSaldoDisponivel(SALDO_DEFAULT);
+        contaBancaria.setSaldoContabilistico(SALDO_DEFAULT);
 
         return contaBancaria;
     }
