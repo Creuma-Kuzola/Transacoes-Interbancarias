@@ -62,7 +62,7 @@ public class AuthController
         var accessToken = tokenService.generateAccessToken((User) authUser.getPrincipal());
 
         JwtDto jwtdto = null;
-        if (accessToken != " " )
+        if (accessToken != " "  &&  ((User) authUser.getPrincipal()).getRole().getValue().equals("admin") == false)
         {
             User user = (User) authUser.getPrincipal();
             Integer clienteId = user.getFkCliente().getPkCliente();
@@ -70,6 +70,9 @@ public class AuthController
             ContaBancaria contaBancaria = contaBancarioRepository.findByCliente(Math.toIntExact(clienteId));
             String username = ((User) authUser.getPrincipal()).getUsername();
             saveUserInfoTemporary(contaBancaria, username);
+            jwtdto = new JwtDto(accessToken);
+        }
+        else {
             jwtdto = new JwtDto(accessToken);
         }
 
