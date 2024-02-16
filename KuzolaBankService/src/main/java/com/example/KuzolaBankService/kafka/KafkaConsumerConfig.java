@@ -3,6 +3,7 @@ package com.example.KuzolaBankService.kafka;
 import com.example.KuzolaBankService.dto.SignInDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
+import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,7 @@ public class KafkaConsumerConfig
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerConfig.class);
     private TransferenciaPOJO transferenciaPOJO;
+    private TransferenciaCustomPOJO transferenciaCustomPOJO;
     private RestTemplate restTemplate;
     @Autowired
     private ContaBancariaServiceImpl contaBancariServiceImpl;
@@ -75,24 +77,28 @@ public class KafkaConsumerConfig
         builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
         Gson gson = builder.create();
         LOGGER.info(String.format("Message received -> %s", message.toString()));
-        TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
+        TransferenciaCustomPOJO obj = gson.fromJson(message.toString(), TransferenciaCustomPOJO.class);
         System.out.println("Descricao " + obj.getDescricao());
-        transferenciaPOJO = obj;
+        transferenciaCustomPOJO = obj;
         //verify the iban and account status
        boolean isValidIban = contaBancariServiceImpl.existsIban(obj.getIbanDestinatario());
        ContaBancaria isActiva = contaBancariServiceImpl.isAccountStatus(obj.getIbanDestinatario(), "Activo");
+
+       TransferenciaResponse transferenciaResponse = new TransferenciaResponse();
        if (isValidIban && isActiva != null)
        {
-           TransferenciaResponse transferenciaResponse = new TransferenciaResponse();
            transferenciaResponse.setDescricao("Conta disponivel");
            transferenciaResponse.setStatus(true);
+           contaBancariServiceImpl.credito(transferenciaCustomPOJO.getIbanDestinatario(),transferenciaCustomPOJO.getMontante());
            sendResposta(transferenciaResponse);
+
        }
        else
        {
-           //boolean availble =  restTemplate.postForObject("",true,Boolean.class);
+           transferenciaResponse.setDescricao("Conta Indisponivel");
+           transferenciaResponse.setStatus(false);
+           sendResposta(transferenciaResponse);
            System.out.println("account unavaible");
-
        }
     }
     private void sendResposta(TransferenciaResponse transferenciaResponse) {

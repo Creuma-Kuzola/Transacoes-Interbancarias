@@ -76,23 +76,22 @@ public class KafkaTransferenciaConsumer
         {
           Integer numeroDeConta  = Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
           Integer montante =  Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("montante"));
-         ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);
-
-
+          ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);
 
          if (contaBancaria != null)
          {
              messageT.put("message","Transferência efectuada com sucesso!");
+             messageT.put("status","true");
              transferenciaMessage.setMessage(messageT);
              System.out.println("Debto feito com sucesso!");
-             //Transferencia transferencia =  builderTransferencia(transferenciaComponent.getTransferenciaResponse());
-             //transferenciaServiceImpl.criar(transferencia);
          }
         }
         else
         {
-            messageT.put("message","Transferência efectuada com sucesso!");
+            messageT.put("message","Transferência não concluída com sucesso!");
+            messageT.put("status","false");
             transferenciaMessage.setMessage(messageT);
+
             System.out.println(" Não é possivel completar a operação!");
         }
         LOGGER.info(String.format("Message received response transferencia status from transferencia topic-> %s", message.toString()));

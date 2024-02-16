@@ -79,7 +79,13 @@ public class TransferenciaController extends BaseController
             KafkaTransferenciaProducer.sendMessage(data);
             try {
                 Thread.sleep(9000);
-                return ResponseEntity.ok("Message: "+transferenciaMessage.getMessage().get("message"));
+
+
+                return transferenciaMessage.getMessage().get("status").equals("true")  ?
+                        ResponseEntity.ok("Message: "+transferenciaMessage.getMessage().get("message"))
+                        :
+                        ResponseEntity.ok("Message: "+transferenciaMessage.getMessage().get("message"));
+
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

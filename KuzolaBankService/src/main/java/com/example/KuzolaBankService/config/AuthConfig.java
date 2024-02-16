@@ -50,6 +50,7 @@ public class AuthConfig
                 .requestMatchers(HttpMethod.GET, "/funcionario").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/ContaBancaria").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/ContaBancaria").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/ContaBancaria/saldo/*").hasAnyRole("ADMIN","CLIENTE")
                         .requestMatchers(HttpMethod.PUT, "/ContaBancaria").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/ContaBancaria").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/ContaBancaria/saldo").hasRole("CLIENTE")
