@@ -67,6 +67,8 @@ public class AuthController
             User user = (User) authUser.getPrincipal();
             Integer clienteId = user.getFkCliente().getPkCliente();
 
+            System.out.println("clienteId: "+clienteId);
+
             ContaBancaria contaBancaria = contaBancarioRepository.findByCliente(Math.toIntExact(clienteId));
             String username = ((User) authUser.getPrincipal()).getUsername();
             saveUserInfoTemporary(contaBancaria, username);
