@@ -94,4 +94,45 @@ public class User implements UserDetails
     {
         return true;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public Cliente getFkCliente() {
+        return fkCliente;
+    }
+
+    public void setFkCliente(Cliente fkCliente) {
+        this.fkCliente = fkCliente;
+    }
 }
