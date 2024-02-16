@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -21,4 +22,11 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, In
 
     @Query("SELECT t FROM Transferencia t ORDER BY t.pkTransferencia DESC ")
     public List<Transferencia> findAllDesc();
+
+    @Query("SELECT t FROM Transferencia t WHERE t.fkContaBancariaOrigem.pkContaBancaria = :fkContaBancariaOrigem" )
+    public List<Transferencia> findAllTransacoesDebitadas(Integer fkContaBancariaOrigem);
+
+    @Query("SELECT t FROM Transferencia t where t.ibanDestinatario = :ibanDestino")
+    public List<Transferencia> findAllTransacoesCreditadas(String ibanDestino);
+
 }

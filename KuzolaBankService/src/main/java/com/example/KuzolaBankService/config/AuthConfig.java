@@ -38,6 +38,8 @@ public class AuthConfig
                 .requestMatchers(HttpMethod.POST, "/transferencia").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.POST, "/transferencia").hasAnyRole("CLIENTE", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/transferencia").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/transferencia/historico/credito").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/transferencia/historico/debito").hasRole("CLIENTE")
                 .requestMatchers(HttpMethod.POST, "/pessoa").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/pessoa").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/cliente").hasRole("ADMIN")

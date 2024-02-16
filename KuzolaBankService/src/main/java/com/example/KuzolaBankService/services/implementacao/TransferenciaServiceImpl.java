@@ -104,7 +104,17 @@ implements TransferenciaService {
     }
 
     public List<Transferencia> findAllDesc(){
-       return transferenciaRepository.findAllDesc();
+
+        return transferenciaRepository.findAllDesc();
+    }
+
+    public List<Transferencia> findAllTransacoesDebitadas(Integer fkContaBancariaOrigem){
+        return  transferenciaRepository.findAllTransacoesDebitadas(fkContaBancariaOrigem);
+    }
+
+    public List<Transferencia> findAllTransacoesCreditadas(String ibanDestino){
+
+        return transferenciaRepository.findAllTransacoesCreditadas(ibanDestino);
     }
 
 }

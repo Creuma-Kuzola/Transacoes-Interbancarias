@@ -30,5 +30,22 @@ public class ContaBancariaResponse {
        return contaBancariaResponse;
    }
 
+    public static ContaBancariaResponse convertingIntoContaBancariaResponseSaldo(ContaBancaria contaBancaria){
+
+        ContaBancariaResponse contaBancariaResponse = new ContaBancariaResponse();
+        contaBancariaResponse.setSaldoContabilistico(contaBancaria.getSaldoContabilistico());
+        contaBancariaResponse.setSaldoDisponivel(contaBancaria.getSaldoDisponivel());
+        return contaBancariaResponse;
+    }
+
+    public static ContaBancariaResponse convertingIntoContaBancariaResponseInfoConta(ContaBancaria contaBancaria){
+
+        ContaBancariaResponse contaBancariaResponse = new ContaBancariaResponse();
+        contaBancariaResponse.setNumeroDeConta(contaBancaria.getNumeroDeConta());
+        contaBancariaResponse.setIban(contaBancaria.getIban());
+        return contaBancariaResponse;
+    }
+
+
 
 }

@@ -39,13 +39,26 @@ public class ContaBancariaController extends BaseController
     UserInfo userInfo;
 
    // ContaBancariaResponse contaBancariaResponse = new ContaBancariaResponse();
-    @GetMapping()
+    @GetMapping("/infoBancarias")
     public ResponseEntity<ResponseBody> findUserContaBancariaInformations()
     {
         ContaBancaria contaBancaria = contaBancariServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
         return this.ok("Informações da sua conta",ContaBancariaResponse.convertingIntoContaBancariaResponse(contaBancaria));
     }
 
+    @GetMapping("/saldo")
+    public ResponseEntity<ResponseBody> findSaldoDoUser()
+    {
+        ContaBancaria contaBancaria = contaBancariServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+        return this.ok("Informações da sua conta",ContaBancariaResponse.convertingIntoContaBancariaResponse(contaBancaria));
+    }
+
+    @GetMapping()
+    public ResponseEntity<ResponseBody> findInformacoesDaConta()
+    {
+        ContaBancaria contaBancaria = contaBancariServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+        return this.ok("Informações da sua conta",ContaBancariaResponse.convertingIntoContaBancariaResponse(contaBancaria));
+    }
     @GetMapping("/all")
     public ResponseEntity<ResponseBody> findAllContaBancaria()
     {

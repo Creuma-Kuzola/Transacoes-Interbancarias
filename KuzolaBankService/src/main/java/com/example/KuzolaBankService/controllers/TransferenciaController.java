@@ -14,6 +14,7 @@ import com.example.KuzolaBankService.services.implementacao.ContaBancariaService
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 
 import java.lang.reflect.Type;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -69,6 +70,7 @@ public class TransferenciaController extends BaseController
 
     Transferencia transferenciaCreated;
 
+
     public TransferenciaController(TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer)
     {
         this.transferenciaJsonKafkaProducer = transferenciaJsonKafkaProducer;
@@ -85,6 +87,25 @@ public class TransferenciaController extends BaseController
     {
         List<Transferencia> lista = transferenciaServiceImpl.findAllDesc();
         return this.ok("Transferencias encontradas com sucesso!", lista);
+    }
+
+    @GetMapping("/historico/debito")
+    public ResponseEntity<ResponseBody> findHistoricoTransacoesDebito()
+    {
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria = contaBancariaServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+
+        List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesDebitadas(contaBancaria.getPkContaBancaria());
+        return this.ok("Transações de Débito encontradas com sucesso!", lista);
+    }
+
+    @GetMapping("/historico/credito")
+    public ResponseEntity<ResponseBody> findHistoricoTransacoesCreditadas()
+    {
+        String ibanDestino = userInfo.getUserInfo().get("iban");
+
+        List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesCreditadas(ibanDestino);
+        return this.ok("Transações de Crédito encontradas com sucesso!", lista);
     }
 
     @GetMapping("/{id}")
