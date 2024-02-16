@@ -7,10 +7,7 @@ package com.example.KuzolaBankService.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-import com.example.KuzolaBankService.utils.GsonLocalDateAdapter;
-import com.google.gson.annotations.JsonAdapter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,7 +43,7 @@ public class Transferencia implements Serializable {
     private BigDecimal montante;
     @Column(name = "iban_destinatario", length = 2147483647)
     private String ibanDestinatario;
-    @JsonAdapter(GsonLocalDateAdapter.class)
+   // @JsonAdapter(GsonLocalDateAdapter.class)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime datahora;
     @Column(name = "estado_transferencia", length = 2147483647)
