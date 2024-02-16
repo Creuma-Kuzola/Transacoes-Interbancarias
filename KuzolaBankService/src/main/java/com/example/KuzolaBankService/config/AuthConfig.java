@@ -52,6 +52,8 @@ public class AuthConfig
                         .requestMatchers(HttpMethod.GET, "/ContaBancaria").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/ContaBancaria").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/ContaBancaria").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/ContaBancaria/saldo").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.DELETE, "/ContaBancaria/infoBancarias").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.POST, "/ola/").hasRole("CLIENTE")
                 .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

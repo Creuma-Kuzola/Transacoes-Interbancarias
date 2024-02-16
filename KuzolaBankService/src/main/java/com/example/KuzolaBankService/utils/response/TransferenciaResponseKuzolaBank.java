@@ -1,4 +1,4 @@
-package com.example.KuzolaBankService.utils;
+package com.example.KuzolaBankService.utils.response;
 
 import com.example.KuzolaBankService.entities.Transferencia;
 import lombok.*;
@@ -19,7 +19,7 @@ public class TransferenciaResponseKuzolaBank {
    private String IbanDestinatario;
    private Integer pkTransferencia;
 
-    public TransferenciaResponseKuzolaBank convertingIntoTransferenciaKuzolaBank(Transferencia transferencia){
+    public static TransferenciaResponseKuzolaBank convertingIntoTransferenciaKuzolaBank(Transferencia transferencia){
 
         TransferenciaResponseKuzolaBank transferenciaResponseKuzolaBank = new TransferenciaResponseKuzolaBank();
         transferenciaResponseKuzolaBank.setPkTransferencia(transferencia.getPkTransferencia());

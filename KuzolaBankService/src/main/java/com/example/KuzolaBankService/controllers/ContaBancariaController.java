@@ -11,7 +11,8 @@ import com.example.KuzolaBankService.services.implementacao.ContaBancariaService
 import java.util.List;
 import java.util.Optional;
 
-import com.example.KuzolaBankService.utils.ContaBancariaResponse;
+import com.example.KuzolaBankService.utils.response.ContaBancariaResponse;
+import com.example.KuzolaBankService.utils.response.SaldoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,21 +40,15 @@ public class ContaBancariaController extends BaseController
     UserInfo userInfo;
 
    // ContaBancariaResponse contaBancariaResponse = new ContaBancariaResponse();
-    @GetMapping("/infoBancarias")
-    public ResponseEntity<ResponseBody> findUserContaBancariaInformations()
-    {
-        ContaBancaria contaBancaria = contaBancariServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
-        return this.ok("Informações da sua conta",ContaBancariaResponse.convertingIntoContaBancariaResponse(contaBancaria));
-    }
 
     @GetMapping("/saldo")
     public ResponseEntity<ResponseBody> findSaldoDoUser()
     {
         ContaBancaria contaBancaria = contaBancariServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
-        return this.ok("Informações da sua conta",ContaBancariaResponse.convertingIntoContaBancariaResponse(contaBancaria));
+        return this.ok("Informações do seu saldo", ContaBancariaResponse.convertingIntoSaldoResponse(contaBancaria));
     }
 
-    @GetMapping()
+    @GetMapping("/infoBancarias")
     public ResponseEntity<ResponseBody> findInformacoesDaConta()
     {
         ContaBancaria contaBancaria = contaBancariServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));

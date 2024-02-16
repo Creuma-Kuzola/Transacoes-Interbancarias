@@ -7,10 +7,7 @@ package com.example.KuzolaBankService.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-import com.example.KuzolaBankService.utils.GsonLocalDateAdapter;
-import com.google.gson.annotations.JsonAdapter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

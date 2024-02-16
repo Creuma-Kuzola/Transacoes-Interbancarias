@@ -1,7 +1,7 @@
 package com.example.KuzolaBankService.https.utils;
 
 import com.example.KuzolaBankService.entities.Transferencia;
-import com.example.KuzolaBankService.utils.TransferenciaResponseKuzolaBank;
+import com.example.KuzolaBankService.utils.response.TransferenciaResponseKuzolaBank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 public class ResponseControllerUtils
 {
-    TransferenciaResponseKuzolaBank transferenciaResponseKuzolaBank = new TransferenciaResponseKuzolaBank();
     public ResponseEntity<ResponseBody> created( String mensagem, Object data) {
         ResponseBody responseBody = new ResponseBody();
         responseBody.setTimestamp(LocalDateTime.now() );
@@ -43,7 +42,7 @@ public class ResponseControllerUtils
         responseBody.setTimestamp(LocalDateTime.now() );
         responseBody.setStatus(HttpStatus.OK);
         responseBody.setMensagem( "Transferencia efectuada com sucesso" );
-        responseBody.setData(transferenciaResponseKuzolaBank.convertingIntoTransferenciaKuzolaBank(transferencia));
+        responseBody.setData(TransferenciaResponseKuzolaBank.convertingIntoTransferenciaKuzolaBank(transferencia));
         return ResponseEntity.status( HttpStatus.OK).body(responseBody );
     }
 

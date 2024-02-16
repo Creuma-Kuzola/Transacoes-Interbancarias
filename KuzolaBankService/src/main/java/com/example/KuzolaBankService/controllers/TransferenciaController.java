@@ -4,7 +4,6 @@
  */
 package com.example.KuzolaBankService.controllers;
 
-import com.example.KuzolaBankService.dto.TransferenciaDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
@@ -13,23 +12,12 @@ import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 
-import java.lang.reflect.Type;
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.KuzolaBankService.utils.GsonLocalDateAdapter;
 import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
-import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
