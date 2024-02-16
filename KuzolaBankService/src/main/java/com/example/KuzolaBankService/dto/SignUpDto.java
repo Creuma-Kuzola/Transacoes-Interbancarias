@@ -13,6 +13,7 @@ public record SignUpDto(
         Cliente fkCliente,
         Funcionario fkFuncionario
         )
+
         {
 
     public String getLogin()
@@ -35,8 +36,11 @@ public record SignUpDto(
         return fkCliente;
     }
 
-            @Override
-            public Funcionario fkFuncionario() {
-                return fkFuncionario;
-            }
-        }
+    @Override
+    public Funcionario fkFuncionario() {
+        return fkFuncionario;
+    }
+
+
+
+   }
