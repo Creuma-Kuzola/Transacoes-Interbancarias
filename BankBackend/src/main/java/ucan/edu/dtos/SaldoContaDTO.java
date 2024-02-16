@@ -1,16 +1,18 @@
 package ucan.edu.dtos;
 
+import java.math.BigDecimal;
+
 
 public class SaldoContaDTO {
     private Integer numeroDaConta;
-    private Integer saldoDisponivel;
-    private Integer saldoContabilistico;
+    private BigDecimal saldoDisponivel;
+    private BigDecimal saldoContabilistico;
     private String titular;
 
     public SaldoContaDTO() {
     }
 
-    public SaldoContaDTO(Integer numeroDaConta, Integer saldoDisponivel, Integer saldoContabilistico, String titular) {
+    public SaldoContaDTO(Integer numeroDaConta, BigDecimal saldoDisponivel, BigDecimal saldoContabilistico, String titular) {
         this.numeroDaConta = numeroDaConta;
         this.saldoDisponivel = saldoDisponivel;
         this.saldoContabilistico = saldoContabilistico;
@@ -25,19 +27,19 @@ public class SaldoContaDTO {
         this.numeroDaConta = numeroDaConta;
     }
 
-    public Integer getSaldoDisponivel() {
+    public BigDecimal getSaldoDisponivel() {
         return saldoDisponivel;
     }
 
-    public void setSaldoDisponivel(Integer saldoDisponivel) {
+    public void setSaldoDisponivel(BigDecimal saldoDisponivel) {
         this.saldoDisponivel = saldoDisponivel;
     }
 
-    public Integer getSaldoContabilistico() {
+    public BigDecimal getSaldoContabilistico() {
         return saldoContabilistico;
     }
 
-    public void setSaldoContabilistico(Integer saldoContabilistico) {
+    public void setSaldoContabilistico(BigDecimal saldoContabilistico) {
         this.saldoContabilistico = saldoContabilistico;
     }
 

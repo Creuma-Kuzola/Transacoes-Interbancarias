@@ -31,7 +31,6 @@ import ucan.edu.utils.enums.UserRole;
 @EqualsAndHashCode(of = "id")
 public class User implements UserDetails
 {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,6 +45,10 @@ public class User implements UserDetails
     @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente")
     @ManyToOne
     private Cliente fkCliente;
+
+    @JoinColumn(name = "fk_funcionario", referencedColumnName = "pk_funcionario", nullable = true)
+    @ManyToOne(optional = true)
+    private Funcionario fkFuncionario;
 
     public User(String login, String password, UserRole role, Cliente fkCliente)
     {

@@ -4,6 +4,7 @@
  */
 package ucan.edu.services.implementacao;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import ucan.edu.entities.Cliente;
 import ucan.edu.services.ClienteService;
@@ -38,8 +39,8 @@ public class ClienteServiceImpl extends AbstractService<Cliente, Integer> implem
 
         Cliente cliente = clienteRepository.save(t);
         contaBancaria.setFkCliente(cliente);
-        contaBancaria.setSaldoContabilistico(0);
-        contaBancaria.setSaldoDisponivel(0);
+       contaBancaria.setSaldoContabilistico(BigDecimal.ZERO);
+        contaBancaria.setSaldoDisponivel(BigDecimal.ZERO);
         contaBancaria.setMoeda("KZ");
        
         ContaBancaria contaBancariaCreated = contaBancariaServiceImpl.createAccount(contaBancaria);
@@ -60,5 +61,6 @@ public class ClienteServiceImpl extends AbstractService<Cliente, Integer> implem
 
         return respoTemp;
     }
+
 
 }

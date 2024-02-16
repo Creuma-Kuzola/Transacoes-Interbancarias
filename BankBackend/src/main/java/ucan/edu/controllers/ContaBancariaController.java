@@ -9,6 +9,8 @@ import ucan.edu.entities.*;
 import ucan.edu.services.*;
 import ucan.edu.services.implementacao.*;
 import ucan.edu.https.utils.ResponseBody;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +81,7 @@ public class ContaBancariaController extends BaseController
 
     @PutMapping("/deposite/{quantidade}")
     public ResponseEntity<ResponseBody> depositeAmountOfMoney(@RequestBody ContaBancaria contaBancaria,
-            @PathVariable("quantidade") Integer quantidade)
+            @PathVariable("quantidade") BigDecimal quantidade)
     {
         ContaBancaria conta = contaBancariServiceImpl.depositeAmountOfMoney(contaBancaria, quantidade);
         return this.ok("Deposito feito com sucesso !", conta);
@@ -88,7 +90,7 @@ public class ContaBancariaController extends BaseController
     @PatchMapping("/transfer/{montante}/{iban}")
     public ResponseEntity<ResponseBody> transferMoney(@RequestBody ContaBancaria contaBancaria,
             @PathVariable("iban") String iban,
-            @PathVariable("montante") Integer montante)
+            @PathVariable("montante") BigDecimal montante)
     {
         List<ContaBancaria> contaBancarias = contaBancariServiceImpl.transferMoneyToAccountSameBank(contaBancaria, iban, montante);
         return this.ok("Transferencia feita com sucesso!", contaBancarias);

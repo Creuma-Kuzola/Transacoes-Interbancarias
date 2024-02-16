@@ -55,5 +55,4 @@ public class Transferencia implements Serializable {
     @JoinColumn(name = "fk_conta_bancaria_origem", referencedColumnName = "pk_conta_bancaria")
     @ManyToOne
     private ContaBancaria fkContaBancariaOrigem;
-    
 }

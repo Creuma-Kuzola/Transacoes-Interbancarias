@@ -7,6 +7,7 @@ package ucan.edu.entities;
 import java.io.Serializable;
 import java.util.Date;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import ucan.edu.utils.enums.StatusContaBancaria;
 
@@ -48,10 +49,10 @@ public class ContaBancaria implements Serializable
     @Column(name = "data_criacao", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataCriacao;
-    @Column(name = "saldo_contabilistico")
-    private Integer saldoContabilistico;
-    @Column(name = "saldo_disponivel")
-    private Integer saldoDisponivel;
+    private BigDecimal saldoContabilistico;
+    @Column(name = "saldo_disponivel", precision = 11, scale = 3)
+    private BigDecimal saldoDisponivel;
+    @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente", nullable = false)
     @Column(length = 2147483647)
     private String moeda;
     @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente")
@@ -127,22 +128,22 @@ public class ContaBancaria implements Serializable
         this.fkCliente = fkCliente;
     }
 
-    public Integer getSaldoContabilistico()
+    public BigDecimal getSaldoContabilistico()
     {
         return saldoContabilistico;
     }
 
-    public void setSaldoContabilistico(Integer saldoContabilistico)
+    public void setSaldoContabilistico(BigDecimal saldoContabilistico)
     {
         this.saldoContabilistico = saldoContabilistico;
     }
 
-    public Integer getSaldoDisponivel()
+    public BigDecimal getSaldoDisponivel()
     {
         return saldoDisponivel;
     }
 
-    public void setSaldoDisponivel(Integer saldoDisponivel)
+    public void setSaldoDisponivel(BigDecimal saldoDisponivel)
     {
         this.saldoDisponivel = saldoDisponivel;
     }

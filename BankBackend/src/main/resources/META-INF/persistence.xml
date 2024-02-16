@@ -24,6 +24,7 @@
     <class>ucan.edu.entities.TokenValidacao</class>
     <class>ucan.edu.entities.Localizacao</class>
     <class>ucan.edu.entities.Conta_1</class>
+    <class>ucan.edu.entities.Funcionario</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/standardbanckdb"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>

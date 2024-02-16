@@ -4,6 +4,7 @@
  */
 package ucan.edu.controllers;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -60,16 +61,15 @@ public class TransferenciaController extends BaseController
         this.KafkaTransferenciaProducer = KafkaTransferenciaProducer;
     }
 
-
-
     @PostMapping("/publishTransferencia")
     public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
     {
         String montaneStr = transferencia.getMontante().toString();
+        BigDecimal bigDecimal = new BigDecimal(montaneStr);
         System.out.println("valor: " +montaneStr);
-        boolean isSaldoEnought = contaBancariaServiceImpl
-                .isSaldoPositiveToTransfer(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")), Integer.parseInt(montaneStr));
-        if (isSaldoEnought)
+        Integer isSaldoEnought = contaBancariaServiceImpl
+                .isSaldoPositiveToTransfer(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")), transferencia.getMontante());
+        if (isSaldoEnought != -1)
         {
             transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
             transferencia.setDatahora(new Date());

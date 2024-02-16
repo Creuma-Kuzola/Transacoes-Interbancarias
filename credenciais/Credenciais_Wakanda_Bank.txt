@@ -1,0 +1,19 @@
+Credenciais Wakanda Bank
+
+{
+    "login":"J0$!!",
+    "password": "##ft12",
+    "role":"CLIENTE"
+}
+
+{
+    "login":"$%&/(dfh",
+    "password": "##ft12",
+    "role":"CLIENTE"
+}
+
+{
+    login":"jp23%|#",
+    "password": "qw574!",
+    "role":"ADMIN"
+}

@@ -6,6 +6,7 @@ to edit this template ...
  */
 package ucan.edu.services.implementacao;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -70,8 +71,8 @@ public class ContaBancariaServiceImplTest
         contaBancaria.setIban("E 260 5831");
         contaBancaria.setStatus(StatusContaBancaria.ACTIVO);
         contaBancaria.setDataCriacao(new Date());
-        contaBancaria.setSaldoContabilistico(100);
-        contaBancaria.setSaldoDisponivel(100);
+        contaBancaria.setSaldoContabilistico(new BigDecimal(100));
+        contaBancaria.setSaldoDisponivel(new BigDecimal(100));
         contaBancaria.setMoeda("KZ");
 
         Pessoa pessoa = new Pessoa();
@@ -91,7 +92,7 @@ public class ContaBancariaServiceImplTest
         cliente.setFkEmpresa(null);
 
         //Accao
-        Mockito.when(contaBancariaServiceImpl.depositeAmountOfMoney(contaBancaria, 200)).thenReturn(contaBancaria);
+        Mockito.when(contaBancariaServiceImpl.depositeAmountOfMoney(contaBancaria, new BigDecimal(200))).thenReturn(contaBancaria);
     }
 
 }

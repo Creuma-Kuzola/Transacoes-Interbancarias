@@ -24,6 +24,7 @@ import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
 import ucan.edu.utils.pojos.TransferenciaResponse;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -75,7 +76,7 @@ public class KafkaTransferenciaConsumer
         if(transferenciaResponse.getStatus() == true)
         {
           Integer numeroDeConta  = Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
-          Integer montante =  Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("montante"));
+          BigDecimal montante = new BigDecimal( transferenciaComponent.getTransferenciaResponse().get("montante"));
          ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);
 
 

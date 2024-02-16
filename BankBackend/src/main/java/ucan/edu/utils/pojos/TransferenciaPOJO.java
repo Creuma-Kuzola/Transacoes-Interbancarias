@@ -4,6 +4,7 @@
  */
 package ucan.edu.utils.pojos;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class TransferenciaPOJO
 
     private Integer pkTransferencia;
     private String descricao;
-    private BigInteger montante;
+    private BigDecimal montante;
     private String ibanDestinatario;
     private Date datahora;
     private Integer fkContaBancariaOrigem;
@@ -48,11 +49,11 @@ public class TransferenciaPOJO
         this.descricao = descricao;
     }
 
-    public BigInteger getMontante() {
+    public BigDecimal getMontante() {
         return montante;
     }
 
-    public void setMontante(BigInteger montante) {
+    public void setMontante(BigDecimal montante) {
         this.montante = montante;
     }
 
