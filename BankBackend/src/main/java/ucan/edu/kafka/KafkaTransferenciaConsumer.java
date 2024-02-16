@@ -84,6 +84,7 @@ public class KafkaTransferenciaConsumer
          if (contaBancaria != null)
          {
              messageT.put("message","Transferência efectuada com sucesso!");
+             messageT.put("status","true");
              transferenciaMessage.setMessage(messageT);
              System.out.println("Debto feito com sucesso!");
              //Transferencia transferencia =  builderTransferencia(transferenciaComponent.getTransferenciaResponse());
@@ -92,7 +93,8 @@ public class KafkaTransferenciaConsumer
         }
         else
         {
-            messageT.put("message","Transferência efectuada com sucesso!");
+            messageT.put("message","Transferência não concluída com sucesso!");
+            messageT.put("status","false");
             transferenciaMessage.setMessage(messageT);
             System.out.println(" Não é possivel completar a operação!");
         }
