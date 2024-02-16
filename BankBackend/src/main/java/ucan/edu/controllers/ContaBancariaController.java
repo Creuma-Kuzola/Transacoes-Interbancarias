@@ -94,7 +94,6 @@ public class ContaBancariaController extends BaseController
         return this.ok("Transferencia feita com sucesso!", contaBancarias);
     }
 
-
     @GetMapping("/saldo/{numeberAccount}")
     public ResponseEntity<ResponseBody> findSaldoThrouhBanco(@PathVariable("numeberAccount") Integer numeberAccount)
     {
