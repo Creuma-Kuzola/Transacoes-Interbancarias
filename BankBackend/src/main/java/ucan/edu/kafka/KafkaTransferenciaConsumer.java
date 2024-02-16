@@ -78,8 +78,6 @@ public class KafkaTransferenciaConsumer
           Integer montante =  Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("montante"));
          ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);
 
-
-
          if (contaBancaria != null)
          {
              messageT.put("message","Transferência efectuada com sucesso!");

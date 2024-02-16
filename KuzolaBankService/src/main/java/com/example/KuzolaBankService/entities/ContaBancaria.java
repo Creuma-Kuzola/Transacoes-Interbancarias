@@ -57,5 +57,67 @@ public class ContaBancaria implements Serializable {
     @ManyToOne(optional = false)
     private Cliente fkCliente;
 
-    
+    public Integer getPkContaBancaria() {
+        return pkContaBancaria;
+    }
+
+    public void setPkContaBancaria(Integer pkContaBancaria) {
+        this.pkContaBancaria = pkContaBancaria;
+    }
+
+    public String getIban() {
+        return iban;
+    }
+
+    public void setIban(String iban) {
+        this.iban = iban;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(Date dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public BigInteger getNumeroDeConta() {
+        return numeroDeConta;
+    }
+
+    public void setNumeroDeConta(BigInteger numeroDeConta) {
+        this.numeroDeConta = numeroDeConta;
+    }
+
+    public BigDecimal getSaldoContabilistico() {
+        return saldoContabilistico;
+    }
+
+    public void setSaldoContabilistico(BigDecimal saldoContabilistico) {
+        this.saldoContabilistico = saldoContabilistico;
+    }
+
+    public BigDecimal getSaldoDisponivel() {
+        return saldoDisponivel;
+    }
+
+    public void setSaldoDisponivel(BigDecimal saldoDisponivel) {
+        this.saldoDisponivel = saldoDisponivel;
+    }
+
+    public Cliente getFkCliente() {
+        return fkCliente;
+    }
+
+    public void setFkCliente(Cliente fkCliente) {
+        this.fkCliente = fkCliente;
+    }
 }

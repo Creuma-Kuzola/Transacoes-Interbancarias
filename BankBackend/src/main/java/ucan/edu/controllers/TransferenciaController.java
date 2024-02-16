@@ -61,7 +61,6 @@ public class TransferenciaController extends BaseController
     }
 
 
-
     @PostMapping("/publishTransferencia")
     public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
     {
@@ -89,11 +88,7 @@ public class TransferenciaController extends BaseController
             return ResponseEntity.ok("Message:  Você possui saldo insuficiente, para efectuar a transfências!" +isSaldoEnought);
         }
     }
-
-
-
     //"datahora":"2024-02-10 16:11:20",
-
     private void saveTransferComponent(TransferenciaPOJO transferencia)  {
         Map<String, String> transferenciaItems = new HashMap<>();
 

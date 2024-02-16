@@ -3,12 +3,12 @@ package com.example.KuzolaBankService.kafka;
 import com.example.KuzolaBankService.dto.SignInDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
+import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,12 @@ import com.example.KuzolaBankService.config.component.TransferenciaResponseCompo
 import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
 import com.example.KuzolaBankService.dto.JwtDto;
 import org.springframework.http.*;
+
+import java.lang.reflect.Type;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
@@ -32,14 +38,13 @@ import java.util.Optional;
 public class KafkaConsumerConfig
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerConfig.class);
-    private TransferenciaPOJO transferenciaPOJO;
+    private TransferenciaCustomPOJO transferenciaCustomPOJO;
+    private  TransferenciaPOJO transferenciaPOJO;
     private RestTemplate restTemplate;
     @Autowired
     private ContaBancariaServiceImpl contaBancariServiceImpl;
-
     //777
     private String welcome;
-
     @Autowired
     TransferenciaResponseComponent transferenciaResponseComponent;
 
@@ -49,6 +54,7 @@ public class KafkaConsumerConfig
 
     public KafkaConsumerConfig()
     {
+        transferenciaCustomPOJO = new TransferenciaCustomPOJO();
         transferenciaPOJO = new TransferenciaPOJO();
     }
 
@@ -66,34 +72,43 @@ public class KafkaConsumerConfig
         return token;
     }
 
+
+
+
+
     @KafkaListener(topics = "transferencia", groupId = "transferenciaGroup")
     public void consumerMessage(String message)
     {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
-        //builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
         builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
         Gson gson = builder.create();
+
         LOGGER.info(String.format("Message received -> %s", message.toString()));
-        TransferenciaPOJO obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
-        System.out.println("Descricao " + obj.getDescricao());
-        transferenciaPOJO = obj;
+        TransferenciaCustomPOJO obj = gson.fromJson(message.toString(), TransferenciaCustomPOJO.class);
+        //System.out.println("Descricao " + obj.getDescricao());
+        transferenciaCustomPOJO = obj;
+        TransferenciaResponse transferenciaResponse = null;
         //verify the iban and account status
        boolean isValidIban = contaBancariServiceImpl.existsIban(obj.getIbanDestinatario());
        ContaBancaria isActiva = contaBancariServiceImpl.isAccountStatus(obj.getIbanDestinatario(), "Activo");
+
        if (isValidIban && isActiva != null)
        {
-           TransferenciaResponse transferenciaResponse = new TransferenciaResponse();
+           transferenciaResponse = new TransferenciaResponse();
            transferenciaResponse.setDescricao("Conta disponivel");
            transferenciaResponse.setStatus(true);
-           sendResposta(transferenciaResponse);
+           contaBancariServiceImpl.credito(obj.getIbanDestinatario(),obj.getMontante());
        }
        else
        {
+           transferenciaResponse = new TransferenciaResponse();
+           transferenciaResponse.setDescricao("Conta não disponivel / A operação não pode ser completada!");
+           transferenciaResponse.setStatus(false);
            //boolean availble =  restTemplate.postForObject("",true,Boolean.class);
            System.out.println("account unavaible");
-
        }
+        sendResposta(transferenciaResponse);
     }
     private void sendResposta(TransferenciaResponse transferenciaResponse) {
 
@@ -110,7 +125,6 @@ public class KafkaConsumerConfig
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("body",jsonStr);
         HttpEntity<?> entity = new HttpEntity<>(body, headers);
-
         HashMap<String, String > response = new HashMap<>();
         response.put("descricao",transferenciaResponse.getDescricao());
         response.put("status",""+transferenciaResponse.getStatus());
