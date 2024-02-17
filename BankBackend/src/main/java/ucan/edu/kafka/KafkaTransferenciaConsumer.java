@@ -22,6 +22,7 @@ import ucan.edu.entities.ContaBancaria;
 import ucan.edu.entities.Transferencia;
 import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
+import ucan.edu.utils.pojos.TransferenciaPOJO;
 import ucan.edu.utils.pojos.TransferenciaResponse;
 
 import java.math.BigDecimal;
@@ -105,7 +106,7 @@ public class KafkaTransferenciaConsumer
         Transferencia transferencia = new Transferencia();
         //transferencia.setEstadoTransferencia("FEITA COM SUCESSO");
         transferencia.setDescricao(transferenciaResponse.get("descricao"));
-        transferencia.setMontante( new BigInteger(transferenciaResponse.get("montante")));
+        transferencia.setMontante( new BigDecimal(transferenciaResponse.get("montante")));
         transferencia.setIbanDestinatario(transferenciaResponse.get("ibanDestinatario"));
         transferencia.setDatahora(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(transferenciaResponse.get("datahora")));
         transferencia.setFkContaBancariaOrigem(Integer.parseInt(transferenciaResponse.get("ibanDestinatario")));
@@ -115,13 +116,16 @@ public class KafkaTransferenciaConsumer
         return transferencia;
     }
 
-   /* @KafkaListener(topics = "tr-intrabancarias-kb", groupId = "consumerBanco")
+   @KafkaListener(topics = "tr-intrabancarias-wd", groupId = "myGroup")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
+       System.out.println("Entrei");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
         try {
+
+            System.out.println("Entrei Try Catch");
 
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
 
@@ -143,6 +147,6 @@ public class KafkaTransferenciaConsumer
         }
 
 
-    }*/
+    }
 
 }

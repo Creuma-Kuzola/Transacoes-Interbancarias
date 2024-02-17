@@ -33,10 +33,9 @@ import ucan.edu.utils.enums.StatusContaBancaria;
 public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Integer>
         implements ContaBancariaService
 {
-
     private Integer numberAccount;
-    private final Integer BANKNUMBER = 0404;
-    private final String ibanCode = "E" + BANKNUMBER;
+    private final Integer BANKNUMBER = 260;
+    private final String ibanCode = "E " + BANKNUMBER;
 
     @Autowired
     private TransferenciaMessage transferenciaMessage;
@@ -250,8 +249,6 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return null;
     }
 
-
-
     public ContaBancaria findContaBancaraByIban(String iban)
     {
         return contaBancariaRepository.findByIban(iban);
@@ -260,6 +257,7 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
     public boolean isWakandaBankIban(String iban)
     {
         String codigoBanco = iban.substring(0, 5);
+        System.out.println("CodigoBanco"+ codigoBanco+ "Codigo Banco Length: "+ codigoBanco.length());
         String idBancoValido = ibanCode;
         return codigoBanco.equals(idBancoValido);
     }
@@ -274,7 +272,39 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     public boolean isValidTheSizeOfIban(String iban)
     {
-        return iban.length() == 9;
+        return iban.length() == 10;
     }
 
+    public boolean existsIban(String iban)
+    {
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria = contaBancariaRepository.findByIban(iban);
+
+        return contaBancaria != null;
+    }
+
+    public ContaBancaria credito(String iban, BigDecimal montante){
+
+        System.out.println( " iban: " +iban);
+
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria = findContaBancaraByIban(iban);
+        contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().add(montante));
+        contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().add(montante));
+
+        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
+        return contaBancaria;
+    }
+
+
+    public ContaBancaria debito(String iban, BigDecimal montante){
+
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria = findContaBancaraByIban(iban);
+        contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().subtract(montante));
+        contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().subtract(montante));
+
+        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
+        return contaBancaria;
+    }
 }

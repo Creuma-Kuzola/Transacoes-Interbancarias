@@ -7,10 +7,14 @@ package ucan.edu.utils.pojos;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ucan.edu.entities.Transferencia;
 
 /**
  *
@@ -23,15 +27,43 @@ import lombok.Setter;
 public class TransferenciaPOJO
 {
 
+    @JsonProperty("pkTransferencia")
     private Integer pkTransferencia;
+
+    @JsonProperty("descricao")
     private String descricao;
+
+    @JsonProperty("montante")
     private BigDecimal montante;
+
+    @JsonProperty("ibanDestinatario")
     private String ibanDestinatario;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("datahora")
     private Date datahora;
+
+    @JsonProperty("fkContaBancariaOrigem")
     private Integer fkContaBancariaOrigem;
+
+    @JsonProperty("tipoTransferencia")
     private String tipoTransferencia;
+
+    @JsonProperty("estadoTransferencia")
     private String estadoTransferencia;
+
+    @JsonProperty("codigoTransferencia")
     private String codigoTransferencia;
+
+    public static Transferencia convertingIntoTransferencia(TransferenciaPOJO transferenciaPOJO){
+        System.out.println("Iban Destina em transf: "+ transferenciaPOJO.getIbanDestinatario());
+        Transferencia transferencia = new Transferencia();
+        transferencia.setDescricao(transferenciaPOJO.getDescricao());
+        transferencia.setMontante(transferenciaPOJO.getMontante());
+        transferencia.setIbanDestinatario(transferenciaPOJO.getIbanDestinatario());
+        System.out.println("Iban Destina em transf 2: "+ transferencia.getIbanDestinatario());
+        return transferencia;
+    }
 
     public Integer getPkTransferencia() {
         return pkTransferencia;
@@ -104,4 +136,22 @@ public class TransferenciaPOJO
     public void setCodigoTransferencia(String codigoTransferencia) {
         this.codigoTransferencia = codigoTransferencia;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("\"pkTransferencia\": ").append(pkTransferencia).append(",");
+        sb.append("\"descricao\": \"").append(descricao).append("\",");
+        sb.append("\"montante\": ").append(montante).append(",");
+        sb.append("\"ibanDestinatario\": \"").append(ibanDestinatario).append("\",");
+        sb.append("\"datahora\": \"").append(datahora).append("\",");
+        sb.append("\"fkContaBancariaOrigem\": ").append(fkContaBancariaOrigem).append(",");
+        sb.append("\"tipoTransferencia\": \"").append(tipoTransferencia).append("\",");
+        sb.append("\"estadoTransferencia\": \"").append(estadoTransferencia).append("\",");
+        sb.append("\"codigoTransferencia\": \"").append(codigoTransferencia).append("\"");
+        sb.append("}");
+        return sb.toString();
+    }
+
 }

@@ -5,6 +5,7 @@
 package ucan.edu.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -37,8 +38,8 @@ public class Transferencia implements Serializable {
     @Column(length = 2147483647)
     private String descricao;
     @Basic(optional = false)
-    @Column(nullable = false)
-    private BigInteger montante;
+    @Column(name = "montante", precision = 11, scale = 3, nullable = false)
+    private BigDecimal montante;
     @Column(name = "iban_destinatario", length = 2147483647)
     private String ibanDestinatario;
     @Temporal(TemporalType.TIMESTAMP)
@@ -70,11 +71,11 @@ public class Transferencia implements Serializable {
         this.descricao = descricao;
     }
 
-    public BigInteger getMontante() {
+    public BigDecimal getMontante() {
         return montante;
     }
 
-    public void setMontante(BigInteger montante) {
+    public void setMontante(BigDecimal montante) {
         this.montante = montante;
     }
 
