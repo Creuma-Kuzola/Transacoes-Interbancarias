@@ -33,6 +33,8 @@ import ucan.edu.kafka.KafkaTransferenciaProducer;
 import ucan.edu.utils.dates.DateUtils;
 import ucan.edu.utils.jsonUtils.CustomJsonPojos;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
+import ucan.edu.utils.pojos.TransferenciaResponse;
+import ucan.edu.utils.response.TransferenciaResponseWakandaBank;
 
 /**
  *
@@ -66,27 +68,22 @@ public class TransferenciaController extends BaseController {
 
     @PostMapping("/publishTransferencia")
     public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia) {
-        System.out.println("valor: " + transferencia.getMontante().toString());
+
         String erro = "jwhhfjf";
 
-        System.out.println("Transferecia Pojo Request Body"+ transferencia);
         Integer isSaldoEnought = contaBancariaServiceImpl
                 .isSaldoPositiveToTransfer(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")), transferencia.getMontante());
 
         Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario());
-        System.out.println("Response Verification: "+ responseVerification);
+
         if (responseVerification == 1) {
-            System.out.println("Caso 1");
             if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")))
             {
-                System.out.println("Entrei");
                 transferenciaCreated = new Transferencia();
                 transferenciaConverted = TransferenciaPOJO.convertingIntoTransferencia(transferencia);
                 transferenciaServiceImpl.fillingTransactionFields(transferenciaConverted);
 
-                System.out.println("Transferencia Converted"+ transferenciaConverted);
                 transferenciaCreated = this.transferenciaServiceImpl.criar(transferenciaConverted);
-                System.out.println("Transferencia Created"+ transferenciaCreated);
 
                 TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated, userInfo.getUserInfo().get("iban"));
 
@@ -94,7 +91,8 @@ public class TransferenciaController extends BaseController {
                 System.out.println("Data Json" + transferenciaJson);
 
                 KafkaTransferenciaProducer.sendTransferenciaIntrabancaria(transferenciaJson.toString());
-                return ResponseEntity.ok(" " +transferenciaCreated);
+
+                return ResponseEntity.ok(" " +TransferenciaResponseWakandaBank.convertingIntoTransferenciaKuzolaBank(transferenciaCreated));
             }
             return  ResponseEntity.ok(""+ erro);
 

@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/ContaBancaria")
 public class ContaBancariaController extends BaseController
 {
-
     @Autowired
     ContaBancariaServiceImpl contaBancariServiceImpl;
 

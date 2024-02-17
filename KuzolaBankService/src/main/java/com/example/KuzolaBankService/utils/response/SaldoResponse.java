@@ -15,6 +15,4 @@ public class SaldoResponse {
 
     private BigDecimal saldoContabilistico;
     private BigDecimal saldoDisponivel;
-
-
 }

@@ -4,6 +4,7 @@
  */
 package ucan.edu.controllers;
 
+import ucan.edu.config.component.UserInfo;
 import ucan.edu.dtos.SaldoContaDTO;
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ucan.edu.utils.response.ContaBancariaResponse;
 
 /**
  *
@@ -35,6 +37,10 @@ public class ContaBancariaController extends BaseController
 {
     @Autowired
     ContaBancariaServiceImpl contaBancariServiceImpl;
+
+    @Autowired
+    UserInfo userInfo;
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllContaBancaria()
     {
@@ -50,6 +56,20 @@ public class ContaBancariaController extends BaseController
             return this.ok("Conta Bancaria encontrada com sucesso.", consulta.get());
         }
         return this.naoEncontrado("Conta Bancaria não encontrada", null);
+    }
+
+    @GetMapping("/saldo")
+    public ResponseEntity<ResponseBody> findSaldoDoUser()
+    {
+        ContaBancaria contaBancaria = contaBancariServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+        return this.ok("Informações do seu saldo", ContaBancariaResponse.convertingIntoSaldoResponse(contaBancaria));
+    }
+
+    @GetMapping("/infoBancarias")
+    public ResponseEntity<ResponseBody> findInformacoesDaConta()
+    {
+        ContaBancaria contaBancaria = contaBancariServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+        return this.ok("Informações da sua conta", ContaBancariaResponse.convertingIntoContaBancariaResponse(contaBancaria));
     }
 
     @PostMapping

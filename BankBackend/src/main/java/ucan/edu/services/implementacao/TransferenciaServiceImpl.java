@@ -86,5 +86,9 @@ implements TransferenciaService{
         return transferenciaPOJO;
     }
 
+    public void transferenciaIntrabancaria(){
+
+
+    }
 
 }

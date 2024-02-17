@@ -80,8 +80,6 @@ public class KafkaTransferenciaConsumer
           BigDecimal montante = new BigDecimal( transferenciaComponent.getTransferenciaResponse().get("montante"));
          ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);
 
-
-
          if (contaBancaria != null)
          {
              messageT.put("message","Transferência efectuada com sucesso!");
