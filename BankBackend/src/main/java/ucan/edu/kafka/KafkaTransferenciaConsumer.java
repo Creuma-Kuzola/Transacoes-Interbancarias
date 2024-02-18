@@ -24,6 +24,7 @@ import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
 import ucan.edu.utils.pojos.TransferenciaResponse;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,7 +32,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 /**
  *
  * @author jussyleitecode
@@ -44,7 +44,6 @@ public class KafkaTransferenciaConsumer
     private TransferenciaComponent transferenciaComponent;
     @Autowired
     ContaBancariaServiceImpl contaBancariServiceImpl;
-
     @Autowired
     private TransferenciaMessage transferenciaMessage;
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaConsumer.class);
@@ -101,7 +100,7 @@ public class KafkaTransferenciaConsumer
         Transferencia transferencia = new Transferencia();
         //transferencia.setEstadoTransferencia("FEITA COM SUCESSO");
         transferencia.setDescricao(transferenciaResponse.get("descricao"));
-        transferencia.setMontante( new BigInteger(transferenciaResponse.get("montante")));
+        transferencia.setMontante( new BigDecimal(transferenciaResponse.get("montante")));
         transferencia.setIbanDestinatario(transferenciaResponse.get("ibanDestinatario"));
         transferencia.setDatahora(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(transferenciaResponse.get("datahora")));
         transferencia.setFkContaBancariaOrigem(Integer.parseInt(transferenciaResponse.get("ibanDestinatario")));
