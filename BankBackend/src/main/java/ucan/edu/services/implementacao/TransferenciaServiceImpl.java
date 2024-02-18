@@ -15,5 +15,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class TransferenciaServiceImpl extends AbstractService<Transferencia, Integer>
 implements TransferenciaService{
-    
+
+
 }

@@ -34,7 +34,6 @@ public class AuthConfig
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/session").permitAll()
                         .requestMatchers(HttpMethod.POST.GET,"/deep").permitAll()
-                .requestMatchers(HttpMethod.GET, "/ContaBancaria").permitAll()
                 .requestMatchers(HttpMethod.POST, "/transferencia").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.POST, "/transferencia").hasAnyRole("CLIENTE", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/transferencia").hasRole("CLIENTE")

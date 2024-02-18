@@ -41,7 +41,6 @@ public class ClienteController extends BaseController {
     @GetMapping
     public ResponseEntity<ResponseBody> findAllClientes()
     {
-        
         List<Cliente> lista = clienteServiceImpl.findAll();
         return this.ok("Clientes encontrados com sucesso!", lista);
     }
