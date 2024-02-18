@@ -55,4 +55,76 @@ public class Transferencia implements Serializable {
     @JoinColumn(name = "fk_conta_bancaria_origem", referencedColumnName = "pk_conta_bancaria")
     @ManyToOne
     private ContaBancaria fkContaBancariaOrigem;
+
+    public Integer getPkTransferencia() {
+        return pkTransferencia;
+    }
+
+    public void setPkTransferencia(Integer pkTransferencia) {
+        this.pkTransferencia = pkTransferencia;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public BigDecimal getMontante() {
+        return montante;
+    }
+
+    public void setMontante(BigDecimal montante) {
+        this.montante = montante;
+    }
+
+    public String getIbanDestinatario() {
+        return ibanDestinatario;
+    }
+
+    public void setIbanDestinatario(String ibanDestinatario) {
+        this.ibanDestinatario = ibanDestinatario;
+    }
+
+    public LocalDateTime getDatahora() {
+        return datahora;
+    }
+
+    public void setDatahora(LocalDateTime datahora) {
+        this.datahora = datahora;
+    }
+
+    public String getEstadoTransferencia() {
+        return estadoTransferencia;
+    }
+
+    public void setEstadoTransferencia(String estadoTransferencia) {
+        this.estadoTransferencia = estadoTransferencia;
+    }
+
+    public String getCodigoTransferencia() {
+        return codigoTransferencia;
+    }
+
+    public void setCodigoTransferencia(String codigoTransferencia) {
+        this.codigoTransferencia = codigoTransferencia;
+    }
+
+    public String getTipoTransferencia() {
+        return tipoTransferencia;
+    }
+
+    public void setTipoTransferencia(String tipoTransferencia) {
+        this.tipoTransferencia = tipoTransferencia;
+    }
+
+    public ContaBancaria getFkContaBancariaOrigem() {
+        return fkContaBancariaOrigem;
+    }
+
+    public void setFkContaBancariaOrigem(ContaBancaria fkContaBancariaOrigem) {
+        this.fkContaBancariaOrigem = fkContaBancariaOrigem;
+    }
 }

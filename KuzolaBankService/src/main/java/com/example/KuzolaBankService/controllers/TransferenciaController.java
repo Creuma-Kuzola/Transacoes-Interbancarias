@@ -4,6 +4,7 @@
  */
 package com.example.KuzolaBankService.controllers;
 
+import com.example.KuzolaBankService.config.component.TransferenciaMessage;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
@@ -12,6 +13,7 @@ import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +47,8 @@ public class TransferenciaController extends BaseController
     TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer;
     @Autowired
     ContaBancariaServiceImpl contaBancariaServiceImpl;
-
+    @Autowired
+    TransferenciaMessage transferenciaMessage;
     @Autowired
     UserInfo userInfo;
 
@@ -154,6 +157,8 @@ public class TransferenciaController extends BaseController
         System.out.println("Transferencia"+ transferencia);
         Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario());
 
+        System.out.println("responseVerification: " +responseVerification);
+
         // 1 - Transferencias Intrabancaria
         if(responseVerification == 1)
         {
@@ -176,6 +181,18 @@ public class TransferenciaController extends BaseController
         }
         // 1 - Transferencias Interbancaria
         else if(responseVerification == 2){
+            TransferenciaCustomPOJO transferenciaCustomPOJO = transferenciaServiceImpl.convertToTransferenciaCustomPOJO(transferencia);
+
+            //System.out.println("transferenciaCustomPOJO: " +transferenciaCustomPOJO);
+            System.out.println("responseVerification2: " +responseVerification);
+
+            /*System.out.println("PASSOU AQUI: --");
+            transferenciaCustomPOJO.setDatahora(new Date());
+            String data = CustomJsonPojos.criarStrToJson(transferenciaCustomPOJO);
+
+            transferenciaServiceImpl.saveTransferComponent(transferenciaCustomPOJO);
+            kafkaTransferenciaProducer.sendMessageTransferenciaIntrabancaria(data); */
+
 
         }
         else{
@@ -184,6 +201,8 @@ public class TransferenciaController extends BaseController
 
         return this.erro("Erro!!");
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseBody> deleteTransferencia(@PathVariable("id") Integer id)

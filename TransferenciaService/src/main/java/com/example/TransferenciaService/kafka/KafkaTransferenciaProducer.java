@@ -70,7 +70,7 @@ public class KafkaTransferenciaProducer
                     .setHeader(KafkaHeaders.TOPIC, "transferencia2")
                     .build();
         }
-        else if (bankUnikeIdentifiedNumber == 2930)
+        else if (bankUnikeIdentifiedNumber == 1003)
         {
             message= MessageBuilder
                     .withPayload(data)
