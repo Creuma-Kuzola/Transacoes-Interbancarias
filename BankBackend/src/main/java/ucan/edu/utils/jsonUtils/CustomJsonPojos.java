@@ -10,6 +10,7 @@ public class CustomJsonPojos {
       //userInfo.getUserInfo().get("accountNumber") +
     public static String criarStrToJson(TransferenciaPOJO transferenciaPOJO)
     {
+        System.out.println(" dt:CustomJsonPojos " +new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferenciaPOJO.getDatahora()));
         String str = "{\n"
                 + "  \"pkTransferencia\": " + transferenciaPOJO.getPkTransferencia() + ",\n"
                 + "   \"descricao\": \"" + transferenciaPOJO.getDescricao() + "\",\n"

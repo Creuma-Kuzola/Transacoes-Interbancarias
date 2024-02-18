@@ -67,7 +67,7 @@ implements TransferenciaService{
 
         transferencia.setFkContaBancariaOrigem(contaBancaria.getPkContaBancaria());
         transferencia.setDatahora(new Date());
-        transferencia.setEstadoTransferencia("Realizado");
+        transferencia.setEstadoTransferencia("REALIZADO");
         transferencia.setTipoTransferencia("Transferencia Intrabancaria");
     }
 
@@ -84,6 +84,11 @@ implements TransferenciaService{
         transferenciaPOJO.setCodigoTransferencia(transferencia.getCodigoTransferencia());
 
         return transferenciaPOJO;
+    }
+
+    public  Transferencia criaTransferencia(Transferencia transferencia)
+    {
+        return  this.criar(transferencia);
     }
 
     public void transferenciaIntrabancaria(){

@@ -48,7 +48,6 @@ public class KafkaConsumerConfig
     @Autowired
     Gson gson;
 
-
     public KafkaConsumerConfig()
     {
         transferenciaPOJO = new TransferenciaPOJO();
@@ -91,7 +90,6 @@ public class KafkaConsumerConfig
            transferenciaResponse.setStatus(true);
            contaBancariServiceImpl.credito(transferenciaCustomPOJO.getIbanDestinatario(),transferenciaCustomPOJO.getMontante());
            sendResposta(transferenciaResponse);
-
        }
        else
        {

@@ -34,7 +34,7 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         implements ContaBancariaService
 {
     private Integer numberAccount;
-    private final Integer BANKNUMBER = 260;
+    private final Integer BANKNUMBER =  4040;
     private final String ibanCode = "E " + BANKNUMBER;
 
     @Autowired
@@ -52,16 +52,31 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         Random random = new Random();
         // Gerar um número aleatório com 4 dígitos
         numberAccount = random.nextInt(9000) + 1000;
+        System.out.println("BANKNUMBER: " +BANKNUMBER);
         // Exibir o número gerado
         System.out.println("Número Aleatório: " + numberAccount);
         return numberAccount;
+    }
+
+    public  Integer  creatNiveRandomNumber()
+    {
+        Random random = new Random();
+        // Gerar um número aleatório com 4 dígitos
+        Integer number = random.nextInt(9000) + 100000000;
+        System.out.println("nine: " +number);
+        // Exibir o número gerado
+        return number;
     }
 
     public String createIban()
     {
         String iban = " ";
         Integer accountCustomerNumber = numberAccount;
-        iban = "E " + BANKNUMBER + " " + accountCustomerNumber;
+        Integer randomNumbers = this.creatNiveRandomNumber();
+        System.out.println("BANKNUMBER: " +BANKNUMBER);
+        iban = "E "+BANKNUMBER+""+accountCustomerNumber+""+randomNumbers;
+
+        System.out.println(" iban: " +iban);
         return iban;
     }
 
@@ -270,7 +285,7 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     public boolean isValidTheSizeOfIban(String iban)
     {
-        return iban.length() == 10;
+        return iban.length() == 17;
     }
 
     public boolean existsIban(String iban)

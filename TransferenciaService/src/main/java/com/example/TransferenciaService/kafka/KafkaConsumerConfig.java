@@ -74,8 +74,6 @@ public class KafkaConsumerConfig
         System.out.println("Resposta: -> to another bank wakanda:-> " +strResponse);
     }
 
-
-
    @KafkaListener(topics = "intra-transfer-kuzola", groupId = "kuzolaGroup")
     public void consumerMessageTransferIntraBakKuzola(String message)
     {
@@ -92,7 +90,6 @@ public class KafkaConsumerConfig
         String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
         //System.out.println("Resposta: -> to another bank kusola:-> " +response);
     }
-
     public TransferenciaPOJO getTransferenciaPOJO()
     {
         return transferenciaPOJO;
