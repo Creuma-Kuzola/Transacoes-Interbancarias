@@ -22,6 +22,7 @@ import ucan.edu.entities.ContaBancaria;
 import ucan.edu.entities.Transferencia;
 import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
+import ucan.edu.utils.pojos.TransferenciaPOJO;
 import ucan.edu.utils.pojos.TransferenciaResponse;
 
 import java.math.BigDecimal;
@@ -74,7 +75,7 @@ public class KafkaTransferenciaConsumer
         if(transferenciaResponse.getStatus() == true)
         {
           Integer numeroDeConta  = Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
-          Integer montante =  Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("montante"));
+          BigDecimal montante = new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante"));
           ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);
 
          if (contaBancaria != null)
@@ -109,6 +110,40 @@ public class KafkaTransferenciaConsumer
         transferencia.setCodigoTransferencia(transferenciaResponse.get("codigoTransferencia"));
         return transferencia;
     }
+
+    @KafkaListener(topics = "tr-intrabancarias-wd", groupId = "myGroup")
+    public void consumeMessageTransferenciasIntrabancarias(String message)  {
+        System.out.println("Entrei");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        try {
+
+            System.out.println("Entrei Try Catch");
+
+            TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
+
+            Optional<ContaBancaria> contaBancaria = contaBancariServiceImpl.findById(transferenciaPOJO.getFkContaBancariaOrigem());
+            contaBancariServiceImpl.debito(contaBancaria.get().getIban(), transferenciaPOJO.getMontante());
+            contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
+
+            LOGGER.info(String.format(" Transferencia efectuada com sucesso ", message.toString()));
+
+            System.out.println("\nTransferencia efectuada com sucesso: "+
+                    "\n"+ "Data-Hora: "+ transferenciaPOJO.getDatahora()+ "\n"+
+                    "Montante (Kz): "+ transferenciaPOJO.getMontante()+ "\n"+
+                    "Estado: "+ transferenciaPOJO.getEstadoTransferencia()+ "\n"+
+                    "Iban do Destinatario: "+ transferenciaPOJO.getIbanDestinatario()
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
 
    /* @KafkaListener(topics = "tr-intrabancarias-kb", groupId = "consumerBanco")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
