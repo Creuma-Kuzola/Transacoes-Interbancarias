@@ -22,10 +22,8 @@ import ucan.edu.entities.ContaBancaria;
 import ucan.edu.entities.Transferencia;
 import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
-import ucan.edu.utils.pojos.TransferenciaPOJO;
 import ucan.edu.utils.pojos.TransferenciaResponse;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -77,8 +75,8 @@ public class KafkaTransferenciaConsumer
         if(transferenciaResponse.getStatus() == true)
         {
           Integer numeroDeConta  = Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
-          BigDecimal montante = new BigDecimal( transferenciaComponent.getTransferenciaResponse().get("montante"));
-         ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);
+          Integer montante =  Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("montante"));
+          ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);
 
          if (contaBancaria != null)
          {
@@ -86,8 +84,6 @@ public class KafkaTransferenciaConsumer
              messageT.put("status","true");
              transferenciaMessage.setMessage(messageT);
              System.out.println("Debto feito com sucesso!");
-             //Transferencia transferencia =  builderTransferencia(transferenciaComponent.getTransferenciaResponse());
-             //transferenciaServiceImpl.criar(transferencia);
          }
         }
         else
@@ -95,6 +91,7 @@ public class KafkaTransferenciaConsumer
             messageT.put("message","Transferência não concluída com sucesso!");
             messageT.put("status","false");
             transferenciaMessage.setMessage(messageT);
+
             System.out.println(" Não é possivel completar a operação!");
         }
         LOGGER.info(String.format("Message received response transferencia status from transferencia topic-> %s", message.toString()));
@@ -104,7 +101,7 @@ public class KafkaTransferenciaConsumer
         Transferencia transferencia = new Transferencia();
         //transferencia.setEstadoTransferencia("FEITA COM SUCESSO");
         transferencia.setDescricao(transferenciaResponse.get("descricao"));
-        transferencia.setMontante( new BigDecimal(transferenciaResponse.get("montante")));
+        transferencia.setMontante( new BigInteger(transferenciaResponse.get("montante")));
         transferencia.setIbanDestinatario(transferenciaResponse.get("ibanDestinatario"));
         transferencia.setDatahora(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(transferenciaResponse.get("datahora")));
         transferencia.setFkContaBancariaOrigem(Integer.parseInt(transferenciaResponse.get("ibanDestinatario")));
@@ -114,16 +111,13 @@ public class KafkaTransferenciaConsumer
         return transferencia;
     }
 
-   @KafkaListener(topics = "tr-intrabancarias-wd", groupId = "myGroup")
+   /* @KafkaListener(topics = "tr-intrabancarias-kb", groupId = "consumerBanco")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
-       System.out.println("Entrei");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
         try {
-
-            System.out.println("Entrei Try Catch");
 
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
 
@@ -145,6 +139,6 @@ public class KafkaTransferenciaConsumer
         }
 
 
-    }
+    }*/
 
 }

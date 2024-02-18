@@ -12,10 +12,12 @@ import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
+import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +59,6 @@ public class TransferenciaController extends BaseController
     private KafkaTransferenciaProducer kafkaTransferenciaProducer;
 
     Transferencia transferenciaCreated;
-
 
     public TransferenciaController(TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer)
     {
@@ -107,6 +108,45 @@ public class TransferenciaController extends BaseController
         return this.naoEncontrado("Transferencia não encontrada", null);
     }
 
+    @PostMapping("/publishTransferencia")
+    public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaCustomPOJO transferencia)
+    {
+        transferencia.setDatahora(new Date());
+        String data = CustomJsonPojos.criarStrToJson(transferencia);
+
+        kafkaTransferenciaProducer.sendMessageTransferenciaIntrabancaria(data);
+        return  ResponseEntity.ok("Transferencia enviada" +data);
+        /*String montaneStr = transferencia.getMontante().toString();
+        System.out.println("valor: " +montaneStr);
+        boolean isSaldoEnought = contaBancariaServiceImpl
+                .isSaldoPositiveToTransfer
+                        (Integer.valueOf(userInfo.getUserInfo().get("accountNumber")), Integer.parseInt(montaneStr));
+        if (isSaldoEnought)
+        {
+            transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
+            transferencia.setDatahora(new Date());
+
+            saveTransferComponent(transferencia);
+
+            String data = CustomJsonPojos.criarStrToJson(transferencia);
+            KafkaTransferenciaProducer.sendMessage(data);
+            try {
+                Thread.sleep(9000);
+                return ResponseEntity.ok("Message:" +
+                        " "+transferenciaMessage.getMessage().get("message")+
+                        " " +transferenciaComponent.getTransferenciaResponse().values());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else
+        {
+            return ResponseEntity.ok("Message: " +
+                    "Você possui saldo insuficiente, para " +
+                    "efectuar a transfências!" +isSaldoEnought);
+        }   */
+    }
+
 
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
@@ -143,7 +183,6 @@ public class TransferenciaController extends BaseController
         }
 
         return this.erro("Erro!!");
-
     }
 
     @DeleteMapping("/{id}")

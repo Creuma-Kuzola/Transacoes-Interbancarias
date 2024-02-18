@@ -4,7 +4,6 @@
  */
 package ucan.edu.services.implementacao;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,9 +32,9 @@ import ucan.edu.utils.enums.StatusContaBancaria;
 public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Integer>
         implements ContaBancariaService
 {
+
     private Integer numberAccount;
-    private final Integer BANKNUMBER = 260;
-    private final String ibanCode = "E " + BANKNUMBER;
+    private final Integer BANKNUMBER = 0404;
 
     @Autowired
     private TransferenciaMessage transferenciaMessage;
@@ -100,7 +99,7 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
     }
 
-    public ContaBancaria depositeAmountOfMoney(ContaBancaria contaBancaria, BigDecimal quantia)
+    public ContaBancaria depositeAmountOfMoney(ContaBancaria contaBancaria, Integer quantia)
     {
         Optional<ContaBancaria> contaBancariaFound = contaBancariaRepository
                 .findContaBancariaByNumeroDeConta(contaBancaria.getNumeroDeConta());
@@ -115,9 +114,9 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
             throw new ContaBancariaNotActivatedException();
         }
 
-        BigDecimal novoSaldo = contaBancariaFound.get().getSaldoDisponivel();
+        Integer novoSaldo = contaBancariaFound.get().getSaldoDisponivel();
 
-        novoSaldo.add( quantia);
+        novoSaldo += quantia;
 
         contaBancaria.setSaldoContabilistico(novoSaldo);
         contaBancaria.setSaldoDisponivel(novoSaldo);
@@ -126,36 +125,31 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return contaBancariaActualizada;
     }
 
-    // -1, 0, or 1 as this BigDecimal is numerically less than, equal to, or greater than val.
-    public Integer isSaldoPositiveToTransfer(Integer numberAccount, BigDecimal montante)
+    public boolean isSaldoPositiveToTransfer(Integer numberAccount, Integer montante)
     {
         Optional<ContaBancaria> contaBancariaFoundOrigem = contaBancariaRepository
                 .findContaBancariaByNumeroDeConta(numberAccount);
-        
         System.out.println("Saldo Disponivel: " +contaBancariaFoundOrigem.get().getSaldoDisponivel());
 
-         return  contaBancariaFoundOrigem.get().getSaldoDisponivel().compareTo(montante);
+         return  montante < contaBancariaFoundOrigem.get().getSaldoDisponivel()  ? true : false;
     }
 
-    public ContaBancaria transferInterbancariaDebito(Integer numberAccount, BigDecimal montante)
+    public ContaBancaria transferInterbancariaDebito(Integer numberAccount, Integer montante)
     {
         Optional<ContaBancaria> contaBancariaFoundOrigem = contaBancariaRepository
                 .findContaBancariaByNumeroDeConta(numberAccount);
 
         System.out.println("Saldo Disponivel: " +contaBancariaFoundOrigem.get().getSaldoDisponivel());
 
-        //(contaBancariaFoundOrigem.get().getSaldoDisponivel() < montante
-        // -1, 0, or 1 as this BigDecimal is numerically less than, equal to, or greater than val.
-       if (contaBancariaFoundOrigem.get().getSaldoDisponivel().compareTo( montante) == -1)
+       if (contaBancariaFoundOrigem.get().getSaldoDisponivel() < montante)
         {
             //throw new SaldoContaBancariaInferiorException();
 
             return null;
         }
 
-        BigDecimal novoSaldoContaBancariaOrigem = contaBancariaFoundOrigem.get().getSaldoDisponivel();
-        BigDecimal novoSaldoContaBancariaOrigemFinalResult = novoSaldoContaBancariaOrigem.subtract(montante);
-        
+        Integer novoSaldoContaBancariaOrigem = contaBancariaFoundOrigem.get().getSaldoDisponivel();
+        Integer novoSaldoContaBancariaOrigemFinalResult = novoSaldoContaBancariaOrigem - montante;
         System.out.println(" novoSaldoContaBancariaOrigem:  transferInterbancariaDebito() " + novoSaldoContaBancariaOrigemFinalResult);
 
         contaBancariaFoundOrigem.get().setSaldoContabilistico(novoSaldoContaBancariaOrigemFinalResult);
@@ -165,7 +159,7 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return contaBancariaFoundOrigem.get();
     }
     //777
-    public List<ContaBancaria> transferMoneyToAccountSameBank(ContaBancaria contaBancaria, String iban, BigDecimal montante)
+    public List<ContaBancaria> transferMoneyToAccountSameBank(ContaBancaria contaBancaria, String iban, Integer montante)
     {
         Optional<ContaBancaria> contaBancariaFoundOrigem = contaBancariaRepository
                 .findContaBancariaByNumeroDeConta(contaBancaria.getNumeroDeConta());
@@ -194,19 +188,19 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
             throw new ContaBancariaNotActivatedException();
         }
 
-        if (contaBancariaFoundOrigem.get().getSaldoDisponivel().compareTo( montante) == -1)
+        if (contaBancariaFoundOrigem.get().getSaldoDisponivel() < montante)
         {
             throw new SaldoContaBancariaInferiorException();
         }
 
         //get saldoDisponivel da conta do destinatario
-        BigDecimal novoSaldoContaDestinatario = contaBancariaFound.get().getSaldoDisponivel();
-        novoSaldoContaDestinatario.add(montante);
+        Integer novoSaldoContaDestinatario = contaBancariaFound.get().getSaldoDisponivel();
+        novoSaldoContaDestinatario += montante;
 
         //get saldoDisponivel da conta do destinatario
-        BigDecimal novoSaldoContaBancariaOrigem = contaBancariaFoundOrigem.get().getSaldoDisponivel();
+        Integer novoSaldoContaBancariaOrigem = contaBancariaFoundOrigem.get().getSaldoDisponivel();
 
-        BigDecimal novoSaldoContaBancariaOrigemFinalResult = novoSaldoContaBancariaOrigem.subtract(montante);
+        Integer novoSaldoContaBancariaOrigemFinalResult = novoSaldoContaBancariaOrigem - montante;
         System.out.println(" novoSaldoContaBancariaOrigem: " + novoSaldoContaBancariaOrigemFinalResult);
 
         contaBancariaFound.get().setSaldoContabilistico(novoSaldoContaDestinatario);
@@ -249,62 +243,4 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return null;
     }
 
-    public ContaBancaria findContaBancaraByIban(String iban)
-    {
-        return contaBancariaRepository.findByIban(iban);
-    }
-
-    public boolean isWakandaBankIban(String iban)
-    {
-        String codigoBanco = iban.substring(0, 5);
-        System.out.println("CodigoBanco"+ codigoBanco+ "Codigo Banco Length: "+ codigoBanco.length());
-        String idBancoValido = ibanCode;
-        return codigoBanco.equals(idBancoValido);
-    }
-
-    public Integer isValidMontante(ContaBancaria contaBancaria, BigDecimal montante){
-
-        BigDecimal saldoContabilistico = contaBancaria.getSaldoContabilistico(); ;
-       // System.out.println("saldoContabilistico.compareTo(montante): "+ saldoContabilistico.compareTo(montante));
-
-        return saldoContabilistico.compareTo( montante);
-    }
-
-    public boolean isValidTheSizeOfIban(String iban)
-    {
-        return iban.length() == 10;
-    }
-
-    public boolean existsIban(String iban)
-    {
-        ContaBancaria contaBancaria = new ContaBancaria();
-        contaBancaria = contaBancariaRepository.findByIban(iban);
-
-        return contaBancaria != null;
-    }
-
-    public ContaBancaria credito(String iban, BigDecimal montante){
-
-        System.out.println( " iban: " +iban);
-
-        ContaBancaria contaBancaria = new ContaBancaria();
-        contaBancaria = findContaBancaraByIban(iban);
-        contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().add(montante));
-        contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().add(montante));
-
-        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
-        return contaBancaria;
-    }
-
-
-    public ContaBancaria debito(String iban, BigDecimal montante){
-
-        ContaBancaria contaBancaria = new ContaBancaria();
-        contaBancaria = findContaBancaraByIban(iban);
-        contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().subtract(montante));
-        contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().subtract(montante));
-
-        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
-        return contaBancaria;
-    }
 }

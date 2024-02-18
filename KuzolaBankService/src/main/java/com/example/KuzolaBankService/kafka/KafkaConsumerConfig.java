@@ -73,13 +73,13 @@ public class KafkaConsumerConfig
     {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
-        //builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
         builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
         Gson gson = builder.create();
         LOGGER.info(String.format("Message received -> %s", message.toString()));
         TransferenciaCustomPOJO obj = gson.fromJson(message.toString(), TransferenciaCustomPOJO.class);
         System.out.println("Descricao " + obj.getDescricao());
         transferenciaCustomPOJO = obj;
+
         //verify the iban and account status
        boolean isValidIban = contaBancariServiceImpl.existsIban(obj.getIbanDestinatario());
        ContaBancaria isActiva = contaBancariServiceImpl.isAccountStatus(obj.getIbanDestinatario(), "Activo");

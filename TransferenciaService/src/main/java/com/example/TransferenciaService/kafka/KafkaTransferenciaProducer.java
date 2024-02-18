@@ -33,6 +33,7 @@ public class KafkaTransferenciaProducer
 
     private KafkaConsumerConfig kafkaConsumerConfig;
 
+    private Integer bankUnikeIdentifiedNumber;
     public KafkaTransferenciaProducer(KafkaTemplate<String, String> kafkaTemplate, KafkaConsumerConfig kafkaConsumerConfig)
     {
         this.kafkaTemplate = kafkaTemplate;
@@ -60,10 +61,22 @@ public class KafkaTransferenciaProducer
     {
         data = CustomJsonPojos.criarStrToJson(kafkaConsumerConfig.getTransferenciaPOJO());
         LOGGER.info(String.format("Message sent ==> %s ", data.toString()));
-        Message<String> message = MessageBuilder
-                .withPayload(data)
-                .setHeader(KafkaHeaders.TOPIC, "transferencia")
-                .build();
+        bankUnikeIdentifiedNumber = 4040;
+        Message<String> message = null;
+        if (bankUnikeIdentifiedNumber == 4040)
+        {
+            message= MessageBuilder
+                    .withPayload(data)
+                    .setHeader(KafkaHeaders.TOPIC, "transferencia2")
+                    .build();
+        }
+        else if (bankUnikeIdentifiedNumber == 2930)
+        {
+            message= MessageBuilder
+                    .withPayload(data)
+                    .setHeader(KafkaHeaders.TOPIC, "transferencia")
+                    .build();
+        }
 
         kafkaTemplate.send(message);
     }

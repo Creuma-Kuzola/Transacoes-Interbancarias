@@ -21,4 +21,13 @@ public class KafkaTopicConfig {
                 .name("tr-intrabancarias-kb")
                 .build();
     }
+
+    @Bean
+    public NewTopic topicTransferenciaIntrabancaria()
+    {
+        return TopicBuilder
+                .name("intra-transfer-kuzola")
+                .partitions(3)
+                .build();
+    }
 }

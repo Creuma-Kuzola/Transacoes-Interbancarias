@@ -36,4 +36,14 @@ public class KafkaTransferenciaProducer
                 .build();
         kafkaTemplate.send(message);
     }
+
+    public void sendMessageTransferenciaIntrabancaria(String data)
+    {
+        LOGGER.info(String.format("Message sent ==> %s ", data.toString()));
+        Message<String> message = MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, "intra-transfer-kuzola")
+                .build();
+        kafkaTemplate.send(message);
+    }
 }

@@ -35,6 +35,4 @@ public interface ContaBancariaRepository extends JpaRepository<ContaBancaria, In
 
     @Query("SELECT c FROM ContaBancaria c WHERE c.fkCliente.pkCliente =:cliente ORDER BY c.fkCliente.pkCliente DESC LIMIT 1")
     public ContaBancaria findByCliente(Integer cliente);
-
-    public ContaBancaria findByIban(String iban);
 }
