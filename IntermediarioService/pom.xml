@@ -11,7 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>IntermediarioService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>IntermediarioService</name>
+    <name>TransferenciaService</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>17</java.version>
