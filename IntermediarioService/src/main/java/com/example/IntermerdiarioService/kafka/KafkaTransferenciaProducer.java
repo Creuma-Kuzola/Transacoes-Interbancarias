@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaTransferenciaProducer
 {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaProducer.class);
 
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -89,4 +88,6 @@ public class KafkaTransferenciaProducer
 
         kafkaTemplate.send(message);
     }
+
+
 }

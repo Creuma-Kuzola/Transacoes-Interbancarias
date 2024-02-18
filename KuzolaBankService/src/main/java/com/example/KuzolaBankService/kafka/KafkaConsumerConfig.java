@@ -152,14 +152,13 @@ public class KafkaConsumerConfig
     }
 
 
-    @KafkaListener(topics = "tr-intrabancarias-kb", groupId = "consumerBanco")
+    @KafkaListener(topics ={ "tr-intrabancarias-kb", "tr-intrabancarias-kb-emis"})
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
         try {
-
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
 
             Optional<ContaBancaria> contaBancaria = contaBancariServiceImpl.findById(transferenciaPOJO.getFkContaBancariaOrigem());

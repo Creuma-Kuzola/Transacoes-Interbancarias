@@ -40,4 +40,13 @@ public class KafkaTopicConfig
                 .partitions(5)
                 .build();
     }
+
+    @Bean
+    public NewTopic topicTransferenciaIntrabancaria()
+    {
+        return TopicBuilder
+                .name("intra-transfer-kuzola")
+                .partitions(3)
+                .build();
+    }
 }
