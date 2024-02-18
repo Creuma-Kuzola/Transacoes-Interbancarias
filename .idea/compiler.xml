@@ -11,11 +11,11 @@
         <module name="TransferenciaService" />
         <module name="KuzolaBankService" />
         <module name="BankBackend" />
-        <module name="intermediario" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="edu" target="17" />
+      <module name="intermediario" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
