@@ -31,6 +31,7 @@ import ucan.edu.kafka.KafkaTransferenciaProducer;
 import ucan.edu.utils.dates.DateUtils;
 import ucan.edu.utils.jsonUtils.CustomJsonPojos;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
+import ucan.edu.utils.response.TransferenciaResponseWakandaBank;
 
 /**
  *
@@ -40,7 +41,6 @@ import ucan.edu.utils.pojos.TransferenciaPOJO;
 @RequestMapping("/transferencia")
 public class TransferenciaController extends BaseController
 {
-
     private final TransferenciaServiceImpl transferenciaServiceImpl;
     @Autowired
     ContaBancariaServiceImpl contaBancariaServiceImpl;
@@ -53,6 +53,8 @@ public class TransferenciaController extends BaseController
       private TransferenciaMessage transferenciaMessage;
 
     private final KafkaTransferenciaProducer KafkaTransferenciaProducer;
+    Transferencia transferenciaCreated = new Transferencia();
+    Transferencia transferenciaConverted = new Transferencia();
 
     public TransferenciaController(TransferenciaServiceImpl transferenciaServiceImpl, KafkaTransferenciaProducer KafkaTransferenciaProducer)
     {
@@ -60,9 +62,67 @@ public class TransferenciaController extends BaseController
         this.KafkaTransferenciaProducer = KafkaTransferenciaProducer;
     }
 
-
-
     @PostMapping("/publishTransferencia")
+    public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia) {
+
+        String erro = "jwhhfjf";
+
+        Integer isSaldoEnought = contaBancariaServiceImpl
+                .isSaldoPositiveToTransfer(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")), transferencia.getMontante());
+
+        Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario());
+
+        if (responseVerification == 1) {
+            if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")))
+            {
+                transferenciaCreated = new Transferencia();
+                transferenciaConverted = TransferenciaPOJO.convertingIntoTransferencia(transferencia);
+                transferenciaServiceImpl.fillingTransactionFields(transferenciaConverted);
+
+                transferenciaCreated = this.transferenciaServiceImpl.criar(transferenciaConverted);
+
+                TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated, userInfo.getUserInfo().get("iban"));
+
+                String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
+                System.out.println("Data Json" + transferenciaJson);
+
+                KafkaTransferenciaProducer.sendTransferenciaIntrabancaria(transferenciaJson.toString());
+
+                return ResponseEntity.ok(" " + TransferenciaResponseWakandaBank.convertingIntoTransferenciaKuzolaBank(transferenciaCreated));
+            }
+            return  ResponseEntity.ok(""+ erro);
+        }
+        else if (responseVerification == 2) {
+            if (isSaldoEnought != -1) {
+                transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
+                transferencia.setDatahora(new Date());
+
+                saveTransferComponent(transferencia);
+                String data = CustomJsonPojos.criarStrToJson(transferencia);
+                KafkaTransferenciaProducer.sendMessage(data);
+                try {
+                    Thread.sleep(9000);
+
+                    return transferenciaMessage.getMessage().get("status").equals("true") ?
+                            ResponseEntity.ok("Message: " + transferenciaMessage.getMessage().get("message"))
+                            :
+                            ResponseEntity.ok("Message: " + transferenciaMessage.getMessage().get("message"));
+
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                return ResponseEntity.ok("Message:  Você possui saldo insuficiente, para efectuar a transfências!" + isSaldoEnought);
+            }
+        } else {
+            return ResponseEntity.ok("Erro"+ erro);
+        }
+        //return ResponseEntity.ok("Erro!!" + erro);
+    }
+
+
+
+   /* @PostMapping("/publishTransferencia")
     public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
     {
         String montaneStr = transferencia.getMontante().toString();
@@ -94,7 +154,7 @@ public class TransferenciaController extends BaseController
         {
             return ResponseEntity.ok("Message:  Você possui saldo insuficiente, para efectuar a transfências!" +isSaldoEnought);
         }
-    }
+    }     */
 
 
 
