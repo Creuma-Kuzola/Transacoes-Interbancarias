@@ -52,9 +52,6 @@ public class TransferenciaController extends BaseController
     @Autowired
     UserInfo userInfo;
 
-    //777
-    private String welcome;
-
     @Autowired
     TransferenciaResponseComponent transferenciaResponseComponent;
 
@@ -182,24 +179,24 @@ public class TransferenciaController extends BaseController
         // 1 - Transferencias Interbancaria
         else if(responseVerification == 2){
             TransferenciaCustomPOJO transferenciaCustomPOJO = transferenciaServiceImpl.convertToTransferenciaCustomPOJO(transferencia);
-
-            //System.out.println("transferenciaCustomPOJO: " +transferenciaCustomPOJO);
-            System.out.println("responseVerification2: " +responseVerification);
-
-            /*System.out.println("PASSOU AQUI: --");
-            transferenciaCustomPOJO.setDatahora(new Date());
-            String data = CustomJsonPojos.criarStrToJson(transferenciaCustomPOJO);
-
             transferenciaServiceImpl.saveTransferComponent(transferenciaCustomPOJO);
-            kafkaTransferenciaProducer.sendMessageTransferenciaIntrabancaria(data); */
+            String data = CustomJsonPojos.criarStrToJson(transferenciaCustomPOJO);
+            kafkaTransferenciaProducer.sendMessageTransferenciaIntrabancaria(data);
+            /*try {
+                Thread.sleep(9000);
+                return this.ok("Message: " + transferenciaMessage.getMessage().get("message"));
 
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } */
 
+            return this.ok("",this);
         }
         else{
             return this.erro("ERRO: IBAN inválido");
         }
 
-        return this.erro("Erro!!");
+        //return this.erro("Erro!!");
     }
 
 

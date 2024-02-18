@@ -5,6 +5,7 @@
 package com.example.KuzolaBankService.services.implementacao;
 
 import com.example.KuzolaBankService.config.component.TransferenciaComponent;
+import com.example.KuzolaBankService.config.component.TransferenciaMessage;
 import com.example.KuzolaBankService.config.component.UserInfo;
 import com.example.KuzolaBankService.dto.TransferenciaDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 import com.example.KuzolaBankService.entities.Transferencia;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -110,23 +113,32 @@ implements TransferenciaService {
         transferencia.setDatahora(formattingDateTime());
         transferencia.setEstadoTransferencia("Realizado");
         transferencia.setTipoTransferencia("Transferencia Intrabancaria");
+
+
+
+        System.out.println("tranferencias:---::  "+transferencia);
     }
 
     public TransferenciaCustomPOJO convertToTransferenciaCustomPOJO(Transferencia transferencia) {
 
-       // ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(userInfo.getUserInfo().get("numeroDaConta"));
-        TransferenciaCustomPOJO result = new TransferenciaCustomPOJO();
+        TransferenciaCustomPOJO transferenciaCustomPOJO = new TransferenciaCustomPOJO();
 
-        result.setFkContaBancariaOrigem(Integer.parseInt(userInfo.getUserInfo().get("numeroDaConta")));
-        result.setDatahora(new Date());
-        result.setDescricao(transferencia.getDescricao());
-        result.setMontante(transferencia.getMontante());
-        transferencia.setEstadoTransferencia("Em processo!");
-        transferencia.setTipoTransferencia("Transferencia Intrabancaria");
-        transferencia.setIbanDestinatario(transferencia.getIbanDestinatario());
-        transferencia.setCodigoTransferencia(""+this.getCondigoTransferencia());
+        transferenciaCustomPOJO.setDatahora(new Date());
+        transferenciaCustomPOJO.setFkContaBancariaOrigem(new BigInteger(userInfo.getUserInfo().get("accountNumber")));
+        transferenciaCustomPOJO.setDescricao(transferencia.getDescricao());
+        transferenciaCustomPOJO.setMontante(transferencia.getMontante());
+        transferenciaCustomPOJO.setIbanDestinatario(transferencia.getIbanDestinatario());
+        transferenciaCustomPOJO.setTipoTransferencia("INTERBANCARIA");
+        transferenciaCustomPOJO.setEstadoTransferencia("EM PROCESSAMENTO");
+        transferenciaCustomPOJO.setCodigoTransferencia(""+this.getCondigoTransferencia());
 
-        return result;
+        System.out.println(" Descricao: "+transferenciaCustomPOJO.getDescricao());
+
+        System.out.println("transferenciaCustomPOJO: " +transferenciaCustomPOJO.toString());
+
+        //System.out.println("data: " + transferenciaCustomPOJO.getDatahora());
+
+        return transferenciaCustomPOJO;
     }
 
 

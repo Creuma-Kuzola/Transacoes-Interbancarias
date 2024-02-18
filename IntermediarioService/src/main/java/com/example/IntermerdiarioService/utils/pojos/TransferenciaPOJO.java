@@ -27,7 +27,7 @@ public class TransferenciaPOJO
     private BigInteger montante;
     private String ibanDestinatario;
     private Date datahora;
-    private Integer fkContaBancariaOrigem;
+    private BigInteger fkContaBancariaOrigem;
     private String tipoTransferencia;
     private String estadoTransferencia;
     private String codigoTransferencia;
@@ -73,11 +73,11 @@ public class TransferenciaPOJO
         this.datahora = datahora;
     }
 
-    public Integer getFkContaBancariaOrigem() {
+    public BigInteger getFkContaBancariaOrigem() {
         return fkContaBancariaOrigem;
     }
 
-    public void setFkContaBancariaOrigem(Integer fkContaBancariaOrigem) {
+    public void setFkContaBancariaOrigem(BigInteger fkContaBancariaOrigem) {
         this.fkContaBancariaOrigem = fkContaBancariaOrigem;
     }
 

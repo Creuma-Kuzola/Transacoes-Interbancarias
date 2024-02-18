@@ -34,7 +34,7 @@ public class TransferenciaCustomPOJO
     private BigDecimal montante;
     private String ibanDestinatario;
     private Date datahora;
-    private Integer fkContaBancariaOrigem;
+    private BigInteger fkContaBancariaOrigem;
     private String tipoTransferencia;
     private String estadoTransferencia;
     private String codigoTransferencia;
@@ -79,11 +79,11 @@ public class TransferenciaCustomPOJO
         this.datahora = datahora;
     }
 
-    public Integer getFkContaBancariaOrigem() {
+    public BigInteger getFkContaBancariaOrigem() {
         return fkContaBancariaOrigem;
     }
 
-    public void setFkContaBancariaOrigem(Integer fkContaBancariaOrigem) {
+    public void setFkContaBancariaOrigem(BigInteger fkContaBancariaOrigem) {
         this.fkContaBancariaOrigem = fkContaBancariaOrigem;
     }
 
@@ -109,5 +109,20 @@ public class TransferenciaCustomPOJO
 
     public void setCodigoTransferencia(String codigoTransferencia) {
         this.codigoTransferencia = codigoTransferencia;
+    }
+
+    @Override
+    public String toString() {
+        return "TransferenciaCustomPOJO{" +
+                "pkTransferencia=" + pkTransferencia +
+                ", descricao='" + descricao + '\'' +
+                ", montante=" + montante +
+                ", ibanDestinatario='" + ibanDestinatario + '\'' +
+                ", datahora=" + datahora +
+                ", fkContaBancariaOrigem=" + fkContaBancariaOrigem +
+                ", tipoTransferencia='" + tipoTransferencia + '\'' +
+                ", estadoTransferencia='" + estadoTransferencia + '\'' +
+                ", codigoTransferencia='" + codigoTransferencia + '\'' +
+                '}';
     }
 }
