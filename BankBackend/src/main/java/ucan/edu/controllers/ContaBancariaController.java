@@ -47,7 +47,7 @@ public class ContaBancariaController extends BaseController
         List<ContaBancaria> lista = contaBancariServiceImpl.findAll();
         return this.ok("Contas Bancarias encontradas com sucesso!", lista);
     }
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<ResponseBody> findContaBancariaByID(@PathVariable Integer id)
     {
         Optional<ContaBancaria> consulta = this.contaBancariServiceImpl.findById(id);

@@ -34,7 +34,6 @@ public class FuncionarioController extends BaseController {
     @GetMapping
     public ResponseEntity<ResponseBody> findAllFuncionario()
     {
-        
         List<Funcionario> lista = funcionarioServiceImpl.findAll();
         return this.ok("Funcionarios encontrados com sucesso!", lista);
     }
