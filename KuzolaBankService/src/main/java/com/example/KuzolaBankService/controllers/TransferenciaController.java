@@ -97,7 +97,7 @@ public class TransferenciaController extends BaseController
         return this.ok("Transações de Crédito encontradas com sucesso!", lista);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<ResponseBody> findTransferenciaByID(@PathVariable Integer id)
     {
         Optional<Transferencia> consulta = this.transferenciaServiceImpl.findById(id);
