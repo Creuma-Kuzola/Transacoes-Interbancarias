@@ -80,9 +80,17 @@ public class KafkaTransferenciaConsumer
 
          if (contaBancaria != null)
          {
+             /*messageT.put("message","Transferência efectuada com sucesso!");
+             messageT.put("status","true");
+             transferenciaMessage.setMessage(messageT); */
+
              messageT.put("message","Transferência efectuada com sucesso!");
              messageT.put("status","true");
              transferenciaMessage.setMessage(messageT);
+             Transferencia transferencia = buildTransferencia(transferenciaComponent);
+             Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
+             this.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
+
              System.out.println("Debto feito com sucesso!");
          }
         }
@@ -95,6 +103,34 @@ public class KafkaTransferenciaConsumer
             System.out.println(" Não é possivel completar a operação!");
         }
         LOGGER.info(String.format("Message received response transferencia status from transferencia topic-> %s", message.toString()));
+    }
+    private Transferencia buildTransferencia(TransferenciaComponent transferenciaComponent) throws ParseException
+    {
+        System.out.println( "transferenciaComponent.getTransferenciaResponse().get(\"datahora\"): " +transferenciaComponent.getTransferenciaResponse().get("datahora"));
+        Transferencia transferencia = new Transferencia();
+        transferencia.setDescricao(transferenciaComponent.getTransferenciaResponse().get("descricao"));
+        transferencia.setMontante(new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante")));
+        transferencia.setDatahora(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(transferenciaComponent.getTransferenciaResponse().get("datahora")));
+        transferencia.setIbanDestinatario(transferenciaComponent.getTransferenciaResponse().get("ibanDestinatario"));
+        transferencia.setFkContaBancariaOrigem(Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem")));
+        transferencia.setTipoTransferencia(transferenciaComponent.getTransferenciaResponse().get("tipoTransferencia"));
+        transferencia.setEstadoTransferencia("REALIZADO");
+        transferencia.setCodigoTransferencia(transferenciaComponent.getTransferenciaResponse().get("codigoTransferencia"));
+        return transferencia;
+    }
+
+    private void builderTransferenciaToTrasnferenciaComponent(Transferencia transferencia, TransferenciaComponent transferenciaComponent )
+            throws ParseException {
+        Map<String, String> component = new HashMap<>();
+        component.put("descricao",transferencia.getDescricao());
+        component.put("montante","" +transferencia.getMontante());
+        component.put("ibanDestinatario",transferencia.getIbanDestinatario());
+        component.put("datahora", "" +transferencia.getDatahora());
+        component.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem());
+        component.put("estadoTransferencia",transferencia.getEstadoTransferencia());
+        component.put("tipoTransferencia",transferencia.getTipoTransferencia());
+        component.put("codigoTransferencia",transferencia.getCodigoTransferencia());
+        transferenciaComponent.setTransferenciaResponse(component);
     }
 
     private Transferencia builderTransferencia(Map<String, String> transferenciaResponse) throws ParseException {
@@ -140,10 +176,7 @@ public class KafkaTransferenciaConsumer
             e.printStackTrace();
         }
 
-
     }
-
-
 
    /* @KafkaListener(topics = "tr-intrabancarias-kb", groupId = "consumerBanco")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {

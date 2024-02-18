@@ -59,7 +59,11 @@ public class KafkaTransferenciaProducer
         LOGGER.info(String.format("Message sent ==> %s ", data.toString()));
         bankUnikeIdentifiedNumber = 4040;
         Message<String> message = null;
-        if (bankUnikeIdentifiedNumber == 4040)
+        message= MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, "transferencia")
+                .build();
+      /*  if (bankUnikeIdentifiedNumber == 2930)
         {
             message= MessageBuilder
                     .withPayload(data)
@@ -73,7 +77,7 @@ public class KafkaTransferenciaProducer
                     .setHeader(KafkaHeaders.TOPIC, "transferencia")
                     .build();
         }
-
+  */
         kafkaTemplate.send(message);
     }
 

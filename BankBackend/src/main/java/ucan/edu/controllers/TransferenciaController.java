@@ -72,6 +72,8 @@ public class TransferenciaController extends BaseController
 
         Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario());
 
+        System.out.println(" responseVerification: " +responseVerification);
+
         if (responseVerification == 1) {
             if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")))
             {
@@ -102,11 +104,7 @@ public class TransferenciaController extends BaseController
                 KafkaTransferenciaProducer.sendMessage(data);
                 try {
                     Thread.sleep(9000);
-
-                    return transferenciaMessage.getMessage().get("status").equals("true") ?
-                            ResponseEntity.ok("Message: " + transferenciaMessage.getMessage().get("message"))
-                            :
-                            ResponseEntity.ok("Message: " + transferenciaMessage.getMessage().get("message"));
+                    return ResponseEntity.ok("Message: " + transferenciaMessage.getMessage().get("message"));
 
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -166,8 +164,8 @@ public class TransferenciaController extends BaseController
         transferenciaItems.put("descricao", transferencia.getDescricao());
         transferenciaItems.put("montante", transferencia.getMontante().toString());
         transferenciaItems.put("ibanDestinatario", transferencia.getIbanDestinatario());
-        transferenciaItems.put("datahora","" + transferencia.getDatahora());
-
+        transferenciaItems.put("datahora","" +
+                "" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferencia.getDatahora()));
         transferenciaItems.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem());
         transferenciaItems.put("tipoTransferencia", transferencia.getTipoTransferencia());
         transferenciaItems.put("estadoTransferencia", transferencia.getEstadoTransferencia());

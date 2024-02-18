@@ -88,11 +88,12 @@ public class AuthController
 
         map.put("username", username);
         map.put("iban",contaBancaria.getIban());
-        map.put("accountNumber","" +contaBancaria.getNumeroDeConta());
+        map.put("accountNumber",""+contaBancaria.getNumeroDeConta());
         map.put("pkCliente",""+contaBancaria.getFkCliente().getPkCliente());
         userInfo.setUserInfo(map);
 
         System.out.println("IBAN:"+userInfo.getUserInfo().get("iban"));
+        System.out.println("numeroDaConta:"+userInfo.getUserInfo().get("accountNumber"));
     }
 
 }
