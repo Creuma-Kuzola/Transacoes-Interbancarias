@@ -82,6 +82,11 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         return contaBancariaRepository.findByIban(iban);
     }
 
+    public ContaBancaria findContaBancaraByNumeroDeConta(BigInteger numeroDeConta)
+    {
+        return contaBancariaRepository.findByNumeroDeConta(numeroDeConta);
+    }
+
     public boolean isKuzolaBankIban(String iban)
     {
         String codigoBanco = iban.substring(0, 4);
@@ -121,6 +126,17 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
 
         ContaBancaria contaBancaria = new ContaBancaria();
         contaBancaria = findContaBancaraByIban(iban);
+        contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().subtract(montante));
+        contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().subtract(montante));
+
+        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
+        return contaBancaria;
+    }
+
+    public ContaBancaria debito(BigInteger numeroConta, BigDecimal montante){
+
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria = findContaBancaraByNumeroDeConta(numeroConta);
         contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().subtract(montante));
         contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().subtract(montante));
 
