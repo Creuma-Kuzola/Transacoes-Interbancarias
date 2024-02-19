@@ -120,6 +120,14 @@ public class KafkaConsumerConfig
        String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
        System.out.println("Resposta: -> to another bank kusola:-> " +response);
     }
+
+    @KafkaListener(topics = "tr-intrabancarias-kb-emis")
+    public void consumeMessageOfTransferenciaIntrabancaria(String message)
+    {
+        LOGGER.info(String.format("Message received in emis -> %s", message.toString()));
+    }
+
+
     public TransferenciaPOJO getTransferenciaPOJO()
     {
         return transferenciaPOJO;

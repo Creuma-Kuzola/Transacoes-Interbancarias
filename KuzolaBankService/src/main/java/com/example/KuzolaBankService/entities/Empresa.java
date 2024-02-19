@@ -23,7 +23,6 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Empresa implements Serializable {
@@ -40,11 +39,20 @@ public class Empresa implements Serializable {
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
     private String nif;
-    @OneToMany(mappedBy = "fkEmpresa")
+    @OneToMany(mappedBy = "fkEmpresa", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Cliente> clienteList;
     @JoinColumn(name = "fk_localizacao", referencedColumnName = "pk_localizacao")
     @ManyToOne
     private Localizacao fkLocalizacao;
-    
+
+    @Override
+    public String toString() {
+        return "Empresa{" +
+                "pkEmpresa=" + pkEmpresa +
+                ", nome='" + nome + '\'' +
+                ", nif='" + nif + '\'' +
+                ", fkLocalizacao=" + fkLocalizacao +
+                '}';
+    }
 }

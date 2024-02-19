@@ -57,6 +57,9 @@ public class KafkaConsumerConfig
     @Autowired
     Gson gson;
 
+    @Autowired
+    TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer;
+
     public KafkaConsumerConfig()
     {
         transferenciaPOJO = new TransferenciaPOJO();
@@ -158,7 +161,7 @@ public class KafkaConsumerConfig
         LOGGER.info(String.format("Message kuzola received response transferencia status from transferencia topic-> %s", message.toString()));
     }
 
-    @KafkaListener(topics ={ "tr-intrabancarias-kb", "tr-intrabancarias-kb-emis"})
+    @KafkaListener(topics ="tr-intrabancarias-kb")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
         ObjectMapper objectMapper = new ObjectMapper();

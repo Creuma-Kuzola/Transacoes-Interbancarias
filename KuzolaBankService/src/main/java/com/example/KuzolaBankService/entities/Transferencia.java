@@ -22,11 +22,9 @@ import lombok.ToString;
 @Entity
 @Table(catalog = "kuzola_bank", schema = "public")
 
-@Getter
-@Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Transferencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -126,5 +124,19 @@ public class Transferencia implements Serializable {
 
     public void setFkContaBancariaOrigem(ContaBancaria fkContaBancariaOrigem) {
         this.fkContaBancariaOrigem = fkContaBancariaOrigem;
+    }
+
+    @Override
+    public String toString() {
+        return "Transferencia{" +
+                "pkTransferencia=" + pkTransferencia +
+                ", descricao='" + descricao + '\'' +
+                ", montante=" + montante +
+                ", ibanDestinatario='" + ibanDestinatario + '\'' +
+                ", datahora=" + datahora +
+                ", estadoTransferencia='" + estadoTransferencia + '\'' +
+                ", codigoTransferencia='" + codigoTransferencia + '\'' +
+                ", tipoTransferencia='" + tipoTransferencia + '\'' +
+                '}';
     }
 }

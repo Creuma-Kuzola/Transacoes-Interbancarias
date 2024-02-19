@@ -21,6 +21,7 @@ import java.util.Optional;
 import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
+import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJOEmis;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -150,10 +151,10 @@ public class TransferenciaController extends BaseController
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
-        System.out.println("Transferencia"+ transferencia);
+        //System.out.println("Transferencia"+ transferencia);
         Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario());
-
-        System.out.println("responseVerification: " +responseVerification);
+        String ibanOrigem = userInfo.getUserInfo().get("iban");
+        //System.out.println("responseVerification: " +responseVerification);
 
         // 1 - Transferencias Intrabancaria
         if(responseVerification == 1)
@@ -161,11 +162,10 @@ public class TransferenciaController extends BaseController
             if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")))
             {
                 transferenciaCreated = new Transferencia();
-                transferenciaServiceImpl.fillingTransactionFields(transferencia);
-
+                transferenciaServiceImpl.fillingTransactionFields(transferencia, ibanOrigem);
                 transferenciaCreated = this.transferenciaServiceImpl.criar(transferencia);
 
-                TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated, userInfo.getUserInfo().get("iban"));
+                TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated);
 
                 String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
                 System.out.println("Data Json" + transferenciaJson);
@@ -175,9 +175,9 @@ public class TransferenciaController extends BaseController
             }
             return  this.erro("ERRO: Informação inválida");
         }
-        // 1 - Transferencias Interbancaria
+        // 2 - Transferencias Interbancaria
         else if(responseVerification == 2){
-            TransferenciaCustomPOJO transferenciaCustomPOJO = transferenciaServiceImpl.convertToTransferenciaCustomPOJO(transferencia);
+          /*  TransferenciaCustomPOJO transferenciaCustomPOJO = transferenciaServiceImpl.convertToTransferenciaCustomPOJO(transferencia);
             transferenciaServiceImpl.saveTransferComponent(transferenciaCustomPOJO);
             String data = CustomJsonPojos.criarStrToJson(transferenciaCustomPOJO);
             kafkaTransferenciaProducer.sendMessageTransferenciaIntrabancaria(data);

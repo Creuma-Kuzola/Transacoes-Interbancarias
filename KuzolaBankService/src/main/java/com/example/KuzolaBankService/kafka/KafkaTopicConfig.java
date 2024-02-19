@@ -30,4 +30,5 @@ public class KafkaTopicConfig {
                 .partitions(3)
                 .build();
     }
+
 }

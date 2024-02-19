@@ -3,6 +3,7 @@ package com.example.KuzolaBankService.utils.jsonUtils;
 
 import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
+import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJOEmis;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +41,23 @@ public class CustomJsonPojos {
                 + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
                 + "    \"codigoTransferencia\": \"" + transferenciaPOJO.getCodigoTransferencia() + "\",\n"
                 + "    \"bancoUdentifier\":"+transferenciaPOJO.getBancoUdentifier()+"\n"
+                + "}";
+        return str;
+    }
+
+
+    public static String criarStrToJson(TransferenciaPOJOEmis transferenciaPOJOEmis)
+    {
+        String str = "{\n"
+                + "  \"pkTransferencia\": " + transferenciaPOJOEmis.getPkTransferencia() + ",\n"
+                + "   \"descricao\": \"" + transferenciaPOJOEmis.getDescricao() + "\",\n"
+                + "    \"montante\": " + transferenciaPOJOEmis.getMontante() + ",\n"
+                + "    \"ibanDestinatario\": \"" + transferenciaPOJOEmis.getIbanDestinatario() + "\",\n"
+                + "    \"datahora\":\"" + transferenciaPOJOEmis.getDatahora() + "\",\n"
+                + "    \"fkContaBancariaOrigem\": " +transferenciaPOJOEmis.getIbanOrigem() +",\n"
+                + "    \"tipoTransferencia\": \"" + transferenciaPOJOEmis.getTipoTransferencia() + "\",\n"
+                + "    \"estadoTransferencia\": \"" + transferenciaPOJOEmis.getEstadoTransferencia() + "\",\n"
+                + "    \"codigoTransferencia\": " + transferenciaPOJOEmis.getCodigoTransferencia() + "\n"
                 + "}";
         return str;
     }

@@ -24,9 +24,9 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class ContaBancaria implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -119,5 +119,19 @@ public class ContaBancaria implements Serializable {
 
     public void setFkCliente(Cliente fkCliente) {
         this.fkCliente = fkCliente;
+    }
+
+    @Override
+    public String toString() {
+        return "ContaBancaria{" +
+                "pkContaBancaria=" + pkContaBancaria +
+                ", iban='" + iban + '\'' +
+                ", status='" + status + '\'' +
+                ", dataCriacao=" + dataCriacao +
+                ", numeroDeConta=" + numeroDeConta +
+                ", saldoContabilistico=" + saldoContabilistico +
+                ", saldoDisponivel=" + saldoDisponivel +
+                ", fkCliente=" + fkCliente +
+                '}';
     }
 }

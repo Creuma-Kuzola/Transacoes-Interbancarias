@@ -12,8 +12,10 @@ import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.enums.DetalhesBanco;
 import com.example.KuzolaBankService.repositories.TransferenciaRepository;
 import com.example.KuzolaBankService.services.TransferenciaService;
+import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
+import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJOEmis;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
@@ -91,7 +93,7 @@ implements TransferenciaService {
 
     }
 
-    public TransferenciaPOJO convertingIntoTransferenciaPOJO(Transferencia transferencia, String IbanOrigem)
+    public TransferenciaPOJO convertingIntoTransferenciaPOJO(Transferencia transferencia)
     {
         TransferenciaPOJO transferenciaPOJO = new TransferenciaPOJO();
         transferenciaPOJO.setPkTransferencia(transferencia.getPkTransferencia());
@@ -103,21 +105,39 @@ implements TransferenciaService {
         transferenciaPOJO.setFkContaBancariaOrigem(transferencia.getFkContaBancariaOrigem().getPkContaBancaria());
         transferenciaPOJO.setCodigoTransferencia(transferencia.getCodigoTransferencia());
 
+        //System.out.println("Transferencia Pojo"+ transferenciaPOJO);
+
         return transferenciaPOJO;
     }
 
-    public void fillingTransactionFields(Transferencia transferencia){
 
-        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+    public static TransferenciaPOJOEmis convertingIntoTransferenciaPOJOEmis(Transferencia transferencia, String ibanOrigem)
+    {
+        TransferenciaPOJOEmis TransferenciaPOJOEmis = new TransferenciaPOJOEmis();
+        TransferenciaPOJOEmis.setPkTransferencia(transferencia.getPkTransferencia());
+        TransferenciaPOJOEmis.setDatahora(transferencia.getDatahora());
+        TransferenciaPOJOEmis.setDescricao(transferencia.getDescricao());
+        TransferenciaPOJOEmis.setIbanDestinatario(transferencia.getIbanDestinatario());
+        TransferenciaPOJOEmis.setMontante(transferencia.getMontante());
+        TransferenciaPOJOEmis.setEstadoTransferencia(transferencia.getEstadoTransferencia());
+        TransferenciaPOJOEmis.setFkContaBancariaOrigem(ibanOrigem);
+        TransferenciaPOJOEmis.setCodigoTransferencia(transferencia.getCodigoTransferencia());
 
-        transferencia.setFkContaBancariaOrigem(contaBancaria);
+        return TransferenciaPOJOEmis;
+    }
+
+    public void fillingTransactionFields(Transferencia transferencia, String ibanOrigem){
+
+        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(ibanOrigem);
+        contaBancaria.getFkCliente().setContaBancariaList(new ArrayList<>());
+        contaBancaria.getFkCliente().setUsersList(new ArrayList<>());
+
         transferencia.setDatahora(formattingDateTime());
         transferencia.setEstadoTransferencia("Realizado");
         transferencia.setTipoTransferencia("Transferencia Intrabancaria");
+        transferencia.setFkContaBancariaOrigem(contaBancaria);
 
-
-
-        System.out.println("tranferencias:---::  "+transferencia);
+        //System.out.println("tranferencias:---::  "+transferencia);
     }
 
     public TransferenciaCustomPOJO convertToTransferenciaCustomPOJO(Transferencia transferencia) {
@@ -181,5 +201,51 @@ implements TransferenciaService {
 
         return transferenciaRepository.findAllTransacoesCreditadas(ibanDestino);
     }
+
+    /*public Transferencia criarTransferencia(Transferencia transferencia, String ibanOrigem){
+        fillingTransactionFields(transferencia, ibanOrigem);
+        return this.criar(transferencia);
+    }
+
+    public String convertingTransferenciaInJson( Transferencia transferenciaCreated){
+
+        TransferenciaPOJO transferenciaPOJO = new TransferenciaPOJO();
+        transferenciaPOJO = this.convertingIntoTransferenciaPOJO(transferenciaCreated);
+
+        String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
+
+        System.out.println("Data Json" + transferenciaJson);
+        return  transferenciaJson;
+    }
+
+    public String convertingTransferenciaInJsonEmis( Transferencia transferenciaCreated, String ibanOrigem){
+
+        TransferenciaPOJOEmis transferenciaPOJOEmis = new TransferenciaPOJOEmis();
+        transferenciaPOJOEmis = this.convertingIntoTransferenciaPOJOEmis(transferenciaCreated, ibanOrigem);
+
+        String transferenciaJsonEmis = CustomJsonPojos.criarStrToJson(transferenciaPOJOEmis);
+
+        System.out.println("Data Json" + transferenciaJsonEmis);
+        return  transferenciaJsonEmis;
+    }
+
+    /*public void TransferenciaIntrabancaria(Transferencia transferencia, String ibanOrigem ){
+
+        Transferencia transf = new Transferencia();
+        transf = transferencia;
+
+        this.fillingTransactionFields(transf, ibanOrigem);
+        criarTransferencia(transf, ibanOrigem);
+        TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferencia);
+
+        String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
+        System.out.println("Data Json" + transferenciaJson);
+
+        transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
+        transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancariaEmis( CustomJsonPojos.criarStrToJson (TransferenciaServiceImpl.convertingIntoTransferenciaPOJOEmis(transferenciaCreated, userInfo.getUserInfo().get("iban"))).toString());
+
+
+    }*/
+
 
 }

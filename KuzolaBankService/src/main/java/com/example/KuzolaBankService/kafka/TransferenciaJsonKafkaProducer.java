@@ -39,4 +39,15 @@ public class TransferenciaJsonKafkaProducer {
                 .build();
         kafkaTemplate.send(message);
     }
+
+    public void sendMessageTransferenciaIntraBancariaEmis(String transferencia){
+
+        LOGGER.info(String.format("Message sent -> %s", transferencia.toString()));
+
+        Message<String> message = MessageBuilder
+                .withPayload(transferencia)
+                .setHeader(KafkaHeaders.TOPIC, "tr-intrabancarias-kb-emis")
+                .build();
+        kafkaTemplate.send(message);
+    }
 }
