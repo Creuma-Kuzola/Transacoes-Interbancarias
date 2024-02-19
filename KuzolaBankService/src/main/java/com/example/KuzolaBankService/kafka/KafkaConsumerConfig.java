@@ -223,10 +223,10 @@ public class KafkaConsumerConfig
                 messageT.put("message","Transferência efectuada com sucesso!");
                 messageT.put("status","true");
                 transferenciaMessage.setMessage(messageT);
-                Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
-                Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
+              //  Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
+                //Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
 
-                transferenciaServiceImpl.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
+                //transferenciaServiceImpl.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
                 System.out.println("Debito feito com sucesso!");
             }
         }

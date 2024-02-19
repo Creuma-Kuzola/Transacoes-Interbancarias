@@ -168,7 +168,7 @@ public class TransferenciaController extends BaseController
                 transferenciaServiceImpl.fillingTransactionFields(transferencia, ibanOrigem);
                 transferenciaCreated = this.transferenciaServiceImpl.criar(transferencia);
 
-                TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated);
+                TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated, ibanOrigem);
 
                 String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
                 System.out.println("Data Json" + transferenciaJson);
@@ -190,13 +190,13 @@ public class TransferenciaController extends BaseController
 
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
-            }
+            }*/
         }
         else{
             return this.erro("ERRO: IBAN inválido");
         }
 
-        //return this.erro("Erro!!");
+        return this.erro("Erro!!");
     }
 
 

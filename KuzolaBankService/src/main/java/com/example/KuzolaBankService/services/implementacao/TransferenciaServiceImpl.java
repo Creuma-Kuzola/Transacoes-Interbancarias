@@ -115,26 +115,33 @@ implements TransferenciaService {
 
     public static TransferenciaPOJOEmis convertingIntoTransferenciaPOJOEmis(Transferencia transferencia, String ibanOrigem)
     {
-        TransferenciaPOJOEmis TransferenciaPOJOEmis = new TransferenciaPOJOEmis();
-        TransferenciaPOJOEmis.setPkTransferencia(transferencia.getPkTransferencia());
-        TransferenciaPOJOEmis.setDatahora(transferencia.getDatahora());
-        TransferenciaPOJOEmis.setDescricao(transferencia.getDescricao());
-        TransferenciaPOJOEmis.setIbanDestinatario(transferencia.getIbanDestinatario());
-        TransferenciaPOJOEmis.setMontante(transferencia.getMontante());
-        TransferenciaPOJOEmis.setEstadoTransferencia(transferencia.getEstadoTransferencia());
-        TransferenciaPOJOEmis.setFkContaBancariaOrigem(ibanOrigem);
-        TransferenciaPOJOEmis.setCodigoTransferencia(transferencia.getCodigoTransferencia());
+        TransferenciaPOJOEmis transferenciaPOJOEmis = new TransferenciaPOJOEmis();
+        transferenciaPOJOEmis.setPkTransferencia(transferencia.getPkTransferencia());
+        transferenciaPOJOEmis.setDatahora(transferencia.getDatahora());
+        transferenciaPOJOEmis.setDescricao(transferencia.getDescricao());
+        transferenciaPOJOEmis.setIbanDestinatario(transferencia.getIbanDestinatario());
+        transferenciaPOJOEmis.setMontante(transferencia.getMontante());
+        transferenciaPOJOEmis.setEstadoTransferencia(transferencia.getEstadoTransferencia());
+        transferenciaPOJOEmis.setFkContaBancariaOrigem(ibanOrigem);
+        transferenciaPOJOEmis.setCodigoTransferencia(transferencia.getCodigoTransferencia());
 
-        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
+        return  transferenciaPOJOEmis;
 
-        transferencia.setFkContaBancariaOrigem(contaBancaria);
+        //System.out.println("tranferencias:---::  "+transferencia);
+    }
+
+    public void fillingTransactionFields(Transferencia transferencia, String ibanOrigem){
+
+        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(ibanOrigem);
+        contaBancaria.getFkCliente().setUsersList(new ArrayList<>());
+        contaBancaria.getFkCliente().setUsersList(new ArrayList<>());
+
         transferencia.setDatahora(formattingDateTime());
         transferencia.setEstadoTransferencia("Realizado");
         transferencia.setTipoTransferencia("Transferencia Intrabancaria");
         transferencia.setFkContaBancariaOrigem(contaBancaria);
-
-        //System.out.println("tranferencias:---::  "+transferencia);
     }
+
 
     public TransferenciaCustomPOJO convertToTransferenciaCustomPOJO(Transferencia transferencia) {
 
