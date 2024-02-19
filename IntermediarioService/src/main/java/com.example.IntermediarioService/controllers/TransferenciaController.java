@@ -4,6 +4,7 @@
  */
 package com.example.IntermediarioService.controllers;
 
+import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.https.utils.ResponseBody;
@@ -36,9 +37,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/transferencia")
 public class TransferenciaController extends BaseController {
-    
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
+
+    @Autowired
+    BancoComponent bancoComponent;
 
     @Autowired
     KafkaTransferenciaProducer kafkaTransferenciaProducer;
@@ -75,7 +78,8 @@ public class TransferenciaController extends BaseController {
                 + "    \"fkContaBancariaOrigem\": " + transferenciaPOJO.getFkContaBancariaOrigem() + ",\n"
                 + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
                 + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
-                + "    \"codigoTransferencia\": " + transferenciaPOJO.getCodigoTransferencia() + "\n"
+                + "    \"codigoTransferencia\": \"" + transferenciaPOJO.getCodigoTransferencia() + "\",\n"
+                + "    \"bancoUdentifier\":"+transferenciaPOJO.getBancoUdentifier()+"\n"
                 + "}";
 
         return str;
@@ -109,12 +113,21 @@ public class TransferenciaController extends BaseController {
         return this.ok("TransferenciaDto editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
     }
 
-    @PostMapping("/response")
+    @PostMapping("/response2")
     public ResponseEntity<String> sendResponseTransferencia(@RequestBody TransferenciaResponse response)
     {
         String data =  CustomJsonPojos.TransferenciaResponse(response);
         this.kafkaTransferenciaProducer.sendMessageTransferenciaResponse(data);
-        System.out.println(" Resposta envida com sucesso wakanda bank! ");
+        System.out.println(" Resposta envida com sucesso wakanda bank! " +bancoComponent.geBancoComponent().get("UUID"));
+        return  ResponseEntity.ok("Resposta envida com sucesso! para o wakanda bank" +data) ;
+    }
+
+    @PostMapping("/responseTokuzola")
+    public ResponseEntity<String> sendResponseTransferencia2(@RequestBody TransferenciaResponse response)
+    {
+        String data =  CustomJsonPojos.TransferenciaResponse(response);
+        this.kafkaTransferenciaProducer.sendMessageTransferenciaResponse2(data);
+        System.out.println(" Resposta envida com sucesso wakanda bank! " +bancoComponent.geBancoComponent().get("UUID"));
         return  ResponseEntity.ok("Resposta envida com sucesso! para o wakanda bank" +data) ;
     }
 }

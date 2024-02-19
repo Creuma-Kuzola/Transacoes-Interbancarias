@@ -30,6 +30,7 @@ public class TransferenciaPOJO
     private String tipoTransferencia;
     private String estadoTransferencia;
     private String codigoTransferencia;
+    private Integer bancoUdentifier;
 
 
     public Integer getPkTransferencia() {
@@ -102,5 +103,13 @@ public class TransferenciaPOJO
 
     public void setCodigoTransferencia(String codigoTransferencia) {
         this.codigoTransferencia = codigoTransferencia;
+    }
+
+    public Integer getBancoUdentifier() {
+        return bancoUdentifier;
+    }
+
+    public void setBancoUdentifier(Integer bancoUdentifier) {
+        this.bancoUdentifier = bancoUdentifier;
     }
 }

@@ -9,6 +9,7 @@ import com.example.KuzolaBankService.config.component.TransferenciaMessage;
 import com.example.KuzolaBankService.config.component.UserInfo;
 import com.example.KuzolaBankService.dto.TransferenciaDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
+import com.example.KuzolaBankService.enums.DetalhesBanco;
 import com.example.KuzolaBankService.repositories.TransferenciaRepository;
 import com.example.KuzolaBankService.services.TransferenciaService;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
@@ -131,6 +132,7 @@ implements TransferenciaService {
         transferenciaCustomPOJO.setTipoTransferencia("INTERBANCARIA");
         transferenciaCustomPOJO.setEstadoTransferencia("EM PROCESSAMENTO");
         transferenciaCustomPOJO.setCodigoTransferencia(""+this.getCondigoTransferencia());
+        transferenciaCustomPOJO.setBancoUdentifier(1003);
 
         System.out.println(" Descricao: "+transferenciaCustomPOJO.getDescricao());
 

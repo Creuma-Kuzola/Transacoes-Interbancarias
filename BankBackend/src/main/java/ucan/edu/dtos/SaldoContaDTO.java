@@ -1,6 +1,7 @@
 package ucan.edu.dtos;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 
 public class SaldoContaDTO {

@@ -1,22 +1,13 @@
-package com.example.KuzolaBankService.utils.pojos;
+package ucan.edu.utils.pojos;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-
-import java.math.BigInteger;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 
 /**
  *
@@ -38,6 +29,7 @@ public class TransferenciaCustomPOJO
     private String tipoTransferencia;
     private String estadoTransferencia;
     private String codigoTransferencia;
+
     private Integer bancoUdentifier;
 
     public Integer getPkTransferencia() {
@@ -88,6 +80,14 @@ public class TransferenciaCustomPOJO
         this.fkContaBancariaOrigem = fkContaBancariaOrigem;
     }
 
+    public Integer getBancoUdentifier() {
+        return bancoUdentifier;
+    }
+
+    public void setBancoUdentifier(Integer bancoUdentifier) {
+        this.bancoUdentifier = bancoUdentifier;
+    }
+
     public String getTipoTransferencia() {
         return tipoTransferencia;
     }
@@ -110,14 +110,6 @@ public class TransferenciaCustomPOJO
 
     public void setCodigoTransferencia(String codigoTransferencia) {
         this.codigoTransferencia = codigoTransferencia;
-    }
-
-    public Integer getBancoUdentifier() {
-        return bancoUdentifier;
-    }
-
-    public void setBancoUdentifier(Integer bancoUdentifier) {
-        this.bancoUdentifier = bancoUdentifier;
     }
 
     @Override

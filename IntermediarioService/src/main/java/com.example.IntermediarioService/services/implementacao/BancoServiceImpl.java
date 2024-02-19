@@ -8,6 +8,9 @@ import com.example.IntermediarioService.entities.Banco;
 import com.example.IntermediarioService.services.BancoService;
 import org.springframework.stereotype.Service;
 import com.example.IntermediarioService.services.implementacao.AbstractService;
+
+import java.util.List;
+
 /**
  *
  * @author creuma
@@ -15,5 +18,11 @@ import com.example.IntermediarioService.services.implementacao.AbstractService;
 @Service
 public class BancoServiceImpl extends AbstractService<Banco, Integer>
 implements BancoService{
+
+
+    public List<Banco> findAllBancos()
+    {
+       return this.findAll();
+    }
     
 }

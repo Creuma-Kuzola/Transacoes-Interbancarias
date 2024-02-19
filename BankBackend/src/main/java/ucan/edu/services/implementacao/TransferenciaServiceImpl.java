@@ -65,7 +65,7 @@ implements TransferenciaService{
 
         ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
 
-        transferencia.setFkContaBancariaOrigem(contaBancaria.getPkContaBancaria());
+        transferencia.setFkContaBancariaOrigem(contaBancaria.getNumeroDeConta());
         transferencia.setDatahora(new Date());
         transferencia.setEstadoTransferencia("REALIZADO");
         transferencia.setTipoTransferencia("Transferencia Intrabancaria");

@@ -32,6 +32,15 @@ public class KafkaTopicConfig
                 .partitions(5)
                 .build();
     }
+    @Bean
+    public NewTopic intermediarioResponse2()
+    {
+        return TopicBuilder.name("response2")
+                .partitions(5)
+                .build();
+    }
+
+
 
     @Bean
     public NewTopic intermediario2()

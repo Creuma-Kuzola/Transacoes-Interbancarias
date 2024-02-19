@@ -31,4 +31,12 @@ public class KafkaTopicConfig {
                 .partitions(5)
                 .build();
     }
+
+    @Bean
+    public NewTopic responseWakanda(){
+        return TopicBuilder
+                .name("responseWakanda")
+                .partitions(5)
+                .build();
+    }
 }

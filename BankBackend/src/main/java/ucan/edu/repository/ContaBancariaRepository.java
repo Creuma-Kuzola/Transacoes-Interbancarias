@@ -4,6 +4,7 @@
  */
 package ucan.edu.repository;
 
+import java.math.BigInteger;
 import java.util.Optional;
 import ucan.edu.entities.*;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,4 +38,7 @@ public interface ContaBancariaRepository extends JpaRepository<ContaBancaria, In
     public ContaBancaria findByCliente(Integer cliente);
 
     public ContaBancaria findByIban(String iban);
+
+    @Query("SELECT c FROM ContaBancaria c WHERE c.iban =:iban AND c.status =:status")
+    public  ContaBancaria findContaBancariaByStatus(@Param("iban") String iban, @Param("status") StatusContaBancaria status);
 }

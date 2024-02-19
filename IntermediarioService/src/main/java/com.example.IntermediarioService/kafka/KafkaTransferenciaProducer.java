@@ -4,13 +4,19 @@
  */
 package com.example.IntermediarioService.kafka;
 
+import com.example.IntermediarioService.component.BancoComponent;
+import com.example.IntermediarioService.entities.Banco;
 import com.example.IntermediarioService.kafka.KafkaConsumerConfig;
+import com.example.IntermediarioService.services.implementacao.BancoServiceImpl;
 import com.example.IntermerdiarioService.utils.pojos.TransferenciaPOJO;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import com.example.IntermerdiarioService.utils.pojos.jsonUtils.CustomJsonPojos;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
@@ -28,6 +34,11 @@ public class KafkaTransferenciaProducer
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaProducer.class);
 
     private KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired
+    private BancoServiceImpl bancoServiceImpl;
+    private  List<Banco> bancos;
+    @Autowired
+    private BancoComponent bancoComponent;
 
     private KafkaConsumerConfig kafkaConsumerConfig;
 
@@ -50,6 +61,7 @@ public class KafkaTransferenciaProducer
                 + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
                 + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
                 + "    \"codigoTransferencia\": " + transferenciaPOJO.getCodigoTransferencia() + "\n"
+                + "    \"bancoUdentifier\":"+transferenciaPOJO.getBancoUdentifier()+"\n"
                 + "}";
 
         return str;
@@ -59,27 +71,27 @@ public class KafkaTransferenciaProducer
     {
         data = CustomJsonPojos.criarStrToJson(kafkaConsumerConfig.getTransferenciaPOJO());
         LOGGER.info(String.format("Message sent ==> %s ", data.toString()));
-        bankUnikeIdentifiedNumber = 2930;
+
+        Integer bankId = bancoComponent.geBancoComponent().get("UUID");
+
         Message<String> message = null;
-        /*message= MessageBuilder
-                .withPayload(data)
-                .setHeader(KafkaHeaders.TOPIC, "transferencia")
-                .build(); */
-      if (bankUnikeIdentifiedNumber == 2930)
+
+        System.out.println(" " +(bankId == 1003) );
+
+        if (bankId == 1003)
         {
             message= MessageBuilder
                     .withPayload(data)
                     .setHeader(KafkaHeaders.TOPIC, "transferencia2")
                     .build();
         }
-        else if (bankUnikeIdentifiedNumber == 2930)
+        else if (bankId == 4040)
         {
             message= MessageBuilder
                     .withPayload(data)
                     .setHeader(KafkaHeaders.TOPIC, "transferencia")
                     .build();
         }
-
         kafkaTemplate.send(message);
     }
 
@@ -90,6 +102,20 @@ public class KafkaTransferenciaProducer
         Message<String> message = MessageBuilder
                 .withPayload(data)
                 .setHeader(KafkaHeaders.TOPIC, "response")
+                .build();
+
+        kafkaTemplate.send(message);
+    }
+
+    public void sendMessageTransferenciaResponse2(String data)
+    {
+        //data = t(kafkaConsumerConfig.getTransferenciaPOJO());
+
+        System.out.println("PASSOU AQUI");
+        LOGGER.info(String.format("Message sent response2 ==> %s ", data.toString()));
+        Message<String> message = MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, "response2")
                 .build();
 
         kafkaTemplate.send(message);

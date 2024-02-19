@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 
 import ucan.edu.component.TransferenciaMessage;
 import ucan.edu.config.component.TransferenciaComponent;
+import ucan.edu.config.component.TransferenciaResponseComponent;
 import ucan.edu.config.component.UserInfo;
 import ucan.edu.entities.*;
 import ucan.edu.services.*;
@@ -31,6 +32,7 @@ import ucan.edu.kafka.KafkaTransferenciaProducer;
 import ucan.edu.utils.dates.DateUtils;
 import ucan.edu.utils.jsonUtils.CustomJsonPojos;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
+import ucan.edu.utils.pojos.TransferenciaResponse;
 import ucan.edu.utils.response.TransferenciaResponseWakandaBank;
 
 /**
@@ -42,6 +44,11 @@ import ucan.edu.utils.response.TransferenciaResponseWakandaBank;
 public class TransferenciaController extends BaseController
 {
     private final TransferenciaServiceImpl transferenciaServiceImpl;
+
+    @Autowired
+    TransferenciaResponseComponent transferenciaResponseComponent;
+    @Autowired
+    private KafkaTransferenciaProducer kafkaTransferenciaProducer;
     @Autowired
     ContaBancariaServiceImpl contaBancariaServiceImpl;
       @Autowired
@@ -157,7 +164,6 @@ public class TransferenciaController extends BaseController
 
 
     //"datahora":"2024-02-10 16:11:20",
-
     private void saveTransferComponent(TransferenciaPOJO transferencia)  {
         Map<String, String> transferenciaItems = new HashMap<>();
 
@@ -208,6 +214,18 @@ public class TransferenciaController extends BaseController
     public ResponseEntity<ResponseBody> updateTransferencia(@PathVariable("id") Integer id, @RequestBody Transferencia transferencia)
     {
         return this.ok("Transferencia editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
+    }
+
+    @PostMapping("/response")
+    public ResponseEntity<String> sendResponseTransferencia(@RequestBody TransferenciaResponse response)
+    {
+        response.setDescricao(transferenciaResponseComponent.getTransferenciaResponse().get("descricao"));
+        response.setStatus(transferenciaResponseComponent.getTransferenciaResponse().get("status").equals("true") ? true : false) ;
+
+        String data =  CustomJsonPojos.TransferenciaResponse(response);
+        this.kafkaTransferenciaProducer.sendMessageResposta(data);
+        System.out.println(" Resposta envida com sucesso do wankanda para o kuzola! ");
+        return  ResponseEntity.ok("Resposta envida com sucesso!" +response) ;
     }
 
 }

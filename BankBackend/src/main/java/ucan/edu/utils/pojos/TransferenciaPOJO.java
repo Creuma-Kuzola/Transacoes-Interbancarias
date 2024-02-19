@@ -26,10 +26,8 @@ import ucan.edu.entities.Transferencia;
 @NoArgsConstructor
 public class TransferenciaPOJO
 {
-
     @JsonProperty("pkTransferencia")
     private Integer pkTransferencia;
-
     @JsonProperty("descricao")
     private String descricao;
 
