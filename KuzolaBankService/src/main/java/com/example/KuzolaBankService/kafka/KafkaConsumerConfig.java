@@ -1,5 +1,6 @@
 package com.example.KuzolaBankService.kafka;
 
+import com.example.KuzolaBankService.config.component.TransferenciaComponent;
 import com.example.KuzolaBankService.config.component.TransferenciaMessage;
 import com.example.KuzolaBankService.dto.SignInDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
@@ -28,6 +29,7 @@ import com.example.KuzolaBankService.dto.JwtDto;
 import org.springframework.http.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,12 +48,11 @@ public class KafkaConsumerConfig
 
     @Autowired
     TransferenciaMessage transferenciaMessage;
-
-    //777
-    private String welcome;
-
     @Autowired
     TransferenciaResponseComponent transferenciaResponseComponent;
+
+    @Autowired
+    TransferenciaComponent transferenciaComponent;
 
     @Autowired
     Gson gson;
@@ -157,7 +158,6 @@ public class KafkaConsumerConfig
         LOGGER.info(String.format("Message kuzola received response transferencia status from transferencia topic-> %s", message.toString()));
     }
 
-
     @KafkaListener(topics ={ "tr-intrabancarias-kb", "tr-intrabancarias-kb-emis"})
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
@@ -203,22 +203,22 @@ public class KafkaConsumerConfig
             transferenciaMessage.setMessage(messageT);
 
             System.out.println(transferenciaMessage.getMessage().get("message"));
-            /*Integer numeroDeConta  = Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
+            BigInteger numeroDeConta  = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
             BigDecimal montante = new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante"));
-            ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);*/
-/*
+            ContaBancaria contaBancaria = contaBancariServiceImpl.debito(numeroDeConta,montante);
+
             if (contaBancaria != null)
             {
                 messageT.put("message","Transferência efectuada com sucesso!");
                 messageT.put("status","true");
                 transferenciaMessage.setMessage(messageT);
-                Transferencia transferencia = buildTransferencia(transferenciaComponent);
-                Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
+                //Transferencia transferencia = buildTransferencia(transferenciaComponent);
+                //Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
 
-                this.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
+                //this.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
 
-                System.out.println("Debto feito com sucesso!");
-            }  */
+                System.out.println("Debito feito com sucesso!");
+            }
         }
         else
         {
