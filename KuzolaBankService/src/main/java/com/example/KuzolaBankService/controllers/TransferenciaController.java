@@ -54,7 +54,6 @@ public class TransferenciaController extends BaseController
 
     @Autowired
     TransferenciaResponseComponent transferenciaResponseComponent;
-
     @Autowired
     private KafkaTransferenciaProducer kafkaTransferenciaProducer;
 

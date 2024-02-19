@@ -53,4 +53,15 @@ public class KafkaTransferenciaProducer
         kafkaTemplate.send(message);
 
     }
+
+
+    public void sendMessageResposta(String data)
+    {
+        LOGGER.info(String.format("Message sent ==> %s ", data.toString()));
+        Message<String> message = MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, "bancowakanda")
+                .build();
+        kafkaTemplate.send(message);
+    }
 }

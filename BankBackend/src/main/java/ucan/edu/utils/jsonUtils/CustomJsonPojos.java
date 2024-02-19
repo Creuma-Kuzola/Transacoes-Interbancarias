@@ -1,6 +1,7 @@
 package ucan.edu.utils.jsonUtils;
 
 import ucan.edu.utils.pojos.TransferenciaPOJO;
+import ucan.edu.utils.pojos.TransferenciaResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,6 +24,13 @@ public class CustomJsonPojos {
                 + "    \"codigoTransferencia\": " + transferenciaPOJO.getCodigoTransferencia() + "\n"
                 + "}";
         return str;
+    }
+
+
+    public  static String TransferenciaResponse(TransferenciaResponse response)
+    {
+        return "{ \"descricao\": \""+response.getDescricao()+"\", " +
+                "\"status\": \"" +response.getStatus()+ "\" }";
     }
 
 

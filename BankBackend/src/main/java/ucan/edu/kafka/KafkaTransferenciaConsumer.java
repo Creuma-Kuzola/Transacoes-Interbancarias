@@ -11,18 +11,29 @@ import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import ucan.edu.component.TransferenciaMessage;
 import ucan.edu.config.component.TransferenciaComponent;
+import ucan.edu.config.component.TransferenciaResponseComponent;
+import ucan.edu.dtos.JwtDto;
+import ucan.edu.dtos.SignInDto;
 import ucan.edu.entities.ContaBancaria;
 import ucan.edu.entities.Transferencia;
 import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
 import ucan.edu.utils.enums.StatusContaBancaria;
+import ucan.edu.utils.jsonUtils.CustomJsonPojos;
 import ucan.edu.utils.pojos.TransferenciaCustomPOJO;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
 import ucan.edu.utils.pojos.TransferenciaResponse;
@@ -31,10 +42,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
 /**
  *
  * @author jussyleitecode
@@ -50,7 +59,9 @@ public class KafkaTransferenciaConsumer
     private TransferenciaPOJO transferenciaPOJO;
     private TransferenciaCustomPOJO transferenciaCustomPOJO;
 
-   // private TransferenciaCustomPOJO transferenciaCustomPOJO;
+    // private TransferenciaCustomPOJO transferenciaCustomPOJO;
+    @Autowired
+    TransferenciaResponseComponent transferenciaResponseComponent;
     @Autowired
     private TransferenciaMessage transferenciaMessage;
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaConsumer.class);
@@ -59,17 +70,6 @@ public class KafkaTransferenciaConsumer
         this.transferenciaServiceImpl = transferenciaServiceImpl;
         transferenciaPOJO = new TransferenciaPOJO();
         transferenciaCustomPOJO = new TransferenciaCustomPOJO();
-    }
-    public void readTransferenciaFrom()
-    {
-        /*
-        1- Ler o topic
-        2- Verficar se a chave do topic recebida == ao numero do banco
-        3- se topic.key == banknumber  
-                - Persistir as informacoes do object transferancia serialized na banco de dados do banco destino
-           se nao
-                - não persistir
-        */
     }
 
     @KafkaListener(topics = "transferencia2", groupId = "transferenciaGroup")
@@ -109,7 +109,53 @@ public class KafkaTransferenciaConsumer
         }
     }
 
+    public JwtDto createHeader(String login, String password)
+    {
+        RestTemplate restTemplate1 = new RestTemplate();
+        SignInDto signInDto = new SignInDto(login,password);
+        JwtDto token = restTemplate1.postForObject("http://localhost:8080/api/v1/auth/signin", signInDto, JwtDto.class);
+        return token;
+    }
+
     private void sendResposta(TransferenciaResponse transferenciaResponse) {
+
+       RestTemplate restTemplate = new RestTemplate();
+       String jsonStr =  CustomJsonPojos.TransferenciaResponse(transferenciaResponse);
+       JwtDto token = createHeader("admin","admin");
+
+        System.out.println("TOKEN: " +token);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE));
+        headers.setBearerAuth(token.accessToken());
+        //headers.add("body",jsonStr);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("body",jsonStr);
+        HttpEntity<?> entity = new HttpEntity<>(body, headers);
+
+        HashMap<String, String > response = new HashMap<>();
+        response.put("descricao",transferenciaResponse.getDescricao());
+        response.put("status",""+transferenciaResponse.getStatus());
+
+        transferenciaResponseComponent.setTransferenciaResponse(response);
+
+        System.out.println("transferenciaResponseComponent: " +transferenciaResponseComponent.getTransferenciaResponse().get("status"));
+
+        HttpEntity entityResponse = restTemplate.exchange("http://localhost:8080/transferencia/response", HttpMethod.POST,entity, String.class);
+
+        System.out.println("entity: headers " +entity.getHeaders());
+        System.out.println("entity: body " +entity.getBody());
+        System.out.println("entity: headers " +body.get("body"));
+
+
+        System.out.println( "token: " +token);
+        System.out.println("header:" +headers);
+        System.out.println("entityResponse: "+ entityResponse.getBody());
+        System.out.println("entityResponse: "+ entityResponse.getHeaders());
+        System.out.println("D "+transferenciaResponse.getDescricao());
+        System.out.println("STATUS "+transferenciaResponse.getStatus());
     }
 
     @KafkaListener(topics = "response")
