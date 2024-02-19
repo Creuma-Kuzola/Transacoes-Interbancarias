@@ -221,7 +221,7 @@ public class KafkaConsumerConfig
                 Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
                 Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
 
-                //this.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
+                transferenciaServiceImpl.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
                 System.out.println("Debito feito com sucesso!");
             }
         }

@@ -183,6 +183,20 @@ implements TransferenciaService {
         System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
     }
 
+    public void builderTransferenciaToTrasnferenciaComponent(Transferencia transferencia, TransferenciaComponent transferenciaComponent )
+            throws ParseException {
+        Map<String, String> component = new HashMap<>();
+        component.put("descricao",transferencia.getDescricao());
+        component.put("montante","" +transferencia.getMontante());
+        component.put("ibanDestinatario",transferencia.getIbanDestinatario());
+        component.put("datahora", "" +transferencia.getDatahora());
+        component.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem().getNumeroDeConta());
+        component.put("estadoTransferencia","REALIZADA");
+        component.put("tipoTransferencia",transferencia.getTipoTransferencia());
+        component.put("codigoTransferencia",transferencia.getCodigoTransferencia());
+        transferenciaComponent.setTransferenciaResponse(component);
+    }
+
     public LocalDateTime formattingDateTime() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
