@@ -1,5 +1,6 @@
 package com.example.KuzolaBankService.kafka;
 
+import com.example.KuzolaBankService.config.component.TransferenciaMessage;
 import com.example.KuzolaBankService.dto.SignInDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
@@ -25,8 +26,12 @@ import com.example.KuzolaBankService.config.component.TransferenciaResponseCompo
 import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
 import com.example.KuzolaBankService.dto.JwtDto;
 import org.springframework.http.*;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -38,6 +43,9 @@ public class KafkaConsumerConfig
     private RestTemplate restTemplate;
     @Autowired
     private ContaBancariaServiceImpl contaBancariServiceImpl;
+
+    @Autowired
+    TransferenciaMessage transferenciaMessage;
 
     //777
     private String welcome;
@@ -177,6 +185,51 @@ public class KafkaConsumerConfig
         }
 
 
+    }
+
+    @KafkaListener(topics = "response2")
+    public void consumerMessageResponse2(String message) throws ParseException {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson gson = builder.create();
+        TransferenciaResponse transferenciaResponse = gson.fromJson(message.toString(), TransferenciaResponse.class);
+        Map<String, String> messageT = new HashMap<>();
+
+        if(transferenciaResponse.getStatus() == true)
+        {
+
+            messageT.put("message","Transferência efectuada com sucesso!");
+            messageT.put("status","true");
+            transferenciaMessage.setMessage(messageT);
+
+            System.out.println(transferenciaMessage.getMessage().get("message"));
+            /*Integer numeroDeConta  = Integer.parseInt(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
+            BigDecimal montante = new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante"));
+            ContaBancaria contaBancaria = contaBancariServiceImpl.transferInterbancariaDebito(numeroDeConta,montante);*/
+/*
+            if (contaBancaria != null)
+            {
+                messageT.put("message","Transferência efectuada com sucesso!");
+                messageT.put("status","true");
+                transferenciaMessage.setMessage(messageT);
+                Transferencia transferencia = buildTransferencia(transferenciaComponent);
+                Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
+
+                this.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
+
+                System.out.println("Debto feito com sucesso!");
+            }  */
+        }
+        else
+        {
+            messageT.put("message","Transferência não concluída com sucesso!");
+            messageT.put("status","false");
+            transferenciaMessage.setMessage(messageT);
+
+            System.out.println(" Não é possivel completar a operação!");
+            System.out.println(transferenciaMessage.getMessage().get("message"));;
+        }
+        LOGGER.info(String.format("Message received response transferencia status from transferencia topic-> %s", message.toString()));
     }
 
 }

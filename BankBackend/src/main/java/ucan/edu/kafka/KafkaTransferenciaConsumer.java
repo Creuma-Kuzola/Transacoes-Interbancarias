@@ -96,6 +96,7 @@ public class KafkaTransferenciaConsumer
             transferenciaResponse.setStatus(true);
             contaBancariServiceImpl.credito(obj.getIbanDestinatario(),obj.getMontante());
             sendResposta(transferenciaResponse);
+            contaBancariServiceImpl.debito(obj.getIbanDestinatario(),obj.getMontante());
 
             System.out.println("message: " +transferenciaResponse.getDescricao());
         }
@@ -174,15 +175,12 @@ public class KafkaTransferenciaConsumer
 
          if (contaBancaria != null)
          {
-             /*messageT.put("message","Transferência efectuada com sucesso!");
-             messageT.put("status","true");
-             transferenciaMessage.setMessage(messageT); */
-
              messageT.put("message","Transferência efectuada com sucesso!");
              messageT.put("status","true");
              transferenciaMessage.setMessage(messageT);
              Transferencia transferencia = buildTransferencia(transferenciaComponent);
              Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
+
              this.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
 
              System.out.println("Debto feito com sucesso!");

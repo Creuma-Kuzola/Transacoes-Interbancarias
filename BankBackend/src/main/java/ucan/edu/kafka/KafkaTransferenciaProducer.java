@@ -60,7 +60,7 @@ public class KafkaTransferenciaProducer
         LOGGER.info(String.format("Message sent ==> %s ", data.toString()));
         Message<String> message = MessageBuilder
                 .withPayload(data)
-                .setHeader(KafkaHeaders.TOPIC, "bancowakanda")
+                .setHeader(KafkaHeaders.TOPIC, "responseWakanda")
                 .build();
         kafkaTemplate.send(message);
     }

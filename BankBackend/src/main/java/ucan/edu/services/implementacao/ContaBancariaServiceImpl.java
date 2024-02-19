@@ -326,4 +326,5 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
         return contaBancaria;
     }
+    
 }

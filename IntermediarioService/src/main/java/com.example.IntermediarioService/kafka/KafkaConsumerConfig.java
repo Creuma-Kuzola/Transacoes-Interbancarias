@@ -95,8 +95,8 @@ public class KafkaConsumerConfig
         System.out.println("Descricao " + response.getDescricao());
         System.out.println("Status " + response.getStatus());
 
-        //String strResponse = restTemplate1.postForObject("http://localhost:8082/transferencia/response",response, String.class);
-        //System.out.println("Resposta: -> to another bank wakanda:-> " +strResponse);
+        String strResponse = restTemplate1.postForObject("http://localhost:8082/transferencia/responseTokuzola",response, String.class);
+        System.out.println("DELCIA " +strResponse);
     }
 
    @KafkaListener(topics = "intra-transfer-kuzola", groupId = "kuzolaGroup")

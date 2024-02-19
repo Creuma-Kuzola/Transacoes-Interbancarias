@@ -220,8 +220,8 @@ public class TransferenciaController extends BaseController
         response.setDescricao(transferenciaResponseComponent.getTransferenciaResponse().get("descricao"));
         response.setStatus(transferenciaResponseComponent.getTransferenciaResponse().get("status").equals("true") ? true : false) ;
 
-      String data =  CustomJsonPojos.TransferenciaResponse(response);
-       this.kafkaTransferenciaProducer.sendMessageResponse(data);
+        String data =  CustomJsonPojos.TransferenciaResponse(response);
+        this.kafkaTransferenciaProducer.sendMessageResponse(data);
         System.out.println(" Resposta envida com sucesso! ");
       return  ResponseEntity.ok("Resposta envida com sucesso!" +data) ;
     }

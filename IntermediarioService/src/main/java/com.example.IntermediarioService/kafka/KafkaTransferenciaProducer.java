@@ -106,4 +106,18 @@ public class KafkaTransferenciaProducer
 
         kafkaTemplate.send(message);
     }
+
+    public void sendMessageTransferenciaResponse2(String data)
+    {
+        //data = t(kafkaConsumerConfig.getTransferenciaPOJO());
+
+        System.out.println("PASSOU AQUI");
+        LOGGER.info(String.format("Message sent response2 ==> %s ", data.toString()));
+        Message<String> message = MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, "response2")
+                .build();
+
+        kafkaTemplate.send(message);
+    }
 }
