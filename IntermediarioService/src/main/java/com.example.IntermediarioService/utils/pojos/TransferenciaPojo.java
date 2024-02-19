@@ -1,21 +1,36 @@
-package com.example.KuzolaBankService.utils.pojos;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.example.IntermediarioService.utils.pojos;
 
-import com.example.KuzolaBankService.entities.Transferencia;
+import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
+import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
+import org.apache.kafka.common.protocol.types.Field;
 
-public class TransferenciaPOJO {
+/**
+ *
+ * @author jussyleitecode
+ */
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class TransferenciaPojo
+{
+    private final String kuzolaBankIdentificador = "1003";
+    private final String wakandaBankIdentificador = "";
+
     @JsonProperty("pkTransferencia")
     private Integer pkTransferencia;
 
@@ -33,7 +48,7 @@ public class TransferenciaPOJO {
     private LocalDateTime datahora;
 
     @JsonProperty("fkContaBancariaOrigem")
-    private int fkContaBancariaOrigem;
+    private String fkContaBancariaOrigem;
 
     @JsonProperty("tipoTransferencia")
     private String tipoTransferencia;
@@ -45,7 +60,23 @@ public class TransferenciaPOJO {
     private String codigoTransferencia;
 
 
-    // Getters and setters
+
+    public static TransferenciaPojo convertingIntoTransferenciaPojo(TransferenciaPOJO transferenciaPOJO){
+
+        TransferenciaPojo transferenciaPojo = new TransferenciaPojo();
+
+        transferenciaPojo.setCodigoTransferencia(transferenciaPOJO.getCodigoTransferencia());
+        transferenciaPojo.setEstadoTransferencia(transferenciaPOJO.getEstadoTransferencia());
+        transferenciaPojo.setPkTransferencia(transferenciaPOJO.getPkTransferencia());
+        transferenciaPojo.setDatahora(TransferenciaServiceImpl.formattingDateTime());
+        transferenciaPojo.setIbanDestinatario(transferenciaPOJO.getIbanDestinatario());
+        transferenciaPojo.setFkContaBancariaOrigem(transferenciaPOJO.getFkContaBancariaOrigem().toString());
+        transferenciaPojo.setMontante(new BigDecimal(transferenciaPOJO.getMontante()));
+        return transferenciaPojo;
+    }
+
+
+
     public Integer getPkTransferencia() {
         return pkTransferencia;
     }
@@ -86,11 +117,11 @@ public class TransferenciaPOJO {
         this.datahora = datahora;
     }
 
-    public int getFkContaBancariaOrigem() {
+    public String getFkContaBancariaOrigem() {
         return fkContaBancariaOrigem;
     }
 
-    public void setFkContaBancariaOrigem(int fkContaBancariaOrigem) {
+    public void setFkContaBancariaOrigem(String fkContaBancariaOrigem) {
         this.fkContaBancariaOrigem = fkContaBancariaOrigem;
     }
 
@@ -117,29 +148,4 @@ public class TransferenciaPOJO {
     public void setCodigoTransferencia(String codigoTransferencia) {
         this.codigoTransferencia = codigoTransferencia;
     }
-
-    /*public Transferencia convertingIntoTransferencia(TransferenciaPOJO transferenciaPOJO){
-        Transferencia transferencia = new Transferencia();
-        transferencia.
-    }*/
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"pkTransferencia\": ").append(pkTransferencia).append(",");
-        sb.append("\"descricao\": \"").append(descricao).append("\",");
-        sb.append("\"montante\": ").append(montante).append(",");
-        sb.append("\"ibanDestinatario\": \"").append(ibanDestinatario).append("\",");
-        sb.append("\"datahora\": \"").append(datahora).append("\",");
-        sb.append("\"fkContaBancariaOrigem\": ").append(fkContaBancariaOrigem).append(",");
-        sb.append("\"tipoTransferencia\": \"").append(tipoTransferencia).append("\",");
-        sb.append("\"estadoTransferencia\": \"").append(estadoTransferencia).append("\",");
-        sb.append("\"codigoTransferencia\": \"").append(codigoTransferencia).append("\"");
-        sb.append("}");
-        return sb.toString();
-    }
-
-
-
 }

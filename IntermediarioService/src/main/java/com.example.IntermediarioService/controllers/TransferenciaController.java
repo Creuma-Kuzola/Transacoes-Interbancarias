@@ -15,9 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.IntermerdiarioService.utils.pojos.TransferenciaPOJO;
-import com.example.IntermerdiarioService.utils.pojos.TransferenciaResponse;
-import com.example.IntermerdiarioService.utils.pojos.jsonUtils.CustomJsonPojos;
+import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
+import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
+import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

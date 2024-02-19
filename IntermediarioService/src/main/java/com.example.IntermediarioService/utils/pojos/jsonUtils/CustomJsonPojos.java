@@ -1,7 +1,7 @@
-package com.example.IntermerdiarioService.utils.pojos.jsonUtils;
+package com.example.IntermediarioService.utils.pojos.jsonUtils;
 
-import com.example.IntermerdiarioService.utils.pojos.TransferenciaPOJO;
-import com.example.IntermerdiarioService.utils.pojos.TransferenciaResponse;
+import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
+import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
 
 import java.text.SimpleDateFormat;
 

@@ -1,4 +1,4 @@
-package com.example.IntermerdiarioService.utils.pojos;
+package com.example.IntermediarioService.utils.pojos;
 
 public class TransferenciaResponse {
     private String descricao;

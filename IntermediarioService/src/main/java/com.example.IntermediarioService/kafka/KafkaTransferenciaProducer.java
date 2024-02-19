@@ -8,11 +8,11 @@ import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.entities.Banco;
 import com.example.IntermediarioService.kafka.KafkaConsumerConfig;
 import com.example.IntermediarioService.services.implementacao.BancoServiceImpl;
-import com.example.IntermerdiarioService.utils.pojos.TransferenciaPOJO;
+import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import com.example.IntermerdiarioService.utils.pojos.jsonUtils.CustomJsonPojos;
+import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
