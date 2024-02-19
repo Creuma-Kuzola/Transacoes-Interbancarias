@@ -4,6 +4,7 @@
  */
 package com.example.KuzolaBankService.controllers;
 
+import com.example.KuzolaBankService.config.component.TransferenciaComponent;
 import com.example.KuzolaBankService.config.component.TransferenciaMessage;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.entities.Transferencia;
@@ -57,6 +58,8 @@ public class TransferenciaController extends BaseController
     TransferenciaResponseComponent transferenciaResponseComponent;
     @Autowired
     private KafkaTransferenciaProducer kafkaTransferenciaProducer;
+    @Autowired
+    TransferenciaComponent transferenciaComponent;
 
     Transferencia transferenciaCreated;
 
@@ -181,15 +184,13 @@ public class TransferenciaController extends BaseController
             transferenciaServiceImpl.saveTransferComponent(transferenciaCustomPOJO);
             String data = CustomJsonPojos.criarStrToJson(transferenciaCustomPOJO);
             kafkaTransferenciaProducer.sendMessageTransferenciaIntrabancaria(data);
-            /*try {
+            try {
                 Thread.sleep(9000);
-                return this.ok("Message: " + transferenciaMessage.getMessage().get("message"));
+                return this.ok("Message: " + transferenciaMessage.getMessage().get("message"), this.transferenciaComponent.getTransferenciaResponse());
 
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
-            } */
-
-            return this.ok("",this);
+            }
         }
         else{
             return this.erro("ERRO: IBAN inválido");

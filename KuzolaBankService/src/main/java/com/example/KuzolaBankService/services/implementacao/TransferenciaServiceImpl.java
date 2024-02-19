@@ -10,6 +10,7 @@ import com.example.KuzolaBankService.config.component.UserInfo;
 import com.example.KuzolaBankService.dto.TransferenciaDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.enums.DetalhesBanco;
+import com.example.KuzolaBankService.repositories.ContaBancariaRepository;
 import com.example.KuzolaBankService.repositories.TransferenciaRepository;
 import com.example.KuzolaBankService.services.TransferenciaService;
 import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
@@ -42,6 +43,9 @@ implements TransferenciaService {
 
     @Autowired
     public ContaBancariaServiceImpl contaBancariaService;
+
+    @Autowired
+    ContaBancariaRepository contaBancariaRepository;
 
     @Autowired
     TransferenciaComponent transferenciaComponent;
@@ -93,7 +97,7 @@ implements TransferenciaService {
 
     }
 
-    public TransferenciaPOJO convertingIntoTransferenciaPOJO(Transferencia transferencia)
+    public TransferenciaPOJO convertingIntoTransferenciaPOJO(Transferencia transferencia, String IbanOrigem)
     {
         TransferenciaPOJO transferenciaPOJO = new TransferenciaPOJO();
         transferenciaPOJO.setPkTransferencia(transferencia.getPkTransferencia());
@@ -104,8 +108,6 @@ implements TransferenciaService {
         transferenciaPOJO.setEstadoTransferencia(transferencia.getEstadoTransferencia());
         transferenciaPOJO.setFkContaBancariaOrigem(transferencia.getFkContaBancariaOrigem().getPkContaBancaria());
         transferenciaPOJO.setCodigoTransferencia(transferencia.getCodigoTransferencia());
-
-        //System.out.println("Transferencia Pojo"+ transferenciaPOJO);
 
         return transferenciaPOJO;
     }
@@ -123,15 +125,9 @@ implements TransferenciaService {
         TransferenciaPOJOEmis.setFkContaBancariaOrigem(ibanOrigem);
         TransferenciaPOJOEmis.setCodigoTransferencia(transferencia.getCodigoTransferencia());
 
-        return TransferenciaPOJOEmis;
-    }
+        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
 
-    public void fillingTransactionFields(Transferencia transferencia, String ibanOrigem){
-
-        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(ibanOrigem);
-        contaBancaria.getFkCliente().setContaBancariaList(new ArrayList<>());
-        contaBancaria.getFkCliente().setUsersList(new ArrayList<>());
-
+        transferencia.setFkContaBancariaOrigem(contaBancaria);
         transferencia.setDatahora(formattingDateTime());
         transferencia.setEstadoTransferencia("Realizado");
         transferencia.setTipoTransferencia("Transferencia Intrabancaria");
@@ -180,6 +176,20 @@ implements TransferenciaService {
         System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
     }
 
+    public void builderTransferenciaToTrasnferenciaComponent(Transferencia transferencia, TransferenciaComponent transferenciaComponent )
+            throws ParseException {
+        Map<String, String> component = new HashMap<>();
+        component.put("descricao",transferencia.getDescricao());
+        component.put("montante","" +transferencia.getMontante());
+        component.put("ibanDestinatario",transferencia.getIbanDestinatario());
+        component.put("datahora", "" +transferencia.getDatahora());
+        component.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem().getNumeroDeConta());
+        component.put("estadoTransferencia","REALIZADA");
+        component.put("tipoTransferencia",transferencia.getTipoTransferencia());
+        component.put("codigoTransferencia",transferencia.getCodigoTransferencia());
+        transferenciaComponent.setTransferenciaResponse(component);
+    }
+
     public LocalDateTime formattingDateTime() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -188,6 +198,10 @@ implements TransferenciaService {
         return LocalDateTime.parse(dateTimeFormatted, formatter);
     }
 
+    public Transferencia criaTransferencia(Transferencia transferencia)
+    {
+        return this.criar(transferencia);
+    }
     public List<Transferencia> findAllDesc(){
 
         return transferenciaRepository.findAllDesc();
