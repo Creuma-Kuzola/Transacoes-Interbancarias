@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.example.IntermerdiarioService.utils.pojos;
+package com.example.IntermediarioService.utils.pojos;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -21,7 +21,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TransferenciaPOJO
 {
-
     private Integer pkTransferencia;
     private String descricao;
     private BigInteger montante;
