@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/transferencia")
 public class TransferenciaController extends BaseController {
-    
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
 
@@ -75,7 +74,8 @@ public class TransferenciaController extends BaseController {
                 + "    \"fkContaBancariaOrigem\": " + transferenciaPOJO.getFkContaBancariaOrigem() + ",\n"
                 + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
                 + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
-                + "    \"codigoTransferencia\": " + transferenciaPOJO.getCodigoTransferencia() + "\n"
+                + "    \"codigoTransferencia\": \"" + transferenciaPOJO.getCodigoTransferencia() + "\",\n"
+                + "    \"bancoUdentifier\":"+transferenciaPOJO.getBancoUdentifier()+"\n"
                 + "}";
 
         return str;

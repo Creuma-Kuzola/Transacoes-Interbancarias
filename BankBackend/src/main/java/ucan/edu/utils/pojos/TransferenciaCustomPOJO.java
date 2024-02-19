@@ -30,6 +30,8 @@ public class TransferenciaCustomPOJO
     private String estadoTransferencia;
     private String codigoTransferencia;
 
+    private Integer bancoUdentifier;
+
     public Integer getPkTransferencia() {
         return pkTransferencia;
     }
@@ -76,6 +78,14 @@ public class TransferenciaCustomPOJO
 
     public void setFkContaBancariaOrigem(BigInteger fkContaBancariaOrigem) {
         this.fkContaBancariaOrigem = fkContaBancariaOrigem;
+    }
+
+    public Integer getBancoUdentifier() {
+        return bancoUdentifier;
+    }
+
+    public void setBancoUdentifier(Integer bancoUdentifier) {
+        this.bancoUdentifier = bancoUdentifier;
     }
 
     public String getTipoTransferencia() {

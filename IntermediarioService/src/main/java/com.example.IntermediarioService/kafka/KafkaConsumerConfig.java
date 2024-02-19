@@ -1,5 +1,6 @@
 package com.example.IntermediarioService.kafka;
 
+import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
 import com.example.IntermerdiarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermerdiarioService.utils.pojos.TransferenciaResponse;
@@ -12,12 +13,18 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class KafkaConsumerConfig
 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerConfig.class);
     private TransferenciaPOJO transferenciaPOJO;
+
+    @Autowired
+    private BancoComponent bancoComponent;
 
     @Autowired
     private TransferenciaResponseComponent transferenciaResponseComponent;
@@ -85,9 +92,14 @@ public class KafkaConsumerConfig
         System.out.println("Descricao " + obj.getDescricao());
         transferenciaPOJO = obj;
 
-        System.out.println("Data: " +transferenciaPOJO.getDatahora()+ "Data: " +obj.getDatahora());
-        String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
-        //System.out.println("Resposta: -> to another bank kusola:-> " +response);
+        Map<String,Integer> identificadorBanco = new HashMap<>();
+
+        identificadorBanco.put("UUID",obj.getBancoUdentifier());
+        bancoComponent.setBancoComponent(identificadorBanco);
+
+       System.out.println("Data: " +transferenciaPOJO.getDatahora()+ "Data: " +obj.getDatahora());
+       String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
+       System.out.println("Resposta: -> to another bank kusola:-> " +response);
     }
     public TransferenciaPOJO getTransferenciaPOJO()
     {
