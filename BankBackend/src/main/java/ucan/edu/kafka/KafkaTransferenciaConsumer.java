@@ -22,6 +22,8 @@ import ucan.edu.entities.ContaBancaria;
 import ucan.edu.entities.Transferencia;
 import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
+import ucan.edu.utils.enums.StatusContaBancaria;
+import ucan.edu.utils.pojos.TransferenciaCustomPOJO;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
 import ucan.edu.utils.pojos.TransferenciaResponse;
 
@@ -45,12 +47,18 @@ public class KafkaTransferenciaConsumer
     private TransferenciaComponent transferenciaComponent;
     @Autowired
     ContaBancariaServiceImpl contaBancariServiceImpl;
+    private TransferenciaPOJO transferenciaPOJO;
+    private TransferenciaCustomPOJO transferenciaCustomPOJO;
+
+   // private TransferenciaCustomPOJO transferenciaCustomPOJO;
     @Autowired
     private TransferenciaMessage transferenciaMessage;
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaConsumer.class);
     public KafkaTransferenciaConsumer(TransferenciaServiceImpl transferenciaServiceImpl)
     {
         this.transferenciaServiceImpl = transferenciaServiceImpl;
+        transferenciaPOJO = new TransferenciaPOJO();
+        transferenciaCustomPOJO = new TransferenciaCustomPOJO();
     }
     public void readTransferenciaFrom()
     {
@@ -62,6 +70,46 @@ public class KafkaTransferenciaConsumer
            se nao
                 - não persistir
         */
+    }
+
+    @KafkaListener(topics = "transferencia2", groupId = "transferenciaGroup")
+    public void consumerMessage(String message)
+    {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
+        Gson gson = builder.create();
+        LOGGER.info(String.format("Message received -> %s", message.toString()));
+
+        TransferenciaCustomPOJO  obj = gson.fromJson(message.toString(), TransferenciaCustomPOJO.class);
+        System.out.println("Descricao " + obj.getDescricao());
+        transferenciaCustomPOJO = obj;
+
+        //verify the iban and account status
+        boolean isValidIban = contaBancariServiceImpl.existsIban(obj.getIbanDestinatario());
+        ContaBancaria isActiva = contaBancariServiceImpl.isAccountStatus(obj.getIbanDestinatario(), StatusContaBancaria.ACTIVO);
+
+        TransferenciaResponse transferenciaResponse = new TransferenciaResponse();
+        if (isValidIban && isActiva != null)
+        {
+            transferenciaResponse.setDescricao("Conta disponivel");
+            transferenciaResponse.setStatus(true);
+            contaBancariServiceImpl.credito(obj.getIbanDestinatario(),obj.getMontante());
+            sendResposta(transferenciaResponse);
+
+            System.out.println("message: " +transferenciaResponse.getDescricao());
+        }
+        else
+        {
+            transferenciaResponse.setDescricao("Conta Indisponivel");
+            transferenciaResponse.setStatus(false);
+            sendResposta(transferenciaResponse);
+            System.out.println("account unavaible");
+            System.out.println("message: " +transferenciaResponse.getDescricao());
+        }
+    }
+
+    private void sendResposta(TransferenciaResponse transferenciaResponse) {
     }
 
     @KafkaListener(topics = "response")
@@ -175,6 +223,12 @@ public class KafkaTransferenciaConsumer
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+
+    public void consumer()
+    {
 
     }
 

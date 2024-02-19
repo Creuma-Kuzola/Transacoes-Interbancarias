@@ -58,13 +58,13 @@ public class KafkaTransferenciaProducer
     {
         data = CustomJsonPojos.criarStrToJson(kafkaConsumerConfig.getTransferenciaPOJO());
         LOGGER.info(String.format("Message sent ==> %s ", data.toString()));
-        bankUnikeIdentifiedNumber = 4040;
+        bankUnikeIdentifiedNumber = 2930;
         Message<String> message = null;
-        message= MessageBuilder
+        /*message= MessageBuilder
                 .withPayload(data)
                 .setHeader(KafkaHeaders.TOPIC, "transferencia")
-                .build();
-      /*  if (bankUnikeIdentifiedNumber == 2930)
+                .build(); */
+      if (bankUnikeIdentifiedNumber == 2930)
         {
             message= MessageBuilder
                     .withPayload(data)
@@ -78,7 +78,7 @@ public class KafkaTransferenciaProducer
                     .setHeader(KafkaHeaders.TOPIC, "transferencia")
                     .build();
         }
-  */
+
         kafkaTemplate.send(message);
     }
 

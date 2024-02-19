@@ -37,7 +37,7 @@ public class ContaBancaria implements Serializable
     private Integer pkContaBancaria;
     @Basic(optional = false)
     @Column(name = "numero_de_conta", nullable = false)
-    private int numeroDeConta;
+    private Integer numeroDeConta;
     @Basic(optional = false)
     @Column(nullable = false, length = 2147483647)
     private String iban;
@@ -78,12 +78,12 @@ public class ContaBancaria implements Serializable
         this.pkContaBancaria = pkContaBancaria;
     }
 
-    public int getNumeroDeConta()
+    public Integer getNumeroDeConta()
     {
         return numeroDeConta;
     }
 
-    public void setNumeroDeConta(int numeroDeConta)
+    public void setNumeroDeConta(Integer numeroDeConta)
     {
         this.numeroDeConta = numeroDeConta;
     }

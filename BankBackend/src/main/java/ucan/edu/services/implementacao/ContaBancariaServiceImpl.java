@@ -74,7 +74,7 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         Integer accountCustomerNumber = numberAccount;
         Integer randomNumbers = this.creatNiveRandomNumber();
         System.out.println("BANKNUMBER: " +BANKNUMBER);
-        iban = "E "+BANKNUMBER+""+accountCustomerNumber+""+randomNumbers;
+        iban = BANKNUMBER+""+accountCustomerNumber+""+randomNumbers;
 
         System.out.println(" iban: " +iban);
         return iban;
@@ -112,6 +112,12 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
                             conta.getFkCliente().getFkPessoa().getNome());
             return saldoContaDTO;
         }
+    }
+
+
+    public ContaBancaria isAccountStatus(String iban, StatusContaBancaria status)
+    {
+        return contaBancariaRepository.findContaBancariaByStatus(iban,status);
     }
 
     public ContaBancaria depositeAmountOfMoney(ContaBancaria contaBancaria, BigDecimal quantia)
