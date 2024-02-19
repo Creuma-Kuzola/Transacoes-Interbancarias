@@ -4,7 +4,9 @@ import com.example.KuzolaBankService.config.component.TransferenciaComponent;
 import com.example.KuzolaBankService.config.component.TransferenciaMessage;
 import com.example.KuzolaBankService.dto.SignInDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
+import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
+import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
@@ -31,6 +33,9 @@ import org.springframework.http.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +50,6 @@ public class KafkaConsumerConfig
     private RestTemplate restTemplate;
     @Autowired
     private ContaBancariaServiceImpl contaBancariServiceImpl;
-
     @Autowired
     TransferenciaMessage transferenciaMessage;
     @Autowired
@@ -56,6 +60,9 @@ public class KafkaConsumerConfig
 
     @Autowired
     Gson gson;
+
+    @Autowired
+    private TransferenciaServiceImpl transferenciaServiceImpl;
 
     public KafkaConsumerConfig()
     {
@@ -206,17 +213,15 @@ public class KafkaConsumerConfig
             BigInteger numeroDeConta  = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
             BigDecimal montante = new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante"));
             ContaBancaria contaBancaria = contaBancariServiceImpl.debito(numeroDeConta,montante);
-
             if (contaBancaria != null)
             {
                 messageT.put("message","Transferência efectuada com sucesso!");
                 messageT.put("status","true");
                 transferenciaMessage.setMessage(messageT);
-                //Transferencia transferencia = buildTransferencia(transferenciaComponent);
-                //Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
+                Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
+                Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
 
                 //this.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
-
                 System.out.println("Debito feito com sucesso!");
             }
         }
@@ -225,11 +230,12 @@ public class KafkaConsumerConfig
             messageT.put("message","Transferência não concluída com sucesso!");
             messageT.put("status","false");
             transferenciaMessage.setMessage(messageT);
-
             System.out.println(" Não é possivel completar a operação!");
             System.out.println(transferenciaMessage.getMessage().get("message"));;
         }
         LOGGER.info(String.format("Message received response transferencia status from transferencia topic-> %s", message.toString()));
     }
+
+
 
 }

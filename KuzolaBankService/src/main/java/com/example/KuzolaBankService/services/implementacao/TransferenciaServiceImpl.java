@@ -10,6 +10,7 @@ import com.example.KuzolaBankService.config.component.UserInfo;
 import com.example.KuzolaBankService.dto.TransferenciaDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.enums.DetalhesBanco;
+import com.example.KuzolaBankService.repositories.ContaBancariaRepository;
 import com.example.KuzolaBankService.repositories.TransferenciaRepository;
 import com.example.KuzolaBankService.services.TransferenciaService;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
@@ -40,6 +41,9 @@ implements TransferenciaService {
 
     @Autowired
     public ContaBancariaServiceImpl contaBancariaService;
+
+    @Autowired
+    ContaBancariaRepository contaBancariaRepository;
 
     @Autowired
     TransferenciaComponent transferenciaComponent;
@@ -91,6 +95,27 @@ implements TransferenciaService {
 
     }
 
+    public Transferencia buildTransferencia(TransferenciaComponent transferenciaComponent) throws ParseException
+    {
+        Transferencia transferencia = new Transferencia();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(transferenciaComponent.getTransferenciaResponse().get("datahora"), formatter);
+
+        BigInteger numeroDeConta = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
+        ContaBancaria contaBancaria = contaBancariaRepository.findByNumeroDeConta(numeroDeConta);
+
+        transferencia.setDescricao(transferenciaComponent.getTransferenciaResponse().get("descricao"));
+        transferencia.setMontante(new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante")));
+        transferencia.setDatahora(localDateTime);
+        transferencia.setIbanDestinatario(transferenciaComponent.getTransferenciaResponse().get("ibanDestinatario"));
+        transferencia.setFkContaBancariaOrigem(contaBancaria);
+
+        transferencia.setTipoTransferencia(transferenciaComponent.getTransferenciaResponse().get("tipoTransferencia"));
+        transferencia.setEstadoTransferencia("REALIZADO");
+        transferencia.setCodigoTransferencia(transferenciaComponent.getTransferenciaResponse().get("codigoTransferencia"));
+        return transferencia;
+    }
+
     public TransferenciaPOJO convertingIntoTransferenciaPOJO(Transferencia transferencia, String IbanOrigem)
     {
         TransferenciaPOJO transferenciaPOJO = new TransferenciaPOJO();
@@ -114,8 +139,6 @@ implements TransferenciaService {
         transferencia.setDatahora(formattingDateTime());
         transferencia.setEstadoTransferencia("Realizado");
         transferencia.setTipoTransferencia("Transferencia Intrabancaria");
-
-
 
         System.out.println("tranferencias:---::  "+transferencia);
     }
@@ -168,6 +191,10 @@ implements TransferenciaService {
         return LocalDateTime.parse(dateTimeFormatted, formatter);
     }
 
+    public Transferencia criaTransferencia(Transferencia transferencia)
+    {
+        return this.criar(transferencia);
+    }
     public List<Transferencia> findAllDesc(){
 
         return transferenciaRepository.findAllDesc();
