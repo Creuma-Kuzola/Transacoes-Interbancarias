@@ -2,8 +2,8 @@ package com.example.IntermediarioService.kafka;
 
 import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
-import com.example.IntermerdiarioService.utils.pojos.TransferenciaPOJO;
-import com.example.IntermerdiarioService.utils.pojos.TransferenciaResponse;
+import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
+import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
