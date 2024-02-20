@@ -237,7 +237,7 @@ implements TransferenciaService {
 
         System.out.println("Data Json" + transferenciaJson);
         return  transferenciaJson;
-    }
+    }*/
 
     public String convertingTransferenciaInJsonEmis( Transferencia transferenciaCreated, String ibanOrigem){
 

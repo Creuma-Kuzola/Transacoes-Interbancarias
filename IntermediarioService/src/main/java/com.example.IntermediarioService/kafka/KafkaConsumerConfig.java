@@ -121,10 +121,11 @@ public class KafkaConsumerConfig
        System.out.println("Resposta: -> to another bank kusola:-> " +response);
     }
 
-    @KafkaListener(topics = "tr-intrabancarias-kb-emis")
+    @KafkaListener(topics = "tr-intrabancarias-kb-emis", groupId = "emisGroup")
     public void consumeMessageOfTransferenciaIntrabancaria(String message)
     {
         LOGGER.info(String.format("Message received in emis -> %s", message.toString()));
+        System.out.println("Mensagem Recebida");
     }
 
 

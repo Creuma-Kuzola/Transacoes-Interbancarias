@@ -169,18 +169,19 @@ public class TransferenciaController extends BaseController
                 transferenciaCreated = this.transferenciaServiceImpl.criar(transferencia);
 
                 TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated, ibanOrigem);
-
                 String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
+                String transferenciaJsonEmis =transferenciaServiceImpl.convertingTransferenciaInJsonEmis(transferenciaCreated, ibanOrigem);
                 System.out.println("Data Json" + transferenciaJson);
 
                 transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
+                transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancariaEmis(transferenciaJsonEmis.toString());
                 return this.transferenciaEfectuada(transferenciaCreated);
             }
             return  this.erro("ERRO: Informação inválida");
         }
         // 2 - Transferencias Interbancaria
         else if(responseVerification == 2){
-          /*  TransferenciaCustomPOJO transferenciaCustomPOJO = transferenciaServiceImpl.convertToTransferenciaCustomPOJO(transferencia);
+           TransferenciaCustomPOJO transferenciaCustomPOJO = transferenciaServiceImpl.convertToTransferenciaCustomPOJO(transferencia);
             transferenciaServiceImpl.saveTransferComponent(transferenciaCustomPOJO);
             String data = CustomJsonPojos.criarStrToJson(transferenciaCustomPOJO);
             kafkaTransferenciaProducer.sendMessageTransferenciaIntrabancaria(data);
@@ -190,13 +191,13 @@ public class TransferenciaController extends BaseController
 
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
-            }*/
+            }
         }
         else{
             return this.erro("ERRO: IBAN inválido");
         }
 
-        return this.erro("Erro!!");
+        //return this.erro("Erro!!");
     }
 
 
