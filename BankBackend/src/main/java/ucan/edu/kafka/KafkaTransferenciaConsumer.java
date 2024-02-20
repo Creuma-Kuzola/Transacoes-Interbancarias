@@ -188,7 +188,7 @@ public class KafkaTransferenciaConsumer
              messageT.put("message","Transferência efectuada com sucesso!");
              messageT.put("status","true");
              transferenciaMessage.setMessage(messageT);
-             //contaBancariServiceImpl.debito(obj.getIbanDestinatario(),obj.getMontante());
+            
              Transferencia transferencia = buildTransferencia(transferenciaComponent);
              Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
 

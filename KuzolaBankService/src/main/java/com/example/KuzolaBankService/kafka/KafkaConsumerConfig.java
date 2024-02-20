@@ -105,6 +105,11 @@ public class KafkaConsumerConfig
            transferenciaResponse.setDescricao("Conta disponivel");
            transferenciaResponse.setStatus(true);
            contaBancariServiceImpl.credito(transferenciaCustomPOJO.getIbanDestinatario(),transferenciaCustomPOJO.getMontante());
+           transferenciaServiceImpl.saveTransferComponent(obj);
+           //Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
+           //Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(obj);
+
+
            sendResposta(transferenciaResponse);
        }
        else

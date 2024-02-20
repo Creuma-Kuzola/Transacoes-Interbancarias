@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 
 /**
  *
@@ -81,6 +82,14 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
     {
         return contaBancariaRepository.findByIban(iban);
     }
+
+    public Integer isSaldoPositiveToTransfer(BigInteger numberAccount, BigDecimal montante)
+    {
+        ContaBancaria contaBancariaFoundOrigem = contaBancariaRepository
+                .findByNumeroDeConta(numberAccount);
+        return  contaBancariaFoundOrigem.getSaldoDisponivel().compareTo(montante);
+    }
+
 
     public ContaBancaria findContaBancaraByNumeroDeConta(BigInteger numeroDeConta)
     {

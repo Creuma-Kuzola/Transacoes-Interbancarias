@@ -163,7 +163,6 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
                 .findContaBancariaByNumeroDeConta(numberAccount);
 
         System.out.println("Saldo Disponivel: " +contaBancariaFoundOrigem.get().getSaldoDisponivel());
-
         //(contaBancariaFoundOrigem.get().getSaldoDisponivel() < montante
         // -1, 0, or 1 as this BigDecimal is numerically less than, equal to, or greater than val.
         if (contaBancariaFoundOrigem.get().getSaldoDisponivel().compareTo( montante) == -1)

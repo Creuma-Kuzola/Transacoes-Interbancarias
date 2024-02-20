@@ -105,6 +105,7 @@ public class TransferenciaController extends BaseController
             if (isSaldoEnought != -1) {
                 transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
                 transferencia.setDatahora(new Date());
+                transferencia.setBancoUdentifier(4040);
 
                 saveTransferComponent(transferencia);
                 String data = CustomJsonPojos.criarStrToJson(transferencia);
@@ -124,44 +125,6 @@ public class TransferenciaController extends BaseController
         }
         //return ResponseEntity.ok("Erro!!" + erro);
     }
-
-
-
-   /* @PostMapping("/publishTransferencia")
-    public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
-    {
-        String montaneStr = transferencia.getMontante().toString();
-        System.out.println("valor: " +montaneStr);
-        boolean isSaldoEnought = contaBancariaServiceImpl
-                .isSaldoPositiveToTransfer(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")), Integer.parseInt(montaneStr));
-        if (isSaldoEnought)
-        {
-            transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
-            transferencia.setDatahora(new Date());
-
-            saveTransferComponent(transferencia);
-            String data = CustomJsonPojos.criarStrToJson(transferencia);
-            KafkaTransferenciaProducer.sendMessage(data);
-            try {
-                Thread.sleep(9000);
-
-
-                return transferenciaMessage.getMessage().get("status").equals("true")  ?
-                        ResponseEntity.ok("Message: "+transferenciaMessage.getMessage().get("message"))
-                        :
-                        ResponseEntity.ok("Message: "+transferenciaMessage.getMessage().get("message"));
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        else
-        {
-            return ResponseEntity.ok("Message:  Você possui saldo insuficiente, para efectuar a transfências!" +isSaldoEnought);
-        }
-    }     */
-
-
 
     //"datahora":"2024-02-10 16:11:20",
     private void saveTransferComponent(TransferenciaPOJO transferencia)  {

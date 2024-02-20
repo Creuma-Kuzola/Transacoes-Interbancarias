@@ -14,6 +14,7 @@ import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -156,6 +157,10 @@ public class TransferenciaController extends BaseController
         System.out.println("Transferencia"+ transferencia);
         Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario());
 
+        Integer isSaldoEnought = contaBancariaServiceImpl
+                .isSaldoPositiveToTransfer(new BigInteger(userInfo.getUserInfo().get("accountNumber")), transferencia.getMontante());
+
+
         System.out.println("responseVerification: " +responseVerification);
 
         // 1 - Transferencias Intrabancaria
@@ -180,17 +185,25 @@ public class TransferenciaController extends BaseController
         }
         // 1 - Transferencias Interbancaria
         else if(responseVerification == 2){
-            TransferenciaCustomPOJO transferenciaCustomPOJO = transferenciaServiceImpl.convertToTransferenciaCustomPOJO(transferencia);
-            transferenciaServiceImpl.saveTransferComponent(transferenciaCustomPOJO);
-            String data = CustomJsonPojos.criarStrToJson(transferenciaCustomPOJO);
-            kafkaTransferenciaProducer.sendMessageTransferenciaIntrabancaria(data);
-            try {
-                Thread.sleep(9000);
-                return this.ok("Message: " + transferenciaMessage.getMessage().get("message"), this.transferenciaComponent.getTransferenciaResponse());
 
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            if (isSaldoEnought != -1) {
+                TransferenciaCustomPOJO transferenciaCustomPOJO = transferenciaServiceImpl.convertToTransferenciaCustomPOJO(transferencia);
+                transferenciaServiceImpl.saveTransferComponent(transferenciaCustomPOJO);
+                String data = CustomJsonPojos.criarStrToJson(transferenciaCustomPOJO);
+                kafkaTransferenciaProducer.sendMessageTransferenciaIntrabancaria(data);
+                try {
+                    Thread.sleep(9000);
+                    return this.ok("Message: " + transferenciaMessage.getMessage().get("message"), this.transferenciaComponent.getTransferenciaResponse());
+
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
+            else
+            {
+                return this.ok("Voce não possui saldo suficiente para efectuar esta operção!: " + transferenciaMessage.getMessage().get("message"), this.transferenciaComponent.getTransferenciaResponse());
+            }
+
         }
         else{
             return this.erro("ERRO: IBAN inválido");
