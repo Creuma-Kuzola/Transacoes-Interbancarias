@@ -4,10 +4,13 @@
  */
 package com.example.IntermediarioService.services;
 
+import com.example.IntermediarioService.entities.Banco;
+import com.example.IntermediarioService.repositories.BancoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  *
  * @author creuma
  */
 public interface BancoService <T,K> {
-    
 }
