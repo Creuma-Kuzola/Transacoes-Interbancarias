@@ -2,8 +2,13 @@ package com.example.IntermediarioService.kafka;
 
 import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
+import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
+import com.example.IntermediarioService.utils.pojos.TransferenciaPOJOEmis;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
@@ -30,6 +35,9 @@ public class KafkaConsumerConfig
     private TransferenciaResponseComponent transferenciaResponseComponent;
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    TransferenciaServiceImpl transferenciaServiceImpl;
 
     public KafkaConsumerConfig()
     {
@@ -120,6 +128,22 @@ public class KafkaConsumerConfig
        String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
        System.out.println("Resposta: -> to another bank kusola:-> " +response);
     }
+
+    @KafkaListener(topics = "tr-intrabancarias-kb-emis", groupId = "emisGroup")
+    public void consumeMessageOfTransferenciaIntrabancaria(String message) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        TransferenciaPOJOEmis transferenciaPOJOEmis = objectMapper.readValue(message, TransferenciaPOJOEmis.class);
+
+        LOGGER.info(String.format("Message received in emis -> %s", message.toString()));
+        System.out.println("Mensagem Recebida TransferenciaPOJOEmis: "+ transferenciaPOJOEmis.toString());
+        System.out.println("Converting into Transferencia"+ transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis).toString());
+
+        transferenciaServiceImpl.salvarTransferencia(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis));
+    }
+
+
     public TransferenciaPOJO getTransferenciaPOJO()
     {
         return transferenciaPOJO;

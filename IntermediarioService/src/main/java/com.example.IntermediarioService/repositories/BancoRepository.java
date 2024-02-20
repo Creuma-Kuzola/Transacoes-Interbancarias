@@ -14,5 +14,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface BancoRepository extends JpaRepository<Banco, Integer> {
-    
+
+    public Banco findByPkBanco(Integer pkBanco);
 }

@@ -6,6 +6,7 @@ package com.example.KuzolaBankService.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,9 +22,6 @@ import lombok.ToString;
 @Entity
 @Table(catalog = "kuzola_bank", schema = "public")
 
-@Getter
-@Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 
@@ -47,10 +45,10 @@ public class Cliente implements Serializable {
     @JoinColumn(name = "fk_pessoa", referencedColumnName = "pk_pessoa")
     @ManyToOne
     private Pessoa fkPessoa;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkCliente")
+    @OneToMany(mappedBy = "fkCliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ContaBancaria> contaBancariaList;
-    @OneToMany(mappedBy = "fkCliente")
+    @OneToMany(mappedBy = "fkCliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<User> usersList;
 
@@ -92,5 +90,34 @@ public class Cliente implements Serializable {
 
     public void setFkPessoa(Pessoa fkPessoa) {
         this.fkPessoa = fkPessoa;
+    }
+
+    public List<User> getUsersList() {
+        return new ArrayList<>();
+    }
+
+    public void setUsersList(List<User> usersList) {
+        this.usersList = usersList;
+    }
+
+
+    public List<ContaBancaria> getContaBancariaList() {
+        return new ArrayList<>();
+    }
+
+    public void setContaBancariaList(List<ContaBancaria> contaBancariaList) {
+        this.contaBancariaList = contaBancariaList;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "pkCliente=" + pkCliente +
+                ", telefone='" + telefone + '\'' +
+                ", email='" + email + '\'' +
+                ", fkEmpresa=" + fkEmpresa +
+                ", fkPessoa=" + fkPessoa +
+                ", contaBancariaList=" + contaBancariaList +
+                '}';
     }
 }

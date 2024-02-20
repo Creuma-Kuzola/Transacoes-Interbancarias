@@ -22,7 +22,6 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 
@@ -53,4 +52,16 @@ public class Pessoa implements Serializable {
     @ManyToOne
     private Localizacao fkLocalizacao;
 
+    @Override
+    public String toString() {
+        return "Pessoa{" +
+                "pkPessoa=" + pkPessoa +
+                ", nome='" + nome + '\'' +
+                ", dataNascimento=" + dataNascimento +
+                ", numeroDoBi='" + numeroDoBi + '\'' +
+                ", nif='" + nif + '\'' +
+                ", sexo='" + sexo + '\'' +
+                ", fkLocalizacao=" + fkLocalizacao +
+                '}';
+    }
 }

@@ -50,6 +50,7 @@ public class KafkaConsumerConfig
     private RestTemplate restTemplate;
     @Autowired
     private ContaBancariaServiceImpl contaBancariServiceImpl;
+
     @Autowired
     TransferenciaMessage transferenciaMessage;
     @Autowired
@@ -63,6 +64,9 @@ public class KafkaConsumerConfig
 
     @Autowired
     private TransferenciaServiceImpl transferenciaServiceImpl;
+
+    @Autowired
+    TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer;
 
     public KafkaConsumerConfig()
     {
@@ -170,7 +174,7 @@ public class KafkaConsumerConfig
         LOGGER.info(String.format("Message kuzola received response transferencia status from transferencia topic-> %s", message.toString()));
     }
 
-    @KafkaListener(topics ={ "tr-intrabancarias-kb", "tr-intrabancarias-kb-emis"})
+    @KafkaListener(topics ="tr-intrabancarias-kb", groupId = "kuzolaGroup")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -218,15 +222,16 @@ public class KafkaConsumerConfig
             BigInteger numeroDeConta  = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
             BigDecimal montante = new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante"));
             ContaBancaria contaBancaria = contaBancariServiceImpl.debito(numeroDeConta,montante);
+
             if (contaBancaria != null)
             {
                 messageT.put("message","Transferência efectuada com sucesso!");
                 messageT.put("status","true");
                 transferenciaMessage.setMessage(messageT);
-                Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
-                Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
+              //  Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
+                //Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
 
-                transferenciaServiceImpl.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
+                //transferenciaServiceImpl.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
                 System.out.println("Debito feito com sucesso!");
             }
         }
@@ -235,11 +240,18 @@ public class KafkaConsumerConfig
             messageT.put("message","Transferência não concluída com sucesso!");
             messageT.put("status","false");
             transferenciaMessage.setMessage(messageT);
+
             System.out.println(" Não é possivel completar a operação!");
             System.out.println(transferenciaMessage.getMessage().get("message"));;
         }
         LOGGER.info(String.format("Message received response transferencia status from transferencia topic-> %s", message.toString()));
     }
+
+    /*@KafkaListener(topics = "tr-intrabancarias-kb-emis", groupId = "emisGroup")
+    public void consumeMessageTransferenciaEmis(String message)
+    {
+        LOGGER.info(String.format("Message received Emis -> %s", message.toString()));
+    }*/
 
 
 

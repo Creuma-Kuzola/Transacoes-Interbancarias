@@ -22,7 +22,6 @@ import lombok.ToString;
 @Table(catalog = "kuzola_bank", schema = "public")
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Localizacao implements Serializable {
@@ -39,8 +38,15 @@ public class Localizacao implements Serializable {
     @OneToMany(mappedBy = "fkLocalizacao")
     @JsonIgnore
     private List<Pessoa> pessoaList;
-    @OneToMany(mappedBy = "fkLocalizacao")
+    @OneToMany(mappedBy = "fkLocalizacao", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Empresa> empresaList;
-    
+
+    @Override
+    public String toString() {
+        return "Localizacao{" +
+                "pkLocalizacao=" + pkLocalizacao +
+                ", designacao='" + designacao + '\'' +
+                '}';
+    }
 }

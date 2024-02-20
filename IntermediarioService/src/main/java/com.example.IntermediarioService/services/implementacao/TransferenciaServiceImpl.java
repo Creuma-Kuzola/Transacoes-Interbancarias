@@ -6,7 +6,9 @@ package com.example.IntermediarioService.services.implementacao;
 
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.services.TransferenciaService;
+import com.example.IntermediarioService.utils.pojos.TransferenciaPOJOEmis;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPojo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.IntermediarioService.services.implementacao.AbstractService;
 
@@ -29,6 +31,9 @@ implements TransferenciaService{
         LocalDateTime.
         return  ldt;
     }*/
+
+    @Autowired
+    BancoServiceImpl bancoServiceImpl;
 
     private final String kuzolaBankIdentificador = "1003";
     private final String waBankIdentificador = "404";
@@ -68,6 +73,33 @@ implements TransferenciaService{
 
     }*/
 
+    public Date convertingLocalDateTimeIntoDate( LocalDateTime localDateTime){
+
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        System.out.println(date);
+        return date;
+    }
+
+    public Transferencia convertingIntoTransferencia(TransferenciaPOJOEmis transferenciaPOJOEmis){
+
+        Transferencia transferencia = new Transferencia();
+        transferencia.setEstadoTransferencia("REALIZADO");
+        transferencia.setTipoTransferencia(transferenciaPOJOEmis.getTipoTransferencia());
+        transferencia.setDescricao(transferenciaPOJOEmis.getDescricao());
+        transferencia.setCanal("Banco Kuzola");
+        transferencia.setContaBancariaOrigem(transferenciaPOJOEmis.getIbanOrigem());
+        transferencia.setMontante(transferenciaPOJOEmis.getMontante());
+        transferencia.setIbanDestinatario(transferenciaPOJOEmis.getIbanDestinatario());
+        transferencia.setDataHora(convertingLocalDateTimeIntoDate(transferenciaPOJOEmis.getDatahora()));
+        transferencia.setFkBanco(bancoServiceImpl.findByPkBanco(1));
+
+        return  transferencia;
+
+    }
+
+    public Transferencia salvarTransferencia(Transferencia transferencia){
+       return this.criar(transferencia);
+    }
 
 
 }
