@@ -111,8 +111,9 @@ implements TransferenciaService {
         transferencia.setFkContaBancariaOrigem(contaBancaria);
 
         transferencia.setTipoTransferencia(transferenciaComponent.getTransferenciaResponse().get("tipoTransferencia"));
-        transferencia.setEstadoTransferencia("REALIZADO");
+        transferencia.setEstadoTransferencia("REALIZADA COM SUCESSO");
         transferencia.setCodigoTransferencia(transferenciaComponent.getTransferenciaResponse().get("codigoTransferencia"));
+        transferencia.setOperacao("ENVIADA");
         return transferencia;
     }
 

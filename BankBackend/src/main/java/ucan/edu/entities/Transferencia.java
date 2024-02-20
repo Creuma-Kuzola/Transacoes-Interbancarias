@@ -52,6 +52,8 @@ public class Transferencia implements Serializable {
     private String estadoTransferencia;
     @Column(name = "codigo_transferencia", length = 2147483647)
     private String codigoTransferencia;
+    @Column(name = "operacao", length = 2147483647)
+    private String operacao;
     @OneToMany(mappedBy = "fkTransferencia")
     private List<TokenValidacao> tokenValidacaoList;
 
@@ -125,5 +127,13 @@ public class Transferencia implements Serializable {
 
     public void setCodigoTransferencia(String codigoTransferencia) {
         this.codigoTransferencia = codigoTransferencia;
+    }
+
+    public String getOperacao() {
+        return operacao;
+    }
+
+    public void setOperacao(String operacao) {
+        this.operacao = operacao;
     }
 }

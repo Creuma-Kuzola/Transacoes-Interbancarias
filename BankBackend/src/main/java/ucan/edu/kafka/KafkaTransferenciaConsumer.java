@@ -95,9 +95,21 @@ public class KafkaTransferenciaConsumer
             transferenciaResponse.setDescricao("Conta disponivel");
             transferenciaResponse.setStatus(true);
             contaBancariServiceImpl.credito(obj.getIbanDestinatario(),obj.getMontante());
-            sendResposta(transferenciaResponse);
-            contaBancariServiceImpl.debito(obj.getIbanDestinatario(),obj.getMontante());
+            Transferencia transferencia = new Transferencia();
 
+            transferencia.setDescricao(obj.getDescricao());
+            transferencia.setOperacao("RECEBIDA");
+            transferencia.setCodigoTransferencia(obj.getCodigoTransferencia());
+            transferencia.setEstadoTransferencia(obj.getEstadoTransferencia());
+            transferencia.setFkContaBancariaOrigem(obj.getFkContaBancariaOrigem().intValue());
+            transferencia.setIbanDestinatario(obj.getIbanDestinatario());
+            transferencia.setDatahora(obj.getDatahora());
+            transferencia.setMontante(obj.getMontante());
+            transferencia.setTipoTransferencia("INTERBANCARIA");
+            transferencia.setEstadoTransferencia("Realizada com sucesso");
+
+            transferenciaServiceImpl.criaTransferencia(transferencia);
+            sendResposta(transferenciaResponse);
             System.out.println("message: " +transferenciaResponse.getDescricao());
         }
         else
@@ -105,8 +117,6 @@ public class KafkaTransferenciaConsumer
             transferenciaResponse.setDescricao("Conta Indisponivel");
             transferenciaResponse.setStatus(false);
             sendResposta(transferenciaResponse);
-            System.out.println("account unavaible");
-            System.out.println("message: " +transferenciaResponse.getDescricao());
         }
     }
 
@@ -178,6 +188,7 @@ public class KafkaTransferenciaConsumer
              messageT.put("message","Transferência efectuada com sucesso!");
              messageT.put("status","true");
              transferenciaMessage.setMessage(messageT);
+             //contaBancariServiceImpl.debito(obj.getIbanDestinatario(),obj.getMontante());
              Transferencia transferencia = buildTransferencia(transferenciaComponent);
              Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
 
