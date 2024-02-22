@@ -54,6 +54,9 @@ public class Transferencia implements Serializable {
     @ManyToOne
     private ContaBancaria fkContaBancariaOrigem;
 
+    @Column(name = "operacao", length = 2147483647)
+    private String operacao;
+
     public Integer getPkTransferencia() {
         return pkTransferencia;
     }
@@ -124,6 +127,14 @@ public class Transferencia implements Serializable {
 
     public void setFkContaBancariaOrigem(ContaBancaria fkContaBancariaOrigem) {
         this.fkContaBancariaOrigem = fkContaBancariaOrigem;
+    }
+
+    public String getOperacao() {
+        return operacao;
+    }
+
+    public void setOperacao(String operacao) {
+        this.operacao = operacao;
     }
 
     @Override

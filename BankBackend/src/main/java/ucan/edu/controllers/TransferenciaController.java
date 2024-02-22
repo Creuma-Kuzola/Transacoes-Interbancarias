@@ -69,6 +69,9 @@ public class TransferenciaController extends BaseController
         this.KafkaTransferenciaProducer = KafkaTransferenciaProducer;
     }
 
+
+
+
     @PostMapping("/publishTransferencia")
     public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia) {
 
@@ -136,9 +139,9 @@ public class TransferenciaController extends BaseController
         transferenciaItems.put("datahora","" +
                 "" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferencia.getDatahora()));
         transferenciaItems.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem());
-        transferenciaItems.put("tipoTransferencia", transferencia.getTipoTransferencia());
-        transferenciaItems.put("estadoTransferencia", transferencia.getEstadoTransferencia());
-        transferenciaItems.put("codigoTransferencia", transferencia.getCodigoTransferencia());
+        transferenciaItems.put("tipoTransferencia", "INTERBANCARIA");
+        transferenciaItems.put("estadoTransferencia", "EM PROCESSAMENTO");
+        transferenciaItems.put("codigoTransferencia",""+transferenciaServiceImpl.getCondigoTransferencia());
         transferenciaComponent.setTransferenciaResponse(transferenciaItems);
         System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
     }

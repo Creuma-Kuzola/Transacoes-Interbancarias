@@ -14,6 +14,7 @@ import ucan.edu.utils.pojos.TransferenciaPOJO;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Random;
 
 /**
  *
@@ -41,6 +42,15 @@ implements TransferenciaService{
             return 2;
         }
         return 3;
+    }
+
+
+    public Integer getCondigoTransferencia()
+    {
+        Random random = new Random();
+        Integer codigo = random.nextInt(9000) + 100000;
+        System.out.println("Número Aleatório: " + codigo);
+        return codigo;
     }
 
 

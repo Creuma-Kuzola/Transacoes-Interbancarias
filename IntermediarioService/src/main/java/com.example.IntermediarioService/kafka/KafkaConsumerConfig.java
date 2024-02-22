@@ -24,18 +24,14 @@ import java.util.Map;
 @Service
 public class KafkaConsumerConfig
 {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerConfig.class);
     private TransferenciaPOJO transferenciaPOJO;
-
     @Autowired
     private BancoComponent bancoComponent;
-
     @Autowired
     private TransferenciaResponseComponent transferenciaResponseComponent;
     @Autowired
     private RestTemplate restTemplate;
-
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
 
@@ -64,7 +60,7 @@ public class KafkaConsumerConfig
         transferenciaPOJO = obj;
 
         System.out.println("Data: " +transferenciaPOJO.getDatahora()+ "Data: " +obj.getDatahora());
-        //String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
+        String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
         //System.out.println("Resposta: -> to another bank kusola:-> " +response);
     }
 

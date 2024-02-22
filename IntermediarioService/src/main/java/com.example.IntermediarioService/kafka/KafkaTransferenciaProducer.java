@@ -71,12 +71,8 @@ public class KafkaTransferenciaProducer
     {
         data = CustomJsonPojos.criarStrToJson(kafkaConsumerConfig.getTransferenciaPOJO());
         LOGGER.info(String.format("Message sent ==> %s ", data.toString()));
-
         Integer bankId = bancoComponent.geBancoComponent().get("UUID");
-
         Message<String> message = null;
-
-        System.out.println(" " +(bankId == 1003) );
 
         if (bankId == 1003)
         {
@@ -87,6 +83,7 @@ public class KafkaTransferenciaProducer
         }
         else if (bankId == 4040)
         {
+            System.out.println("PASSOU AQUI: BANCO IDENTIFICADOR: " +bankId);
             message= MessageBuilder
                     .withPayload(data)
                     .setHeader(KafkaHeaders.TOPIC, "transferencia")

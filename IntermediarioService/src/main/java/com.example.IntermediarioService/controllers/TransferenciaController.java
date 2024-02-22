@@ -85,10 +85,8 @@ public class TransferenciaController extends BaseController {
         return str;
     }
 
-
-    // /transferencia/publishTransferencia
     @PostMapping("/publishTransferencia")
-    public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia)
+    public ResponseEntity<String> publishTransferencia(@RequestBody TransferenciaPOJO transferencia)
     {
         String data = CustomJsonPojos.criarStrToJson(transferencia);
         kafkaTransferenciaProducer.sendMessage(data);

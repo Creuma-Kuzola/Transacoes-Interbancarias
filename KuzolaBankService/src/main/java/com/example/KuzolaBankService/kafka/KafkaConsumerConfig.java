@@ -88,8 +88,7 @@ public class KafkaConsumerConfig
     }
 
     @KafkaListener(topics = "transferencia", groupId = "transferenciaGroup")
-    public void consumerMessage(String message)
-    {
+    public void consumerMessage(String message) throws ParseException {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
         builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -110,10 +109,8 @@ public class KafkaConsumerConfig
            transferenciaResponse.setStatus(true);
            contaBancariServiceImpl.credito(transferenciaCustomPOJO.getIbanDestinatario(),transferenciaCustomPOJO.getMontante());
            transferenciaServiceImpl.saveTransferComponent(obj);
-           //Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
-           //Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(obj);
-
-
+           Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
+           Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
            sendResposta(transferenciaResponse);
        }
        else
@@ -228,10 +225,10 @@ public class KafkaConsumerConfig
                 messageT.put("message","Transferência efectuada com sucesso!");
                 messageT.put("status","true");
                 transferenciaMessage.setMessage(messageT);
-              //  Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
-                //Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
+                Transferencia transferencia = transferenciaServiceImpl.buildTransferencia(transferenciaComponent);
+                Transferencia transferenciaSaved =  transferenciaServiceImpl.criaTransferencia(transferencia);
 
-                //transferenciaServiceImpl.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
+                transferenciaServiceImpl.builderTransferenciaToTrasnferenciaComponent(transferenciaSaved,transferenciaComponent);
                 System.out.println("Debito feito com sucesso!");
             }
         }

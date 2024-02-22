@@ -191,7 +191,7 @@ implements TransferenciaService {
         component.put("ibanDestinatario",transferencia.getIbanDestinatario());
         component.put("datahora", "" +transferencia.getDatahora());
         component.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem().getNumeroDeConta());
-        component.put("estadoTransferencia","REALIZADA");
+        component.put("estadoTransferencia","REALIZADA COM SUCESSO");
         component.put("tipoTransferencia",transferencia.getTipoTransferencia());
         component.put("codigoTransferencia",transferencia.getCodigoTransferencia());
         transferenciaComponent.setTransferenciaResponse(component);
@@ -250,6 +250,28 @@ implements TransferenciaService {
         return  transferenciaJsonEmis;
     }
 
+    public Transferencia buildTransferencia(TransferenciaComponent transferenciaComponent) throws ParseException
+    {
+        Transferencia transferencia = new Transferencia();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(transferenciaComponent.getTransferenciaResponse().get("datahora"), formatter);
+
+        BigInteger numeroDeConta = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
+        ContaBancaria contaBancaria = contaBancariaRepository.findByNumeroDeConta(numeroDeConta);
+
+        transferencia.setDescricao(transferenciaComponent.getTransferenciaResponse().get("descricao"));
+        transferencia.setMontante(new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante")));
+        transferencia.setDatahora(localDateTime);
+        transferencia.setIbanDestinatario(transferenciaComponent.getTransferenciaResponse().get("ibanDestinatario"));
+        transferencia.setFkContaBancariaOrigem(contaBancaria);
+
+        transferencia.setTipoTransferencia(transferenciaComponent.getTransferenciaResponse().get("tipoTransferencia"));
+        transferencia.setEstadoTransferencia("REALIZADA COM SUCESSO");
+        transferencia.setCodigoTransferencia(transferenciaComponent.getTransferenciaResponse().get("codigoTransferencia"));
+        transferencia.setOperacao("ENVIADA");
+        return transferencia;
+    }
+
     /*public void TransferenciaIntrabancaria(Transferencia transferencia, String ibanOrigem ){
 
         Transferencia transf = new Transferencia();
@@ -267,6 +289,9 @@ implements TransferenciaService {
 
 
     }*/
+
+
+
 
 
 }
