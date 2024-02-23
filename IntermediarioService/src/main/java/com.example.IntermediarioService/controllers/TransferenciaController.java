@@ -111,7 +111,7 @@ public class TransferenciaController extends BaseController {
         return this.ok("TransferenciaDto editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
     }
 
-    @PostMapping("/response2")
+    @PostMapping("/response")
     public ResponseEntity<String> sendResponseTransferencia(@RequestBody TransferenciaResponse response)
     {
         String data =  CustomJsonPojos.TransferenciaResponse(response);

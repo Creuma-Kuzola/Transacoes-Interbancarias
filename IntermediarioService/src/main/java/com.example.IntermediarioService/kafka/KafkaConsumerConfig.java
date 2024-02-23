@@ -59,6 +59,10 @@ public class KafkaConsumerConfig
         System.out.println("Descricao " + obj.getDescricao());
         transferenciaPOJO = obj;
 
+        Map<String,Integer> identificadorBanco = new HashMap<>();
+        identificadorBanco.put("UUID",obj.getBancoUdentifier());
+        bancoComponent.setBancoComponent(identificadorBanco);
+
         System.out.println("Data: " +transferenciaPOJO.getDatahora()+ "Data: " +obj.getDatahora());
         String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
         //System.out.println("Resposta: -> to another bank kusola:-> " +response);
@@ -69,7 +73,6 @@ public class KafkaConsumerConfig
     {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
-        //jussy leite
         Gson gson = builder.create();
         RestTemplate restTemplate1 = new RestTemplate();
 
@@ -80,8 +83,8 @@ public class KafkaConsumerConfig
         System.out.println("Descricao " + response.getDescricao());
         System.out.println("Status " + response.getStatus());
 
-        String strResponse = restTemplate1.postForObject("http://localhost:8082/transferencia/response",response, String.class);
-        System.out.println("Resposta: -> to another bank wakanda:-> " +strResponse);
+        String strResponse = restTemplate1.<String>postForObject("http://localhost:8082/transferencia/response", response, String.class);
+        //System.out.println("Resposta: -> to another bank wakanda:-> " +strResponse);
     }
 
     @KafkaListener(topics = "responseWakanda", groupId = "myGroup")
@@ -116,7 +119,6 @@ public class KafkaConsumerConfig
         transferenciaPOJO = obj;
 
         Map<String,Integer> identificadorBanco = new HashMap<>();
-
         identificadorBanco.put("UUID",obj.getBancoUdentifier());
         bancoComponent.setBancoComponent(identificadorBanco);
 

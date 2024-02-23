@@ -179,6 +179,7 @@ implements TransferenciaService {
         transferenciaItems.put("tipoTransferencia", transferencia.getTipoTransferencia());
         transferenciaItems.put("estadoTransferencia", transferencia.getEstadoTransferencia());
         transferenciaItems.put("codigoTransferencia", transferencia.getCodigoTransferencia());
+        transferenciaItems.put("bancoUdentifier",""+transferencia.getBancoUdentifier());
         transferenciaComponent.setTransferenciaResponse(transferenciaItems);
         System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
     }
@@ -259,6 +260,17 @@ implements TransferenciaService {
         BigInteger numeroDeConta = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
         ContaBancaria contaBancaria = contaBancariaRepository.findByNumeroDeConta(numeroDeConta);
 
+       /* if (transferenciaComponent.getTransferenciaResponse().get("bancoUdentifie").equals("1003"))
+        {
+            BigInteger numeroDeConta = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
+            ContaBancaria contaBancaria = contaBancariaRepository.findByNumeroDeConta(numeroDeConta);
+        }
+        else
+        {
+            BigInteger numeroDeConta = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
+            ContaBancaria contaBancaria = contaBancariaRepository.findByNumeroDeConta(numeroDeConta);
+        } */
+
         transferencia.setDescricao(transferenciaComponent.getTransferenciaResponse().get("descricao"));
         transferencia.setMontante(new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante")));
         transferencia.setDatahora(localDateTime);
@@ -268,7 +280,12 @@ implements TransferenciaService {
         transferencia.setTipoTransferencia(transferenciaComponent.getTransferenciaResponse().get("tipoTransferencia"));
         transferencia.setEstadoTransferencia("REALIZADA COM SUCESSO");
         transferencia.setCodigoTransferencia(transferenciaComponent.getTransferenciaResponse().get("codigoTransferencia"));
-        transferencia.setOperacao("ENVIADA");
+
+        if (transferenciaComponent.getTransferenciaResponse().get("bancoUdentifier").equals("1003"))
+        {
+            transferencia.setOperacao("ENVIADA");
+        }
+        transferencia.setOperacao("RECEBIDA");
         return transferencia;
     }
 
