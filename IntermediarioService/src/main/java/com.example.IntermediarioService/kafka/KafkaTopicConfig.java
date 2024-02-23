@@ -49,4 +49,31 @@ public class KafkaTopicConfig
                 .partitions(5)
                 .build();
     }
+
+    @Bean
+    public NewTopic transferenciaIntrabancariaKuzolaBank()
+    {
+        return TopicBuilder
+                .name("transf-intrabancarias-kb-emis")
+                .partitions(3)
+                .build();
+    }
+
+    @Bean
+    public NewTopic transferenciaIntrabancariaWakandaBank()
+    {
+        return TopicBuilder
+                .name("transf-intrabancarias-wb-emis")
+                .partitions(3)
+                .build();
+    }
+
+    @Bean
+    public NewTopic transferenciaIntrabancariaWakandaKuzolaBank()
+    {
+        return TopicBuilder
+                .name("tr-interbancaria-wbkb-emis")
+                .partitions(3)
+                .build();
+    }
 }

@@ -65,8 +65,6 @@ public class KafkaConsumerConfig
     @Autowired
     private TransferenciaServiceImpl transferenciaServiceImpl;
 
-    @Autowired
-    TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer;
 
     public KafkaConsumerConfig()
     {
@@ -180,7 +178,7 @@ public class KafkaConsumerConfig
         try {
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
 
-            Optional<ContaBancaria> contaBancaria = contaBancariServiceImpl.findById(transferenciaPOJO.getFkContaBancariaOrigem());
+            Optional<ContaBancaria> contaBancaria = Optional.ofNullable(contaBancariServiceImpl.findContaBancaraByIban(transferenciaPOJO.getibanOrigem()));
             contaBancariServiceImpl.debito(contaBancaria.get().getIban(), transferenciaPOJO.getMontante());
             contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
 
@@ -210,7 +208,6 @@ public class KafkaConsumerConfig
 
         if(transferenciaResponse.getStatus() == true)
         {
-
             messageT.put("message","Transferência efectuada com sucesso!");
             messageT.put("status","true");
             transferenciaMessage.setMessage(messageT);

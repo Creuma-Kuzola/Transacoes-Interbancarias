@@ -23,7 +23,7 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic topicTransferenciaIntrabancaria()
+    public NewTopic topicTransferenciaIntrabancariaEmis()
     {
         return TopicBuilder
                 .name("tr-intrabancarias-kb-emis")

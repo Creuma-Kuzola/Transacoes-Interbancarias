@@ -6,12 +6,14 @@ package com.example.IntermediarioService.services.implementacao;
 
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.services.TransferenciaService;
+import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJOEmis;
 //import com.example.IntermediarioService.utils.pojos.TransferenciaPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.IntermediarioService.services.implementacao.AbstractService;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -87,7 +89,7 @@ implements TransferenciaService{
         transferencia.setTipoTransferencia(transferenciaPOJOEmis.getTipoTransferencia());
         transferencia.setDescricao(transferenciaPOJOEmis.getDescricao());
         transferencia.setCanal("Banco Kuzola");
-        transferencia.setContaBancariaOrigem(transferenciaPOJOEmis.getIbanOrigem());
+        transferencia.setibanOrigem(transferenciaPOJOEmis.getIbanOrigem());
         transferencia.setMontante(transferenciaPOJOEmis.getMontante());
         transferencia.setIbanDestinatario(transferenciaPOJOEmis.getIbanDestinatario());
         transferencia.setDataHora(convertingLocalDateTimeIntoDate(transferenciaPOJOEmis.getDatahora()));
@@ -99,6 +101,31 @@ implements TransferenciaService{
 
     public Transferencia salvarTransferencia(Transferencia transferencia){
        return this.criar(transferencia);
+    }
+
+    public boolean isTransferenciaInterbancariaKuzolaBank(String ibanOrigem, String ibanDestino){
+
+        return isKuzolaBankIban(ibanOrigem) && isKuzolaBankIban(ibanDestino);
+
+    }
+
+    public boolean isTransferenciaInterbancariaWakandaBank(String ibanOrigem, String ibanDestino){
+
+        return isWakandaBankIban(ibanOrigem) && isWakandaBankIban(ibanDestino);
+
+    }
+
+    public boolean isTransferenciaInterBancaria(String ibanOrigem, String ibanDestino){
+
+        if(isKuzolaBankIban(ibanOrigem) && isWakandaBankIban(ibanDestino))
+        {
+            return true;
+        }
+        else if(isWakandaBankIban(ibanOrigem) && isKuzolaBankIban(ibanDestino))
+        {
+            return true;
+        }
+        return false;
     }
 
 

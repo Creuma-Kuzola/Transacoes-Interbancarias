@@ -16,17 +16,7 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(catalog = "transferencia_bd", schema = "public")
-@NamedQueries({
-    @NamedQuery(name = "Transferencia.findAll", query = "SELECT t FROM Transferencia t"),
-    @NamedQuery(name = "Transferencia.findByPkTransferencia", query = "SELECT t FROM Transferencia t WHERE t.pkTransferencia = :pkTransferencia"),
-    @NamedQuery(name = "Transferencia.findByDescricao", query = "SELECT t FROM Transferencia t WHERE t.descricao = :descricao"),
-    @NamedQuery(name = "Transferencia.findByMontante", query = "SELECT t FROM Transferencia t WHERE t.montante = :montante"),
-    @NamedQuery(name = "Transferencia.findByIbanDestinatario", query = "SELECT t FROM Transferencia t WHERE t.ibanDestinatario = :ibanDestinatario"),
-    @NamedQuery(name = "Transferencia.findByDataHora", query = "SELECT t FROM Transferencia t WHERE t.dataHora = :dataHora"),
-    @NamedQuery(name = "Transferencia.findByEstadoTransferencia", query = "SELECT t FROM Transferencia t WHERE t.estadoTransferencia = :estadoTransferencia"),
-    @NamedQuery(name = "Transferencia.findByCanal", query = "SELECT t FROM Transferencia t WHERE t.canal = :canal"),
-    @NamedQuery(name = "Transferencia.findByTipoTransferencia", query = "SELECT t FROM Transferencia t WHERE t.tipoTransferencia = :tipoTransferencia"),
-    @NamedQuery(name = "Transferencia.findByContaBancariaOrigem", query = "SELECT t FROM Transferencia t WHERE t.contaBancariaOrigem = :contaBancariaOrigem")})
+
 public class Transferencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,11 +44,12 @@ public class Transferencia implements Serializable {
     private String canal;
     @Column(name = "tipo_transferencia", length = 2147483647)
     private String tipoTransferencia;
-    @Column(name = "conta_bancaria_origem", length = 2147483647)
-    private String contaBancariaOrigem;
     @JoinColumn(name = "fk_banco", referencedColumnName = "pk_banco")
     @ManyToOne
     private Banco fkBanco;
+
+    @Column(name = "iban_origem", length = 2147483647)
+    private String ibanOrigem;
 
     public Transferencia() {
     }
@@ -138,12 +129,12 @@ public class Transferencia implements Serializable {
         this.tipoTransferencia = tipoTransferencia;
     }
 
-    public String getContaBancariaOrigem() {
-        return contaBancariaOrigem;
+    public String getibanOrigem() {
+        return ibanOrigem;
     }
 
-    public void setContaBancariaOrigem(String contaBancariaOrigem) {
-        this.contaBancariaOrigem = contaBancariaOrigem;
+    public void setibanOrigem(String ibanOrigem) {
+        this.ibanOrigem = ibanOrigem;
     }
 
     public Banco getFkBanco() {
@@ -155,28 +146,18 @@ public class Transferencia implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (pkTransferencia != null ? pkTransferencia.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Transferencia)) {
-            return false;
-        }
-        Transferencia other = (Transferencia) object;
-        if ((this.pkTransferencia == null && other.pkTransferencia != null) || (this.pkTransferencia != null && !this.pkTransferencia.equals(other.pkTransferencia))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "com.example.TransferenciaService.entities.Transferencia[ pkTransferencia=" + pkTransferencia + " ]";
+        return "Transferencia{" +
+                "pkTransferencia=" + pkTransferencia +
+                ", descricao='" + descricao + '\'' +
+                ", montante=" + montante +
+                ", ibanDestinatario='" + ibanDestinatario + '\'' +
+                ", dataHora=" + dataHora +
+                ", estadoTransferencia='" + estadoTransferencia + '\'' +
+                ", canal='" + canal + '\'' +
+                ", tipoTransferencia='" + tipoTransferencia + '\'' +
+                ", fkBanco=" + fkBanco +
+                ", ibanOrigem='" + ibanOrigem + '\'' +
+                '}';
     }
-    
 }

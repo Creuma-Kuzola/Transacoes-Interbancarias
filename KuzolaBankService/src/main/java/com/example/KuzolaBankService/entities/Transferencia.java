@@ -7,13 +7,8 @@ package com.example.KuzolaBankService.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import java.util.Date;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  *
@@ -21,9 +16,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(catalog = "kuzola_bank", schema = "public")
-
-@AllArgsConstructor
-@NoArgsConstructor
 
 public class Transferencia implements Serializable {
 
@@ -41,21 +33,31 @@ public class Transferencia implements Serializable {
     private BigDecimal montante;
     @Column(name = "iban_destinatario", length = 2147483647)
     private String ibanDestinatario;
-   // @JsonAdapter(GsonLocalDateAdapter.class)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime datahora;
+
     @Column(name = "estado_transferencia", length = 2147483647)
     private String estadoTransferencia;
     @Column(name = "codigo_transferencia", length = 2147483647)
     private String codigoTransferencia;
     @Column(name = "tipo_transferencia", length = 2147483647)
     private String tipoTransferencia;
-    @JoinColumn(name = "fk_conta_bancaria_origem", referencedColumnName = "pk_conta_bancaria")
-    @ManyToOne
-    private ContaBancaria fkContaBancariaOrigem;
-
-    @Column(name = "operacao", length = 2147483647)
+    @Column(length = 2147483647)
     private String operacao;
+    @Column(name = "iban_origem", length = 2147483647)
+    private String ibanOrigem;
+
+    public Transferencia() {
+    }
+
+    public Transferencia(Integer pkTransferencia) {
+        this.pkTransferencia = pkTransferencia;
+    }
+
+    public Transferencia(Integer pkTransferencia, BigDecimal montante) {
+        this.pkTransferencia = pkTransferencia;
+        this.montante = montante;
+    }
 
     public Integer getPkTransferencia() {
         return pkTransferencia;
@@ -121,20 +123,20 @@ public class Transferencia implements Serializable {
         this.tipoTransferencia = tipoTransferencia;
     }
 
-    public ContaBancaria getFkContaBancariaOrigem() {
-        return fkContaBancariaOrigem;
-    }
-
-    public void setFkContaBancariaOrigem(ContaBancaria fkContaBancariaOrigem) {
-        this.fkContaBancariaOrigem = fkContaBancariaOrigem;
-    }
-
     public String getOperacao() {
         return operacao;
     }
 
     public void setOperacao(String operacao) {
         this.operacao = operacao;
+    }
+
+    public String getIbanOrigem() {
+        return ibanOrigem;
+    }
+
+    public void setIbanOrigem(String ibanOrigem) {
+        this.ibanOrigem = ibanOrigem;
     }
 
     @Override
@@ -148,6 +150,8 @@ public class Transferencia implements Serializable {
                 ", estadoTransferencia='" + estadoTransferencia + '\'' +
                 ", codigoTransferencia='" + codigoTransferencia + '\'' +
                 ", tipoTransferencia='" + tipoTransferencia + '\'' +
+                ", operacao='" + operacao + '\'' +
+                ", ibanOrigem='" + ibanOrigem + '\'' +
                 '}';
     }
 }
