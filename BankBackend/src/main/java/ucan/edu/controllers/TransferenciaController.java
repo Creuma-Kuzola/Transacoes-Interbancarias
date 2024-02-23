@@ -73,7 +73,7 @@ public class TransferenciaController extends BaseController
 
 
     @PostMapping("/publishTransferencia")
-    public ResponseEntity<String> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia) {
+    public ResponseEntity<ResponseBody> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia) {
 
         String erro = "jwhhfjf";
 
@@ -100,31 +100,36 @@ public class TransferenciaController extends BaseController
 
                 KafkaTransferenciaProducer.sendTransferenciaIntrabancaria(transferenciaJson.toString());
 
-                return ResponseEntity.ok(" " + TransferenciaResponseWakandaBank.convertingIntoTransferenciaKuzolaBank(transferenciaCreated));
+                return this.ok(" ",TransferenciaResponseWakandaBank.convertingIntoTransferenciaKuzolaBank(transferenciaCreated));
             }
-            return  ResponseEntity.ok(""+ erro);
+            return  this.ok(""+erro,this);
         }
         else if (responseVerification == 2) {
             if (isSaldoEnought != -1) {
                 transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
                 transferencia.setDatahora(new Date());
                 transferencia.setBancoUdentifier(4040);
+                transferencia.setCodigoTransferencia(""+transferenciaServiceImpl.getCondigoTransferencia());
+                transferencia.setEstadoTransferencia("EM PROCESSAMENTO");
+                transferencia.setTipoTransferencia("INTERBANCARIA");
+
+
 
                 saveTransferComponent(transferencia);
                 String data = CustomJsonPojos.criarStrToJson(transferencia);
                 KafkaTransferenciaProducer.sendMessage(data);
                 try {
                     Thread.sleep(9000);
-                    return ResponseEntity.ok("Message: " + transferenciaMessage.getMessage().get("message"));
+                    return this.ok(""+transferenciaMessage.getMessage().get("message"),transferenciaComponent.getTransferenciaResponse().values()) ;
 
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                return ResponseEntity.ok("Message:  Você possui saldo insuficiente, para efectuar a transfências!" + isSaldoEnought);
+                return this.ok(" Você possui saldo insuficiente, para efectuar a transfências!" + isSaldoEnought,this);
             }
         } else {
-            return ResponseEntity.ok("Erro"+ erro);
+            return this.ok("Erro",erro);
         }
         //return ResponseEntity.ok("Erro!!" + erro);
     }
@@ -142,7 +147,11 @@ public class TransferenciaController extends BaseController
         transferenciaItems.put("tipoTransferencia", "INTERBANCARIA");
         transferenciaItems.put("estadoTransferencia", "EM PROCESSAMENTO");
         transferenciaItems.put("codigoTransferencia",""+transferenciaServiceImpl.getCondigoTransferencia());
+        transferenciaItems.put("bancoUdentifier",""+transferencia.getCodigoTransferencia());
+
         transferenciaComponent.setTransferenciaResponse(transferenciaItems);
+
+
         System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
     }
 

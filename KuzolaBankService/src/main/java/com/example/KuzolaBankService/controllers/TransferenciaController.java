@@ -187,7 +187,7 @@ public class TransferenciaController extends BaseController
 
         String data =  CustomJsonPojos.TransferenciaResponse(response);
         this.kafkaTransferenciaProducer.sendMessageResponse(data);
-        System.out.println(" Resposta envida com sucesso! ");
+        System.out.println(" Resposta do banco kuzola enviada com sucesso! ");
       return  ResponseEntity.ok("Resposta envida com sucesso!" +data) ;
     }
 
