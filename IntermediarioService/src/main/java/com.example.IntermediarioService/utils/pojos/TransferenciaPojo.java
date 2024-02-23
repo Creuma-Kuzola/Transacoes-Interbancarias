@@ -47,8 +47,8 @@ public class TransferenciaPojo
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime datahora;
 
-    @JsonProperty("fkContaBancariaOrigem")
-    private String fkContaBancariaOrigem;
+    @JsonProperty("ibanOrigem")
+    private String ibanOrigem;
 
     @JsonProperty("tipoTransferencia")
     private String tipoTransferencia;
@@ -70,7 +70,7 @@ public class TransferenciaPojo
         transferenciaPojo.setPkTransferencia(transferenciaPOJO.getPkTransferencia());
         transferenciaPojo.setDatahora(TransferenciaServiceImpl.formattingDateTime());
         transferenciaPojo.setIbanDestinatario(transferenciaPOJO.getIbanDestinatario());
-        transferenciaPojo.setFkContaBancariaOrigem(transferenciaPOJO.getFkContaBancariaOrigem().toString());
+        transferenciaPojo.setibanOrigem(transferenciaPOJO.getFkContaBancariaOrigem().toString());
         transferenciaPojo.setMontante(new BigDecimal(transferenciaPOJO.getMontante()));
         return transferenciaPojo;
     }
@@ -117,12 +117,12 @@ public class TransferenciaPojo
         this.datahora = datahora;
     }
 
-    public String getFkContaBancariaOrigem() {
-        return fkContaBancariaOrigem;
+    public String getibanOrigem() {
+        return ibanOrigem;
     }
 
-    public void setFkContaBancariaOrigem(String fkContaBancariaOrigem) {
-        this.fkContaBancariaOrigem = fkContaBancariaOrigem;
+    public void setibanOrigem(String ibanOrigem) {
+        this.ibanOrigem = ibanOrigem;
     }
 
     public String getTipoTransferencia() {

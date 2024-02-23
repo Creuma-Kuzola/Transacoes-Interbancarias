@@ -31,10 +31,7 @@ public class TransferenciaPOJO {
     @JsonProperty("datahora")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime datahora;
-
-    @JsonProperty("fkContaBancariaOrigem")
-    private int fkContaBancariaOrigem;
-
+    
     @JsonProperty("tipoTransferencia")
     private String tipoTransferencia;
 
@@ -43,6 +40,9 @@ public class TransferenciaPOJO {
 
     @JsonProperty("codigoTransferencia")
     private String codigoTransferencia;
+
+    @JsonProperty("ibanOrigem")
+    private String ibanOrigem;
 
 
     // Getters and setters
@@ -86,12 +86,12 @@ public class TransferenciaPOJO {
         this.datahora = datahora;
     }
 
-    public int getFkContaBancariaOrigem() {
-        return fkContaBancariaOrigem;
+    public String getibanOrigem() {
+        return ibanOrigem;
     }
 
-    public void setFkContaBancariaOrigem(int fkContaBancariaOrigem) {
-        this.fkContaBancariaOrigem = fkContaBancariaOrigem;
+    public void setibanOrigem(String ibanOrigem) {
+        this.ibanOrigem = ibanOrigem;
     }
 
     public String getTipoTransferencia() {
@@ -132,7 +132,7 @@ public class TransferenciaPOJO {
         sb.append("\"montante\": ").append(montante).append(",");
         sb.append("\"ibanDestinatario\": \"").append(ibanDestinatario).append("\",");
         sb.append("\"datahora\": \"").append(datahora).append("\",");
-        sb.append("\"fkContaBancariaOrigem\": ").append(fkContaBancariaOrigem).append(",");
+        sb.append("\"ibanOrigem\": ").append(ibanOrigem).append(",");
         sb.append("\"tipoTransferencia\": \"").append(tipoTransferencia).append("\",");
         sb.append("\"estadoTransferencia\": \"").append(estadoTransferencia).append("\",");
         sb.append("\"codigoTransferencia\": \"").append(codigoTransferencia).append("\"");

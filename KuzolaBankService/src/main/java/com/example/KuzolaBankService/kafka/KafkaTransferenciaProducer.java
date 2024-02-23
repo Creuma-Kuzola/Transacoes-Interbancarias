@@ -46,4 +46,27 @@ public class KafkaTransferenciaProducer
                 .build();
         kafkaTemplate.send(message);
     }
+
+
+    public void sendMessageTransferenciaIntraBancaria(String transferencia){
+
+        LOGGER.info(String.format("Message sent -> %s", transferencia.toString()));
+
+        Message<String> message = MessageBuilder
+                .withPayload(transferencia)
+                .setHeader(KafkaHeaders.TOPIC, "tr-intrabancarias-kb")
+                .build();
+        kafkaTemplate.send(message);
+    }
+
+    public void sendMessageTransferenciaIntraBancariaEmis(String transferencia){
+
+        LOGGER.info(String.format("Message sent -> %s", transferencia.toString()));
+
+        Message<String> message = MessageBuilder
+                .withPayload(transferencia)
+                .setHeader(KafkaHeaders.TOPIC, "tr-intrabancarias-kb-emis")
+                .build();
+        kafkaTemplate.send(message);
+    }
 }

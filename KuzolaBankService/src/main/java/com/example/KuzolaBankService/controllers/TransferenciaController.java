@@ -10,7 +10,6 @@ import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
 import com.example.KuzolaBankService.kafka.KafkaTransferenciaProducer;
-import com.example.KuzolaBankService.kafka.TransferenciaJsonKafkaProducer;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 
@@ -47,7 +46,7 @@ public class TransferenciaController extends BaseController
 {
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
-    TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer;
+    KafkaTransferenciaProducer kafkaTransferenciaProducer;
     @Autowired
     ContaBancariaServiceImpl contaBancariaServiceImpl;
     @Autowired
@@ -57,16 +56,15 @@ public class TransferenciaController extends BaseController
 
     @Autowired
     TransferenciaResponseComponent transferenciaResponseComponent;
-    @Autowired
-    private KafkaTransferenciaProducer kafkaTransferenciaProducer;
+
     @Autowired
     TransferenciaComponent transferenciaComponent;
 
     Transferencia transferenciaCreated;
 
-    public TransferenciaController(TransferenciaJsonKafkaProducer transferenciaJsonKafkaProducer)
+    public TransferenciaController(KafkaTransferenciaProducer kafkaTransferenciaProducer)
     {
-        this.transferenciaJsonKafkaProducer = transferenciaJsonKafkaProducer;
+        this.kafkaTransferenciaProducer = kafkaTransferenciaProducer;
     }
 
     @GetMapping("/teste")
@@ -88,7 +86,7 @@ public class TransferenciaController extends BaseController
         ContaBancaria contaBancaria = new ContaBancaria();
         contaBancaria = contaBancariaServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
 
-        List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesDebitadas(contaBancaria.getPkContaBancaria());
+        List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesDebitadas(contaBancaria.getIban());
         return this.ok("Transações de Débito encontradas com sucesso!", lista);
     }
 
@@ -135,8 +133,8 @@ public class TransferenciaController extends BaseController
                 String transferenciaJsonEmis =transferenciaServiceImpl.convertingTransferenciaInJsonEmis(transferenciaCreated, ibanOrigem);
                 System.out.println("Data Json" + transferenciaJson);
 
-                transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
-                transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancariaEmis(transferenciaJsonEmis.toString());
+                kafkaTransferenciaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
+                kafkaTransferenciaProducer.sendMessageTransferenciaIntraBancariaEmis(transferenciaJsonEmis.toString());
                 return this.transferenciaEfectuada(transferenciaCreated);
             }
             return  this.erro("ERRO: Informação inválida");

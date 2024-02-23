@@ -15,6 +15,7 @@
     <bytecodeTargetLevel>
       <module name="edu" target="17" />
       <module name="intermediario" target="17" />
+      <module name="TransferenciaService" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

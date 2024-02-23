@@ -20,7 +20,7 @@ public class CustomJsonPojos {
                 + "    \"montante\": " + transferenciaPOJO.getMontante() + ",\n"
                 + "    \"ibanDestinatario\": \"" + transferenciaPOJO.getIbanDestinatario() + "\",\n"
                 + "    \"datahora\":\"" + transferenciaPOJO.getDatahora() + "\",\n"
-                + "    \"fkContaBancariaOrigem\": " +transferenciaPOJO.getFkContaBancariaOrigem() +",\n"
+                + "    \"IbanOrigem\": " +transferenciaPOJO.getibanOrigem() +",\n"
                 + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
                 + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
                 + "    \"codigoTransferencia\": " + transferenciaPOJO.getCodigoTransferencia() + "\n"

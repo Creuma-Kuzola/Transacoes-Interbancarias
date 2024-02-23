@@ -7,11 +7,6 @@ package com.example.KuzolaBankService.entities;
 import java.io.Serializable;
 import java.util.Date;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  *
@@ -19,11 +14,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(catalog = "kuzola_bank", schema = "public")
-
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 
 public class Pessoa implements Serializable {
 
@@ -52,16 +42,82 @@ public class Pessoa implements Serializable {
     @ManyToOne
     private Localizacao fkLocalizacao;
 
+    public Pessoa() {
+    }
+
+    public Pessoa(Integer pkPessoa) {
+        this.pkPessoa = pkPessoa;
+    }
+
+    public Pessoa(Integer pkPessoa, String nome, Date dataNascimento, String numeroDoBi, String nif) {
+        this.pkPessoa = pkPessoa;
+        this.nome = nome;
+        this.dataNascimento = dataNascimento;
+        this.numeroDoBi = numeroDoBi;
+        this.nif = nif;
+    }
+
+    public Integer getPkPessoa() {
+        return pkPessoa;
+    }
+
+    public void setPkPessoa(Integer pkPessoa) {
+        this.pkPessoa = pkPessoa;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Date getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(Date dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public String getNumeroDoBi() {
+        return numeroDoBi;
+    }
+
+    public void setNumeroDoBi(String numeroDoBi) {
+        this.numeroDoBi = numeroDoBi;
+    }
+
+    public String getNif() {
+        return nif;
+    }
+
+    public void setNif(String nif) {
+        this.nif = nif;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public Localizacao getFkLocalizacao() {
+        return fkLocalizacao;
+    }
+
+    public void setFkLocalizacao(Localizacao fkLocalizacao) {
+        this.fkLocalizacao = fkLocalizacao;
+    }
+
     @Override
     public String toString() {
-        return "Pessoa{" +
-                "pkPessoa=" + pkPessoa +
-                ", nome='" + nome + '\'' +
-                ", dataNascimento=" + dataNascimento +
-                ", numeroDoBi='" + numeroDoBi + '\'' +
-                ", nif='" + nif + '\'' +
-                ", sexo='" + sexo + '\'' +
-                ", fkLocalizacao=" + fkLocalizacao +
-                '}';
+        return "Pessoa{" + "pkPessoa=" + pkPessoa + ", nome=" + nome + ", dataNascimento=" + dataNascimento + ", numeroDoBi=" + numeroDoBi + ", nif=" + nif + ", sexo=" + sexo + ", fkLocalizacao=" + fkLocalizacao + '}';
     }
+
+
+    
 }

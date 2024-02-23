@@ -106,7 +106,7 @@ implements TransferenciaService {
         transferenciaPOJO.setIbanDestinatario(transferencia.getIbanDestinatario());
         transferenciaPOJO.setMontante(transferencia.getMontante());
         transferenciaPOJO.setEstadoTransferencia(transferencia.getEstadoTransferencia());
-        transferenciaPOJO.setFkContaBancariaOrigem(transferencia.getFkContaBancariaOrigem().getPkContaBancaria());
+        transferenciaPOJO.setibanOrigem(transferencia.getIbanOrigem());
         transferenciaPOJO.setCodigoTransferencia(transferencia.getCodigoTransferencia());
 
         return transferenciaPOJO;
@@ -132,14 +132,11 @@ implements TransferenciaService {
 
     public void fillingTransactionFields(Transferencia transferencia, String ibanOrigem){
 
-        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(ibanOrigem);
-        contaBancaria.getFkCliente().setUsersList(new ArrayList<>());
-        contaBancaria.getFkCliente().setUsersList(new ArrayList<>());
 
         transferencia.setDatahora(formattingDateTime());
         transferencia.setEstadoTransferencia("Realizado");
         transferencia.setTipoTransferencia("Transferencia Intrabancaria");
-        transferencia.setFkContaBancariaOrigem(contaBancaria);
+        transferencia.setIbanOrigem(ibanOrigem);
     }
 
 
@@ -185,12 +182,13 @@ implements TransferenciaService {
 
     public void builderTransferenciaToTrasnferenciaComponent(Transferencia transferencia, TransferenciaComponent transferenciaComponent )
             throws ParseException {
+        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(transferencia.getIbanOrigem());
         Map<String, String> component = new HashMap<>();
         component.put("descricao",transferencia.getDescricao());
         component.put("montante","" +transferencia.getMontante());
         component.put("ibanDestinatario",transferencia.getIbanDestinatario());
         component.put("datahora", "" +transferencia.getDatahora());
-        component.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem().getNumeroDeConta());
+        component.put("fkContaBancariaOrigem",""+contaBancaria.getNumeroDeConta());
         component.put("estadoTransferencia","REALIZADA COM SUCESSO");
         component.put("tipoTransferencia",transferencia.getTipoTransferencia());
         component.put("codigoTransferencia",transferencia.getCodigoTransferencia());
@@ -214,8 +212,8 @@ implements TransferenciaService {
         return transferenciaRepository.findAllDesc();
     }
 
-    public List<Transferencia> findAllTransacoesDebitadas(Integer fkContaBancariaOrigem){
-        return  transferenciaRepository.findAllTransacoesDebitadas(fkContaBancariaOrigem);
+    public List<Transferencia> findAllTransacoesDebitadas(String ibanOrigem){
+        return  transferenciaRepository.findAllTransacoesDebitadas(ibanOrigem);
     }
 
     public List<Transferencia> findAllTransacoesCreditadas(String ibanDestino){
@@ -263,7 +261,7 @@ implements TransferenciaService {
         transferencia.setMontante(new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante")));
         transferencia.setDatahora(localDateTime);
         transferencia.setIbanDestinatario(transferenciaComponent.getTransferenciaResponse().get("ibanDestinatario"));
-        transferencia.setFkContaBancariaOrigem(contaBancaria);
+        transferencia.setIbanOrigem(contaBancaria.getIban());
 
         transferencia.setTipoTransferencia(transferenciaComponent.getTransferenciaResponse().get("tipoTransferencia"));
         transferencia.setEstadoTransferencia("REALIZADA COM SUCESSO");
