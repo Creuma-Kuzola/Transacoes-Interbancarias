@@ -1,0 +1,24 @@
+
+security:
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET}
+
+server:
+  port: 8082
+  error:
+    include-stacktrace: never
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/transferencia_bd
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+
