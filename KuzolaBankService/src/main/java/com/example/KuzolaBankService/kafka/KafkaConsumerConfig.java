@@ -210,7 +210,6 @@ public class KafkaConsumerConfig
 
         if(transferenciaResponse.getStatus() == true)
         {
-
             messageT.put("message","Transferência efectuada com sucesso!");
             messageT.put("status","true");
             transferenciaMessage.setMessage(messageT);

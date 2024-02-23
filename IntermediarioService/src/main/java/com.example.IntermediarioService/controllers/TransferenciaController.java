@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/transferencia")
 public class TransferenciaController extends BaseController {
+
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
 
@@ -62,27 +63,9 @@ public class TransferenciaController extends BaseController {
         Optional<Transferencia> consulta = this.transferenciaServiceImpl.findById(id);
         if (consulta.isPresent())
         {
-            return this.ok("TransferenciaDto encontrada com sucesso.", consulta.get());
+            return this.ok("Transferencia encontrada com sucesso.", consulta.get());
         }
-        return this.naoEncontrado("TransferenciaDto não encontrada", null);
-    }
-
-    public String criarStrToJson(TransferenciaPOJO transferenciaPOJO)
-    {
-        String str = "{\n"
-                + "  \"pkTransferencia\": " + transferenciaPOJO.getPkTransferencia() + ",\n"
-                + "   \"descricao\": \"" +  transferenciaPOJO.getDescricao() + "\",\n"
-                + "    \"montante\": " + transferenciaPOJO.getMontante() + ",\n"
-                + "    \"ibanDestinatario\": \"" + transferenciaPOJO.getIbanDestinatario() + "\",\n"
-                + "    \"datahora\":\"" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferenciaPOJO.getDatahora()) + "\",\n"
-                + "    \"fkContaBancariaOrigem\": " + transferenciaPOJO.getFkContaBancariaOrigem() + ",\n"
-                + "    \"tipoTransferencia\": \"" + transferenciaPOJO.getTipoTransferencia() + "\",\n"
-                + "    \"estadoTransferencia\": \"" + transferenciaPOJO.getEstadoTransferencia() + "\",\n"
-                + "    \"codigoTransferencia\": \"" + transferenciaPOJO.getCodigoTransferencia() + "\",\n"
-                + "    \"bancoUdentifier\":"+transferenciaPOJO.getBancoUdentifier()+"\n"
-                + "}";
-
-        return str;
+        return this.naoEncontrado("Transferencia não encontrada", null);
     }
 
     @PostMapping("/publishTransferencia")
@@ -96,19 +79,19 @@ public class TransferenciaController extends BaseController {
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
-        return this.created("TransferenciaDto adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
+        return this.created("Transferencia adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseBody> deleteTransferencia(@PathVariable("id") Integer id)
     {
-        return this.ok("TransferenciaDto eliminada com sucesso.", this.transferenciaServiceImpl.eliminar(id));
+        return this.ok("Transferencia eliminada com sucesso.", this.transferenciaServiceImpl.eliminar(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseBody> updateTransferencia(@PathVariable("id") Integer id, @RequestBody Transferencia transferencia)
     {
-        return this.ok("TransferenciaDto editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
+        return this.ok("Transferencia editada com sucesso.", (Transferencia) transferenciaServiceImpl.editar(id, transferencia));
     }
 
     @PostMapping("/response2")
@@ -128,4 +111,5 @@ public class TransferenciaController extends BaseController {
         System.out.println(" Resposta envida com sucesso wakanda bank! " +bancoComponent.geBancoComponent().get("UUID"));
         return  ResponseEntity.ok("Resposta envida com sucesso! para o wakanda bank" +data) ;
     }
+
 }
