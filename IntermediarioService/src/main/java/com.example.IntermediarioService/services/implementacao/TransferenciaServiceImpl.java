@@ -82,6 +82,12 @@ implements TransferenciaService{
         return date;
     }
 
+    public LocalDateTime convertingDateIntoLocalDateTime( Date date){
+
+        LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        return ldt;
+    }
+
     public Transferencia convertingIntoTransferencia(TransferenciaPOJOEmis transferenciaPOJOEmis){
 
         Transferencia transferencia = new Transferencia();
@@ -109,7 +115,7 @@ implements TransferenciaService{
 
     }
 
-    public boolean isTransferenciaInterbancariaWakandaBank(String ibanOrigem, String ibanDestino){
+    public boolean isTransferenciaIntrabancariaWakandaBank(String ibanOrigem, String ibanDestino){
 
         return isWakandaBankIban(ibanOrigem) && isWakandaBankIban(ibanDestino);
 
@@ -126,6 +132,15 @@ implements TransferenciaService{
             return true;
         }
         return false;
+    }
+
+
+    public void fillingTransactionFields(Transferencia transferencia, String ibanOrigem){
+
+        transferencia.setDataHora(new Date());
+        //transferencia.setEstadoTransferencia("Realizado");
+        transferencia.setTipoTransferencia("Transferencia Intrabancaria");
+        transferencia.setibanOrigem(ibanOrigem);
     }
 
 

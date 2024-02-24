@@ -18,6 +18,7 @@ import java.util.Optional;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,7 +53,6 @@ public class TransferenciaController extends BaseController {
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencias()
     {
-        
         List<Transferencia> lista = transferenciaServiceImpl.findAll();
         return this.ok("Transferencias encontradas com sucesso!", lista);
     }
@@ -77,9 +77,14 @@ public class TransferenciaController extends BaseController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
-    {
-        return this.created("Transferencia adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
+    public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia) throws JsonProcessingException {
+
+        CustomJsonPojos customJsonPojos = new CustomJsonPojos();
+        System.out.println("Transferencia no metodo"+ transferencia);
+        transferenciaServiceImpl.fillingTransactionFields(transferencia, transferencia.getibanOrigem());
+        kafkaTransferenciaProducer.sendMessageTransferenciaInEmis(customJsonPojos.criarStrToJson(transferencia).toString());
+        //return this.created("Transferencia adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
+        return ok("sjdfkjggh", transferencia);
     }
 
     @DeleteMapping("/{id}")
