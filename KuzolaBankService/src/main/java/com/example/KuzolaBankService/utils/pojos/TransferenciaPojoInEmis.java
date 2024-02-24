@@ -1,21 +1,33 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.example.KuzolaBankService.utils.pojos;
 
-import com.example.KuzolaBankService.entities.Transferencia;
+import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class TransferenciaPOJO {
+/**
+ *
+ * @author jussyleitecode
+ */
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class TransferenciaPojoInEmis
+{
+    private final String kuzolaBankIdentificador = "1003";
+    private final String wakandaBankIdentificador = "";
+
     @JsonProperty("pkTransferencia")
     private Integer pkTransferencia;
 
@@ -28,10 +40,13 @@ public class TransferenciaPOJO {
     @JsonProperty("ibanDestinatario")
     private String ibanDestinatario;
 
-    @JsonProperty("dataHora")
+    @JsonProperty("datahora")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime dataHora;
-    
+    private LocalDateTime datahora;
+
+    @JsonProperty("ibanOrigem")
+    private String ibanOrigem;
+
     @JsonProperty("tipoTransferencia")
     private String tipoTransferencia;
 
@@ -41,11 +56,24 @@ public class TransferenciaPOJO {
     @JsonProperty("codigoTransferencia")
     private String codigoTransferencia;
 
-    @JsonProperty("ibanOrigem")
-    private String ibanOrigem;
 
 
-    // Getters and setters
+    public static TransferenciaPojoInEmis convertingIntoTransferenciaPojo(TransferenciaPojoInEmis transferenciaPOJO){
+
+        TransferenciaPojoInEmis transferenciaPojo = new TransferenciaPojoInEmis();
+
+        transferenciaPojo.setCodigoTransferencia(transferenciaPOJO.getCodigoTransferencia());
+        transferenciaPojo.setEstadoTransferencia(transferenciaPOJO.getEstadoTransferencia());
+        transferenciaPojo.setPkTransferencia(transferenciaPOJO.getPkTransferencia());
+        transferenciaPojo.setDatahora(transferenciaPOJO.getDatahora());
+        transferenciaPojo.setIbanDestinatario(transferenciaPOJO.getIbanDestinatario());
+        transferenciaPojo.setibanOrigem(transferenciaPOJO.getibanOrigem());
+        transferenciaPojo.setMontante(transferenciaPOJO.getMontante());
+        return transferenciaPojo;
+    }
+
+
+
     public Integer getPkTransferencia() {
         return pkTransferencia;
     }
@@ -79,11 +107,11 @@ public class TransferenciaPOJO {
     }
 
     public LocalDateTime getDatahora() {
-        return dataHora;
+        return datahora;
     }
 
     public void setDatahora(LocalDateTime datahora) {
-        this.dataHora = datahora;
+        this.datahora = datahora;
     }
 
     public String getibanOrigem() {
@@ -117,29 +145,4 @@ public class TransferenciaPOJO {
     public void setCodigoTransferencia(String codigoTransferencia) {
         this.codigoTransferencia = codigoTransferencia;
     }
-
-    /*public Transferencia convertingIntoTransferencia(TransferenciaPOJO transferenciaPOJO){
-        Transferencia transferencia = new Transferencia();
-        transferencia.
-    }*/
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"pkTransferencia\": ").append(pkTransferencia).append(",");
-        sb.append("\"descricao\": \"").append(descricao).append("\",");
-        sb.append("\"montante\": ").append(montante).append(",");
-        sb.append("\"ibanDestinatario\": \"").append(ibanDestinatario).append("\",");
-        sb.append("\"datahora\": \"").append(dataHora).append("\",");
-        sb.append("\"ibanOrigem\": ").append(ibanOrigem).append(",");
-        sb.append("\"tipoTransferencia\": \"").append(tipoTransferencia).append("\",");
-        sb.append("\"estadoTransferencia\": \"").append(estadoTransferencia).append("\",");
-        sb.append("\"codigoTransferencia\": \"").append(codigoTransferencia).append("\"");
-        sb.append("}");
-        return sb.toString();
-    }
-
-
-
 }

@@ -7,6 +7,8 @@ package com.example.IntermediarioService.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -37,15 +39,20 @@ public class Transferencia implements Serializable {
     @Basic(optional = false)
     @Column(name = "data_hora", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
     private Date dataHora;
     @Column(name = "estado_transferencia", length = 2147483647)
+    @JsonIgnore
     private String estadoTransferencia;
     @Column(length = 2147483647)
+    @JsonIgnore
     private String canal;
     @Column(name = "tipo_transferencia", length = 2147483647)
+    @JsonIgnore
     private String tipoTransferencia;
     @JoinColumn(name = "fk_banco", referencedColumnName = "pk_banco")
     @ManyToOne
+    @JsonIgnore
     private Banco fkBanco;
 
     @Column(name = "iban_origem", length = 2147483647)

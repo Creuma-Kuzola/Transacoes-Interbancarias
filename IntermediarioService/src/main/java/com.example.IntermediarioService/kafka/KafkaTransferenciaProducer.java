@@ -6,13 +6,18 @@ package com.example.IntermediarioService.kafka;
 
 import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.entities.Banco;
+import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.kafka.KafkaConsumerConfig;
 import com.example.IntermediarioService.services.implementacao.BancoServiceImpl;
+import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +46,9 @@ public class KafkaTransferenciaProducer
     private BancoComponent bancoComponent;
 
     private KafkaConsumerConfig kafkaConsumerConfig;
+
+    @Autowired
+    TransferenciaServiceImpl transferenciaServiceImpl;
 
     private Integer bankUnikeIdentifiedNumber;
     public KafkaTransferenciaProducer(KafkaTemplate<String, String> kafkaTemplate, KafkaConsumerConfig kafkaConsumerConfig)
@@ -74,12 +82,42 @@ public class KafkaTransferenciaProducer
         kafkaTemplate.send(message);
     }
 
-    public  void sendMessageTransferenciaInEmis(String transferencia){
+    public  void sendMessageTransferenciaInEmis(String transferencia) throws JsonProcessingException {
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        Transferencia transferenciaDes = objectMapper.readValue(transferencia, Transferencia.class);
 
+        System.out.println("TransferenciaJson"+ transferencia);
+        System.out.println("TransferenciaDes"+ transferenciaDes);
+        if(transferenciaServiceImpl.isTransferenciaInterbancariaKuzolaBank(transferenciaDes.getibanOrigem(), transferenciaDes.getIbanDestinatario()))
+        {
+            Message<String> message = MessageBuilder
+                    .withPayload(transferencia)
+                    .setHeader(KafkaHeaders.TOPIC, "transf-intrabancarias-kb-emis")
+                    .build();
 
+            kafkaTemplate.send(message);
 
+        }
+        else if(transferenciaServiceImpl.isTransferenciaIntrabancariaWakandaBank(transferenciaDes.getibanOrigem(), transferenciaDes.getIbanDestinatario()))
+        {
+            Message<String> message = MessageBuilder
+                    .withPayload(transferencia)
+                    .setHeader(KafkaHeaders.TOPIC, "transf-intrabancarias-wb-emis")
+                    .build();
 
+            kafkaTemplate.send(message);
+        }
+        else if(transferenciaServiceImpl.isTransferenciaInterBancaria(transferenciaDes.getibanOrigem(),transferenciaDes.getIbanDestinatario())) {
+
+            Message<String> message = MessageBuilder
+                    .withPayload(transferencia)
+                    .setHeader(KafkaHeaders.TOPIC, "tr-interbancaria-wbkb-emis")
+                    .build();
+
+            kafkaTemplate.send(message);
+        }
 
     }
 

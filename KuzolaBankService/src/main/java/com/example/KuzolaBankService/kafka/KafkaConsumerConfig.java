@@ -169,7 +169,7 @@ public class KafkaConsumerConfig
         LOGGER.info(String.format("Message kuzola received response transferencia status from transferencia topic-> %s", message.toString()));
     }
 
-    @KafkaListener(topics ="tr-intrabancarias-kb", groupId = "kuzolaGroup")
+    @KafkaListener(topics = {"tr-intrabancarias-kb", "transf-intrabancarias-kb-emis"}, groupId = "kuzolaGroup")
     public void consumeMessageTransferenciasIntrabancarias(String message)  {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -246,7 +246,5 @@ public class KafkaConsumerConfig
     {
         LOGGER.info(String.format("Message received Emis -> %s", message.toString()));
     }*/
-
-
 
 }
