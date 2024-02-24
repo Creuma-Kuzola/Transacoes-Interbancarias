@@ -5,22 +5,31 @@
 package com.example.IntermediarioService.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
+import com.example.IntermediarioService.utils.pojos.UserRole;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
 /**
  *
  * @author creuma
  */
-@Entity
-@Table(catalog = "transferencia_bd", schema = "public")
-@NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
-    @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
-    @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM User u WHERE u.login = :login"),
-    @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
-    @NamedQuery(name = "User.findByRole", query = "SELECT u FROM User u WHERE u.role = :role")})
-public class User implements Serializable {
+@Table()
+@Entity(name = "users")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
+public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -32,8 +41,8 @@ public class User implements Serializable {
     private String login;
     @Column(length = 2147483647)
     private String password;
-    @Column(length = 2147483647)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
     @JoinColumn(name = "fk_cliente", referencedColumnName = "pk_cliente")
     @ManyToOne
     private Cliente fkCliente;
@@ -41,15 +50,24 @@ public class User implements Serializable {
     @ManyToOne
     private Funcionario fkFuncionario;
 
-    public User() {
-    }
-
     public User(Integer id) {
         this.id = id;
     }
 
-    public Integer getId() {
-        return id;
+    public User(String login, String password, UserRole role, Cliente fkCliente)
+    {
+        this.login = login;
+        this.password = password;
+        this.role = role;
+        this.fkCliente = fkCliente;
+    }
+
+    public User(String login, String password, UserRole role, Funcionario fkFuncionario) {
+        this.login = login;
+        this.password = password;
+        this.role = role;
+        this.fkFuncionario = fkFuncionario;
+        this.fkCliente = fkCliente;
     }
 
     public void setId(Integer id) {
@@ -64,19 +82,15 @@ public class User implements Serializable {
         this.login = login;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
@@ -96,29 +110,43 @@ public class User implements Serializable {
         this.fkFuncionario = fkFuncionario;
     }
 
+
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == UserRole.ADMIN)
+        {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        }
+        return List.of(new SimpleGrantedAuthority("ROLE_CLIENTE"));
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof User)) {
-            return false;
-        }
-        User other = (User) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
-    public String toString() {
-        return "com.example.TransferenciaService.entities.User[ id=" + id + " ]";
+    public boolean isAccountNonLocked() {
+        return true;
     }
-    
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

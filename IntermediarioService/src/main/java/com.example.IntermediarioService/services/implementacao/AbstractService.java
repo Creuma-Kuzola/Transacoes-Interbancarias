@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Service
 public abstract class AbstractService<E, K> 
 {
-    @Autowired
+    @Autowired(required=true)
     protected JpaRepository<E, K>  repository;
 
     public Repository<E, K> getRepository() {

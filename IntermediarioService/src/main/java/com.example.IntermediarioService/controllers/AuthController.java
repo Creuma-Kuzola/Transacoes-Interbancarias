@@ -1,36 +1,22 @@
-package com.example.KuzolaBankService.controllers;
+package com.example.IntermediarioService.controllers;
 
-import com.example.KuzolaBankService.config.auth.TokenProvider;
-import com.example.KuzolaBankService.config.component.UserInfo;
-import com.example.KuzolaBankService.dto.JwtDto;
-import com.example.KuzolaBankService.dto.SignInDto;
-import com.example.KuzolaBankService.dto.SignUpDto;
-import com.example.KuzolaBankService.entities.ContaBancaria;
-import com.example.KuzolaBankService.entities.User;
-import com.example.KuzolaBankService.repositories.ClienteRepository;
-import com.example.KuzolaBankService.repositories.ContaBancariaRepository;
-import com.example.KuzolaBankService.repositories.UserRepository;
-import com.example.KuzolaBankService.services.implementacao.AuthService;
-import jakarta.validation.Valid;
+import com.example.IntermediarioService.config.TokenProvider;
+import com.example.IntermediarioService.dto.JwtDto;
+import com.example.IntermediarioService.dto.SignInDto;
+import com.example.IntermediarioService.dto.SignUpDto;
+import com.example.IntermediarioService.entities.User;
+import com.example.IntermediarioService.repositories.UserRepository;
+import com.example.IntermediarioService.services.implementacao.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/intermediario/auth")
 public class AuthController
 {
 
@@ -40,17 +26,22 @@ public class AuthController
     private AuthService service;
     @Autowired
     private TokenProvider tokenService;
-    @Autowired
-    UserInfo userInfo;
 
-    @Autowired
-    ContaBancariaRepository contaBancarioRepository;
+   // @Autowired
+   // ContaBancariaRepository contaBancarioRepository;
 
     @Autowired
     UserRepository userRepository;
 
+
+    @GetMapping
+    public String teste()
+    {
+        return "/api/intermediario/auth/";
+    }
+
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody @Valid SignUpDto data)
+    public ResponseEntity<?> signUp(@RequestBody @Validated SignUpDto data)
     {
         //System.out.println("AuthController.pkFuncionario:"+data.fkFuncionario().getPkFuncionario());
         service.signUp(data);
@@ -58,7 +49,7 @@ public class AuthController
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtDto> signIn(@RequestBody @Valid SignInDto data)
+    public ResponseEntity<JwtDto> signIn(@RequestBody @Validated SignInDto data)
     {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
 
@@ -66,6 +57,8 @@ public class AuthController
 
         var accessToken = tokenService.generateAccessToken((User) authUser.getPrincipal());
         JwtDto jwtdto = null;
+
+       /* jwtdto = new JwtDto(accessToken, "", null);
         if (accessToken != " " && ((User) authUser.getPrincipal()).getRole().getValue().equals("admin") == false)
         {
             User user = (User) authUser.getPrincipal();
@@ -78,11 +71,12 @@ public class AuthController
         }
        else {
             jwtdto = new JwtDto(accessToken, "", null);
-        }
+        }  */
+        jwtdto = new JwtDto(accessToken, "", null);
         return ResponseEntity.ok(jwtdto);
     }
 
-    private void saveUserInfoTemporary(ContaBancaria contaBancaria, String username) {
+   /* private void saveUserInfoTemporary(ContaBancaria contaBancaria, String username) {
         HashMap<String, String> map = new HashMap<>();
 
         map.put("username", username);
@@ -93,6 +87,6 @@ public class AuthController
 
         System.out.println("IBAN:"+userInfo.getUserInfo().get("iban"));
         System.out.println("numeroDaConta:"+userInfo.getUserInfo().get("accountNumber"));
-    }
+    } */
 
 }

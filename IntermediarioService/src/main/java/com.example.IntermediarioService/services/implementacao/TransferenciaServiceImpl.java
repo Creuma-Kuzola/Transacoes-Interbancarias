@@ -8,7 +8,7 @@ import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.services.TransferenciaService;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJOEmis;
-import com.example.IntermediarioService.utils.pojos.TransferenciaPojo;
+//import com.example.IntermediarioService.utils.pojos.TransferenciaPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.IntermediarioService.services.implementacao.AbstractService;
