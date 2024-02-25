@@ -71,7 +71,7 @@ public class TransferenciaPojo
         transferenciaPojo.setDatahora(TransferenciaServiceImpl.formattingDateTime());
         transferenciaPojo.setIbanDestinatario(transferenciaPOJO.getIbanDestinatario());
         transferenciaPojo.setibanOrigem(transferenciaPOJO.getFkContaBancariaOrigem().toString());
-        transferenciaPojo.setMontante(new BigDecimal(transferenciaPOJO.getMontante()));
+        transferenciaPojo.setMontante(transferenciaPOJO.getMontante());
         return transferenciaPojo;
     }
 

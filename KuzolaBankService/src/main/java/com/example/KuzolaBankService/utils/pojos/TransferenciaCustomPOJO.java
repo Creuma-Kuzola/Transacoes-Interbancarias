@@ -39,6 +39,7 @@ public class TransferenciaCustomPOJO
     private String estadoTransferencia;
     private String codigoTransferencia;
     private Integer bancoUdentifier;
+    private String ibanOrigem;
 
     public Integer getPkTransferencia() {
         return pkTransferencia;
@@ -118,6 +119,13 @@ public class TransferenciaCustomPOJO
 
     public void setBancoUdentifier(Integer bancoUdentifier) {
         this.bancoUdentifier = bancoUdentifier;
+    }
+
+    public String getIbanOrigem() {
+        return ibanOrigem;
+    }
+    public void setIbanOrigem(String ibanOrigem) {
+        this.ibanOrigem = ibanOrigem;
     }
 
     @Override

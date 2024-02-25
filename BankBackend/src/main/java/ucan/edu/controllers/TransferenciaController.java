@@ -106,22 +106,14 @@ public class TransferenciaController extends BaseController
         }
         else if (responseVerification == 2) {
             if (isSaldoEnought != -1) {
-                transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
-                transferencia.setDatahora(new Date());
-                transferencia.setBancoUdentifier(4040);
-                transferencia.setCodigoTransferencia(""+transferenciaServiceImpl.getCondigoTransferencia());
-                transferencia.setEstadoTransferencia("EM PROCESSAMENTO");
-                transferencia.setTipoTransferencia("INTERBANCARIA");
 
-
-
-                saveTransferComponent(transferencia);
+                transferencia = transferenciaServiceImpl.fillingTransferenciaFields(transferencia);
+                CustomJsonPojos.saveTransferComponent(transferencia, transferenciaComponent);
                 String data = CustomJsonPojos.criarStrToJson(transferencia);
                 KafkaTransferenciaProducer.sendMessage(data);
                 try {
                     Thread.sleep(9000);
                     return this.ok(""+transferenciaMessage.getMessage().get("message"),transferenciaComponent.getTransferenciaResponse().values()) ;
-
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -135,25 +127,7 @@ public class TransferenciaController extends BaseController
     }
 
     //"datahora":"2024-02-10 16:11:20",
-    private void saveTransferComponent(TransferenciaPOJO transferencia)  {
-        Map<String, String> transferenciaItems = new HashMap<>();
 
-        transferenciaItems.put("descricao", transferencia.getDescricao());
-        transferenciaItems.put("montante", transferencia.getMontante().toString());
-        transferenciaItems.put("ibanDestinatario", transferencia.getIbanDestinatario());
-        transferenciaItems.put("datahora","" +
-                "" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferencia.getDatahora()));
-        transferenciaItems.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem());
-        transferenciaItems.put("tipoTransferencia", "INTERBANCARIA");
-        transferenciaItems.put("estadoTransferencia", "EM PROCESSAMENTO");
-        transferenciaItems.put("codigoTransferencia",""+transferenciaServiceImpl.getCondigoTransferencia());
-        transferenciaItems.put("bancoUdentifier",""+transferencia.getCodigoTransferencia());
-
-        transferenciaComponent.setTransferenciaResponse(transferenciaItems);
-
-
-        System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
-    }
 
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencia()

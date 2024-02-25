@@ -5,12 +5,14 @@
 package com.example.IntermediarioService.controllers;
 
 import com.example.IntermediarioService.component.BancoComponent;
+import com.example.IntermediarioService.component.TransferenciaPojoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.https.utils.ResponseBody;
 import com.example.IntermediarioService.kafka.KafkaTransferenciaProducer;
 import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
@@ -41,13 +43,13 @@ public class TransferenciaController extends BaseController {
 
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
-
     @Autowired
     BancoComponent bancoComponent;
-
     @Autowired
     KafkaTransferenciaProducer kafkaTransferenciaProducer;
 
+    @Autowired
+    TransferenciaPojoComponent transferenciaPOJOComponent;
     @Autowired
     TransferenciaResponseComponent transferenciaResponseComponent;
     @GetMapping
@@ -71,6 +73,13 @@ public class TransferenciaController extends BaseController {
     @PostMapping("/publishTransferencia")
     public ResponseEntity<String> publishTransferencia(@RequestBody TransferenciaPOJO transferencia)
     {
+        try
+        {
+            transferencia = CustomJsonPojos.convertToTransferenciaPOJO(transferenciaPOJOComponent);
+        } catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
         String data = CustomJsonPojos.criarStrToJson(transferencia);
         kafkaTransferenciaProducer.sendMessage(data);
         return ResponseEntity.ok("Transferencia envida com sucesso no topic");
@@ -102,6 +111,7 @@ public class TransferenciaController extends BaseController {
     @PostMapping("/response")
     public ResponseEntity<String> sendResponseTransferencia(@RequestBody TransferenciaResponse response)
     {
+        response = CustomJsonPojos.componenteResponseToResponse(transferenciaResponseComponent);
         String data =  CustomJsonPojos.TransferenciaResponse(response);
         this.kafkaTransferenciaProducer.sendMessageTransferenciaResponse(data);
         System.out.println(" Resposta envida com sucesso wakanda bank! " +bancoComponent.geBancoComponent().get("UUID"));
@@ -111,6 +121,7 @@ public class TransferenciaController extends BaseController {
     @PostMapping("/responseTokuzola")
     public ResponseEntity<String> sendResponseTransferencia2(@RequestBody TransferenciaResponse response)
     {
+        response = CustomJsonPojos.componenteResponseToResponse(transferenciaResponseComponent);
         String data =  CustomJsonPojos.TransferenciaResponse(response);
         this.kafkaTransferenciaProducer.sendMessageTransferenciaResponse2(data);
         System.out.println(" Resposta envida com sucesso wakanda bank! " +bancoComponent.geBancoComponent().get("UUID"));

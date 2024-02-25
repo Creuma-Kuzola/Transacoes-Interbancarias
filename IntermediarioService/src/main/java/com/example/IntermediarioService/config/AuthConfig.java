@@ -33,6 +33,11 @@ public class AuthConfig
                 .requestMatchers(HttpMethod.POST, "/api/intermediario/auth/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/session").permitAll()
                         .requestMatchers(HttpMethod.POST.GET,"/deep").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/transferencia/publishTransferencia").hasAnyRole("ADMIN","CLIENTE")
+                        .requestMatchers(HttpMethod.POST,"/transferencia").hasAnyRole("ADMIN","CLIENTE")
+                        .requestMatchers(HttpMethod.POST,"/transferencia/response").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/transferencia/responseTokuzola").hasRole("ADMIN")
+
 
                 .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -53,7 +53,10 @@ public class TransferenciaPOJO
     @JsonProperty("codigoTransferencia")
     private String codigoTransferencia;
 
+    @JsonProperty("bancoUdentifier")
     private Integer bancoUdentifier;
+    @JsonProperty("ibanOrigem")
+    private String ibanOrigem;
 
     public static Transferencia convertingIntoTransferencia(TransferenciaPOJO transferenciaPOJO){
         System.out.println("Iban Destina em transf: "+ transferenciaPOJO.getIbanDestinatario());
@@ -143,6 +146,14 @@ public class TransferenciaPOJO
 
     public void setBancoUdentifier(Integer bancoUdentifier) {
         this.bancoUdentifier = bancoUdentifier;
+    }
+
+    public String getIbanOrigem() {
+        return ibanOrigem;
+    }
+
+    public void setIbanOrigem(String ibanOrigem) {
+        this.ibanOrigem = ibanOrigem;
     }
 
     @Override

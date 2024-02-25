@@ -81,6 +81,19 @@ implements TransferenciaService{
         transferencia.setTipoTransferencia("Transferencia Intrabancaria");
     }
 
+    public  TransferenciaPOJO fillingTransferenciaFields(TransferenciaPOJO transferencia)
+    {
+
+        transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
+        transferencia.setDatahora(new Date());
+        transferencia.setBancoUdentifier(4040);
+        transferencia.setIbanOrigem(userInfo.getUserInfo().get("iban"));
+        transferencia.setCodigoTransferencia(""+this.getCondigoTransferencia());
+        transferencia.setEstadoTransferencia("EM PROCESSAMENTO");
+        transferencia.setTipoTransferencia("INTERBANCARIA");
+        return transferencia;
+    }
+
     public TransferenciaPOJO convertingIntoTransferenciaPOJO(Transferencia transferencia, String IbanOrigem)
     {
         TransferenciaPOJO transferenciaPOJO = new TransferenciaPOJO();

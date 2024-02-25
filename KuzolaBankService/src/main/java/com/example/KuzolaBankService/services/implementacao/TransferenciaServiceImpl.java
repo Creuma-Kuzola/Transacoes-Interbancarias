@@ -172,6 +172,7 @@ implements TransferenciaService {
         transferenciaItems.put("ibanDestinatario", transferencia.getIbanDestinatario());
         transferenciaItems.put("datahora","" +
                 "" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferencia.getDatahora()));
+        transferenciaItems.put("ibanOrigem",transferencia.getIbanOrigem());
         transferenciaItems.put("fkContaBancariaOrigem",""+transferencia.getFkContaBancariaOrigem());
         transferenciaItems.put("tipoTransferencia", transferencia.getTipoTransferencia());
         transferenciaItems.put("estadoTransferencia", transferencia.getEstadoTransferencia());
@@ -190,6 +191,7 @@ implements TransferenciaService {
         component.put("ibanDestinatario",transferencia.getIbanDestinatario());
         component.put("datahora", "" +transferencia.getDatahora());
         component.put("fkContaBancariaOrigem",""+contaBancaria.getNumeroDeConta());
+        component.put("ibanOrigem",""+transferencia.getIbanOrigem());
         component.put("estadoTransferencia","REALIZADA COM SUCESSO");
         component.put("tipoTransferencia",transferencia.getTipoTransferencia());
         component.put("codigoTransferencia",transferencia.getCodigoTransferencia());
@@ -258,6 +260,7 @@ implements TransferenciaService {
         BigInteger numeroDeConta = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
         ContaBancaria contaBancaria = contaBancariaRepository.findByNumeroDeConta(numeroDeConta);
 
+
        /* if (transferenciaComponent.getTransferenciaResponse().get("bancoUdentifie").equals("1003"))
         {
             BigInteger numeroDeConta = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
@@ -273,7 +276,7 @@ implements TransferenciaService {
         transferencia.setMontante(new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante")));
         transferencia.setDatahora(localDateTime);
         transferencia.setIbanDestinatario(transferenciaComponent.getTransferenciaResponse().get("ibanDestinatario"));
-        transferencia.setIbanOrigem(contaBancaria.getIban());
+        transferencia.setIbanOrigem(transferenciaComponent.getTransferenciaResponse().get("ibanOrigem"));
 
         transferencia.setTipoTransferencia(transferenciaComponent.getTransferenciaResponse().get("tipoTransferencia"));
         transferencia.setEstadoTransferencia("REALIZADA COM SUCESSO");
@@ -282,6 +285,7 @@ implements TransferenciaService {
         if (transferenciaComponent.getTransferenciaResponse().get("bancoUdentifier").equals("1003"))
         {
             transferencia.setOperacao("ENVIADA");
+            return transferencia;
         }
         transferencia.setOperacao("RECEBIDA");
         return transferencia;

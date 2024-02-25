@@ -219,9 +219,11 @@ public class KafkaTransferenciaConsumer
         transferencia.setTipoTransferencia(transferenciaComponent.getTransferenciaResponse().get("tipoTransferencia"));
         transferencia.setEstadoTransferencia("Realizada com sucesso");
         transferencia.setCodigoTransferencia(transferenciaComponent.getTransferenciaResponse().get("codigoTransferencia"));
+        transferencia.setIbanOrigem(transferenciaComponent.getTransferenciaResponse().get("ibanOrigem"));
         if (transferenciaComponent.getTransferenciaResponse().get("bancoUdentifier").equals("4040"))
         {
             transferencia.setOperacao("ENVIADA");
+            return transferencia;
         }
         transferencia.setOperacao("RECEBIDA");
         return transferencia;
