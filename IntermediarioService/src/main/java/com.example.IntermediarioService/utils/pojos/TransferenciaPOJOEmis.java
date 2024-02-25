@@ -23,7 +23,7 @@ public class TransferenciaPOJOEmis {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime datahora;
 
-    @JsonProperty("fkContaBancariaOrigem")
+    @JsonProperty("ibanOrigem")
     private String ibanOrigem;
 
     @JsonProperty("tipoTransferencia")

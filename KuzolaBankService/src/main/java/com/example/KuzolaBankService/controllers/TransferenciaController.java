@@ -83,10 +83,7 @@ public class TransferenciaController extends BaseController
     @GetMapping("/historico/debito")
     public ResponseEntity<ResponseBody> findHistoricoTransacoesDebito()
     {
-        ContaBancaria contaBancaria = new ContaBancaria();
-        contaBancaria = contaBancariaServiceImpl.findContaBancaraByIban(userInfo.getUserInfo().get("iban"));
-
-        List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesDebitadas(contaBancaria.getIban());
+        List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesDebitadas(userInfo.getUserInfo().get("iban"));
         return this.ok("Transações de Débito encontradas com sucesso!", lista);
     }
 
@@ -124,18 +121,7 @@ public class TransferenciaController extends BaseController
         {
             if (transferenciaServiceImpl.isTransferenciaInformationValid(transferencia.getIbanDestinatario(), transferencia.getMontante(), userInfo.getUserInfo().get("iban")))
             {
-                transferenciaCreated = new Transferencia();
-                transferenciaServiceImpl.fillingTransactionFields(transferencia, ibanOrigem);
-                transferenciaCreated = this.transferenciaServiceImpl.criar(transferencia);
-
-                TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferenciaCreated, ibanOrigem);
-                String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
-                String transferenciaJsonEmis =transferenciaServiceImpl.convertingTransferenciaInJsonEmis(transferenciaCreated, ibanOrigem);
-                System.out.println("Data Json" + transferenciaJson);
-
-                kafkaTransferenciaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
-                kafkaTransferenciaProducer.sendMessageTransferenciaIntraBancariaEmis(transferenciaJsonEmis.toString());
-                return this.transferenciaEfectuada(transferenciaCreated);
+                return this.transferenciaEfectuada(transferenciaServiceImpl.transferenciaIntrabancaria(transferencia, ibanOrigem));
             }
             return  this.erro("ERRO: Informação inválida");
         }
