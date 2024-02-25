@@ -23,7 +23,7 @@ public class TransferenciaPOJOEmis {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime datahora;
 
-    @JsonProperty("fkContaBancariaOrigem")
+    @JsonProperty("ibanOrigem")
     private String ibanOrigem;
 
     @JsonProperty("tipoTransferencia")
@@ -124,7 +124,7 @@ public class TransferenciaPOJOEmis {
         sb.append("\"montante\": ").append(montante).append(",");
         sb.append("\"ibanDestinatario\": \"").append(ibanDestinatario).append("\",");
         sb.append("\"datahora\": \"").append(datahora).append("\",");
-        sb.append("\"fkContaBancariaOrigem\": ").append(ibanOrigem).append(",");
+        sb.append("\"ibanOrigem\": ").append(ibanOrigem).append(",");
         sb.append("\"tipoTransferencia\": \"").append(tipoTransferencia).append("\",");
         sb.append("\"estadoTransferencia\": \"").append(estadoTransferencia).append("\",");
         sb.append("\"codigoTransferencia\": \"").append(codigoTransferencia).append("\"");

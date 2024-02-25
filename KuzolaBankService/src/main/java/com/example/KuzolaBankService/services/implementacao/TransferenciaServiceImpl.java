@@ -10,6 +10,7 @@ import com.example.KuzolaBankService.config.component.UserInfo;
 import com.example.KuzolaBankService.dto.TransferenciaDto;
 import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.enums.DetalhesBanco;
+import com.example.KuzolaBankService.kafka.KafkaTransferenciaProducer;
 import com.example.KuzolaBankService.repositories.ContaBancariaRepository;
 import com.example.KuzolaBankService.repositories.TransferenciaRepository;
 import com.example.KuzolaBankService.services.TransferenciaService;
@@ -55,6 +56,9 @@ implements TransferenciaService {
 
     @Autowired
     TransferenciaRepository transferenciaRepository;
+
+    @Autowired
+    KafkaTransferenciaProducer kafkaTransferenciaProducer;
 
     //-1, 0, or 1 as this BigDecimal is numerically less than, equal to, or greater than val.
 
@@ -216,6 +220,7 @@ implements TransferenciaService {
     }
 
     public List<Transferencia> findAllTransacoesDebitadas(String ibanOrigem){
+
         return  transferenciaRepository.findAllTransacoesDebitadas(ibanOrigem);
     }
 
@@ -291,23 +296,22 @@ implements TransferenciaService {
         return transferencia;
     }
 
-    /*public void TransferenciaIntrabancaria(Transferencia transferencia, String ibanOrigem ){
+    public Transferencia transferenciaIntrabancaria(Transferencia transferencia, String ibanOrigem ){
 
-        Transferencia transf = new Transferencia();
-        transf = transferencia;
+       Transferencia transferenciaCreated;
+        fillingTransactionFields(transferencia, ibanOrigem);
+        transferenciaCreated = this.criar(transferencia);
 
-        this.fillingTransactionFields(transf, ibanOrigem);
-        criarTransferencia(transf, ibanOrigem);
-        TransferenciaPOJO transferenciaPOJO = transferenciaServiceImpl.convertingIntoTransferenciaPOJO(transferencia);
-
+        TransferenciaPOJO transferenciaPOJO = convertingIntoTransferenciaPOJO(transferenciaCreated, ibanOrigem);
         String transferenciaJson = CustomJsonPojos.criarStrToJson(transferenciaPOJO);
+        String transferenciaJsonEmis = convertingTransferenciaInJsonEmis(transferenciaCreated, ibanOrigem);
         System.out.println("Data Json" + transferenciaJson);
 
-        transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
-        transferenciaJsonKafkaProducer.sendMessageTransferenciaIntraBancariaEmis( CustomJsonPojos.criarStrToJson (TransferenciaServiceImpl.convertingIntoTransferenciaPOJOEmis(transferenciaCreated, userInfo.getUserInfo().get("iban"))).toString());
+        kafkaTransferenciaProducer.sendMessageTransferenciaIntraBancaria(transferenciaJson.toString());
+        kafkaTransferenciaProducer.sendMessageTransferenciaIntraBancariaEmis(transferenciaJsonEmis.toString());
 
-
-    }*/
+        return transferenciaCreated;
+    }
 
 
 
