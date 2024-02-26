@@ -87,8 +87,6 @@ public class KafkaConsumerConfig
         System.out.println(":entityResponse: "+entityResponse);
     }
 
-
-
     @KafkaListener(topics = "transfer-kuzolabank", groupId = "kuzolaGroup")
     public void consumerMessageKuzola(String message)
     {
