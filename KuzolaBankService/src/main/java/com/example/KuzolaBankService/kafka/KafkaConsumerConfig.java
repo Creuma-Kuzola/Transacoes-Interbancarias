@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,8 @@ public class KafkaConsumerConfig
     @Autowired
     private TransferenciaServiceImpl transferenciaServiceImpl;
 
+   // @Autowired
+    //KafkaProducer kafkaProducer;
 
     public KafkaConsumerConfig()
     {
@@ -177,7 +180,7 @@ public class KafkaConsumerConfig
 
         try {
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
-
+            System.out.println("Transferencia POjo in Kuzola Bank"+ transferenciaPOJO.toString());
             //Optional<ContaBancaria> contaBancaria = Optional.ofNullable(contaBancariServiceImpl.findContaBancaraByIban(transferenciaPOJO.getibanOrigem()));
             contaBancariServiceImpl.debito(transferenciaPOJO.getibanOrigem(), transferenciaPOJO.getMontante());
             contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
@@ -188,7 +191,8 @@ public class KafkaConsumerConfig
                     "\n"+ "Data-Hora: "+ transferenciaPOJO.getDatahora()+ "\n"+
                     "Montante (Kz): "+ transferenciaPOJO.getMontante()+ "\n"+
                     "Estado: "+ transferenciaPOJO.getEstadoTransferencia()+ "\n"+
-                    "Iban do Destinatario: "+ transferenciaPOJO.getIbanDestinatario()
+                    "Iban do Destinatario: "+ transferenciaPOJO.getIbanDestinatario()+"\n"+
+                    "IBAn Origem: "+ transferenciaPOJO.getibanOrigem()
             );
 
         } catch (Exception e) {

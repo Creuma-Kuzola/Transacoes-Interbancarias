@@ -158,7 +158,7 @@ public class KafkaConsumerConfig
 
     }
 
-    @KafkaListener(topics = "tr-intrabancarias-kb-emis", groupId = "emisGroup")
+    @KafkaListener(topics ={"tr-intrabancarias-kb-emis", "resposta-tr-intrabancarias-kb-emis"}, groupId = "emisGroup")
     public void consumeMessageOfTransferenciaIntrabancaria(String message) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());

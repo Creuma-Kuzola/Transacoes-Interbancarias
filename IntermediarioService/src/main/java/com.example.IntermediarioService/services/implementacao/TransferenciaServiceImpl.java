@@ -4,6 +4,8 @@
  */
 package com.example.IntermediarioService.services.implementacao;
 
+import com.example.IntermediarioService.component.UserInfo;
+import com.example.IntermediarioService.entities.Cliente;
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.services.TransferenciaService;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  *
@@ -36,6 +39,9 @@ implements TransferenciaService{
 
     @Autowired
     BancoServiceImpl bancoServiceImpl;
+
+    @Autowired
+    UserInfo userInfo;
 
     private final String kuzolaBankIdentificador = "1003";
     private final String waBankIdentificador = "404";
@@ -143,5 +149,17 @@ implements TransferenciaService{
         transferencia.setibanOrigem(ibanOrigem);
     }
 
+    public void saveUserInfoTemporary(Cliente cliente, String username) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put("username", username);
+        map.put("iban",cliente.getIban());
+        map.put("accountNumber",""+cliente.getNumeroDeConta());
+        map.put("pkCliente",""+cliente.getPkCliente());
+        userInfo.setUserInfo(map);
+
+        System.out.println("IBAN:"+userInfo.getUserInfo().get("iban"));
+        System.out.println("numeroDaConta:"+userInfo.getUserInfo().get("accountNumber"));
+    }
 
 }

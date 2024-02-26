@@ -31,4 +31,15 @@ public class KafkaTopicConfig {
                 .build();
     }
 
+
+    @Bean
+    public NewTopic topicRespostaTransferenciaIntrabancariaEmis()
+    {
+        return TopicBuilder
+                .name("resposta-tr-intrabancarias-kb-emis")
+                .partitions(3)
+                .build();
+    }
+
+
 }

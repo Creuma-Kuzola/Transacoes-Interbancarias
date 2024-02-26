@@ -10,6 +10,7 @@ import com.example.IntermediarioService.entities.User;
 import com.example.IntermediarioService.repositories.UserRepository;
 import com.example.IntermediarioService.services.implementacao.AuthService;
 import com.example.IntermediarioService.services.implementacao.ClienteServiceImpl;
+import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,6 @@ import java.util.Optional;
 @RequestMapping("/api/intermediario/auth")
 public class AuthController
 {
-
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -41,6 +41,9 @@ public class AuthController
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    TransferenciaServiceImpl transferenciaServiceImpl;
 
 
     @GetMapping
@@ -75,7 +78,7 @@ public class AuthController
 
             Optional<Cliente> cliente = clienteServiceImpl.findById(clienteId);
             String username = ((User) authUser.getPrincipal()).getUsername();
-            saveUserInfoTemporary(cliente.get(), username);
+            transferenciaServiceImpl.saveUserInfoTemporary(cliente.get(), username);
             jwtdto = new JwtDto(accessToken, cliente.get().getIban(), cliente.get().getNumeroDeConta());
         }
        else {
@@ -83,19 +86,6 @@ public class AuthController
         }
         //jwtdto = new JwtDto(accessToken, "", null);
         return ResponseEntity.ok(jwtdto);
-    }
-
-   private void saveUserInfoTemporary(Cliente cliente, String username) {
-        HashMap<String, String> map = new HashMap<>();
-
-        map.put("username", username);
-        map.put("iban",cliente.getIban());
-        map.put("accountNumber",""+cliente.getNumeroDeConta());
-        map.put("pkCliente",""+cliente.getPkCliente());
-        userInfo.setUserInfo(map);
-
-        System.out.println("IBAN:"+userInfo.getUserInfo().get("iban"));
-        System.out.println("numeroDaConta:"+userInfo.getUserInfo().get("accountNumber"));
     }
 
 }
