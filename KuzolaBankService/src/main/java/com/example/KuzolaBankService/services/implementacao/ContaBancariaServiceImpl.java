@@ -126,8 +126,8 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().add(montante));
         contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().add(montante));
 
-        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
-        return contaBancaria;
+        return this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
+
     }
 
 
@@ -138,8 +138,7 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().subtract(montante));
         contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().subtract(montante));
 
-        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
-        return contaBancaria;
+        return this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
     }
 
     public ContaBancaria debito(BigInteger numeroConta, BigDecimal montante){
@@ -149,10 +148,8 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().subtract(montante));
         contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().subtract(montante));
 
-        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
-        return contaBancaria;
+       return this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
+
     }
-
-
 
 }

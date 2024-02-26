@@ -126,7 +126,7 @@ implements TransferenciaService {
         transferenciaPOJOEmis.setIbanDestinatario(transferencia.getIbanDestinatario());
         transferenciaPOJOEmis.setMontante(transferencia.getMontante());
         transferenciaPOJOEmis.setEstadoTransferencia(transferencia.getEstadoTransferencia());
-        transferenciaPOJOEmis.setFkContaBancariaOrigem(ibanOrigem);
+        transferenciaPOJOEmis.setIbanOrigem(ibanOrigem);
         transferenciaPOJOEmis.setCodigoTransferencia(transferencia.getCodigoTransferencia());
 
         return  transferenciaPOJOEmis;
@@ -257,6 +257,15 @@ implements TransferenciaService {
         return  transferenciaJsonEmis;
     }
 
+    public String convertingTransferenciaInJsonEmis( TransferenciaPOJO transferenciaPOJO){
+
+        TransferenciaPOJOEmis transferenciaPOJOEmis = TransferenciaPOJOEmis.convertingIntoTransferenciaEmis(transferenciaPOJO);
+        String transferenciaJsonEmis = CustomJsonPojos.criarStrToJson(transferenciaPOJOEmis);
+
+        System.out.println("Data Json" + transferenciaJsonEmis);
+        return  transferenciaJsonEmis;
+    }
+
     public Transferencia buildTransferencia(TransferenciaComponent transferenciaComponent) throws ParseException
     {
         Transferencia transferencia = new Transferencia();
@@ -308,6 +317,11 @@ implements TransferenciaService {
         return transferenciaCreated;
     }
 
+    public void sendRespostaOfTransferenciaIntrabancariInEmis(TransferenciaPOJO transferenciaPOJO, KafkaTransferenciaProducer kafkaTransferenciaProducer)
+    {
+          String jsonEmis =  convertingTransferenciaInJsonEmis(transferenciaPOJO);
+          kafkaTransferenciaProducer.sendRespostaTransferenciaIntraBancariaInEmis(jsonEmis);
+    }
 
 
 

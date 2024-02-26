@@ -7,7 +7,9 @@ package com.example.IntermediarioService.controllers;
 import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.component.TransferenciaPojoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
+import com.example.IntermediarioService.component.UserInfo;
 import com.example.IntermediarioService.entities.Transferencia;
+import com.example.IntermediarioService.entities.User;
 import com.example.IntermediarioService.https.utils.ResponseBody;
 import com.example.IntermediarioService.kafka.KafkaTransferenciaProducer;
 import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
@@ -52,6 +54,10 @@ public class TransferenciaController extends BaseController {
     TransferenciaPojoComponent transferenciaPOJOComponent;
     @Autowired
     TransferenciaResponseComponent transferenciaResponseComponent;
+
+    @Autowired
+    UserInfo userInfo;
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencias()
     {
@@ -90,8 +96,11 @@ public class TransferenciaController extends BaseController {
 
         CustomJsonPojos customJsonPojos = new CustomJsonPojos();
         System.out.println("Transferencia no metodo"+ transferencia);
-        transferenciaServiceImpl.fillingTransactionFields(transferencia, transferencia.getibanOrigem());
+        String ibanOrigem = userInfo.getUserInfo().get("iban");
+
+        transferenciaServiceImpl.fillingTransactionFields(transferencia, ibanOrigem);
         kafkaTransferenciaProducer.sendMessageTransferenciaInEmis(customJsonPojos.criarStrToJson(transferencia).toString());
+
         //return this.created("Transferencia adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
         return ok("sjdfkjggh", transferencia);
     }

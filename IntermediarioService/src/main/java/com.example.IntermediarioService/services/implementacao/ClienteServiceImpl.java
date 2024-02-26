@@ -8,10 +8,12 @@ import com.example.IntermediarioService.entities.Banco;
 import com.example.IntermediarioService.entities.Cliente;
 import com.example.IntermediarioService.repositories.ClienteRepository;
 import com.example.IntermediarioService.services.ClienteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.example.IntermediarioService.utils.pojos.ClientePOJO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.IntermediarioService.services.implementacao.AbstractService;
+
+import java.util.Optional;
 
 /**
  *
@@ -20,6 +22,15 @@ import com.example.IntermediarioService.services.implementacao.AbstractService;
 @Service
 public class ClienteServiceImpl extends AbstractService<Cliente, Integer>
 implements ClienteService {
+
+    @Autowired
+    ClienteRepository clienteRepository;
+
+    public Optional<Cliente> findById(Integer idCliente){
+       return clienteRepository.findById(idCliente);
+    }
+
+
 
     @Autowired
     ClienteRepository clienteRepository;
@@ -39,5 +50,5 @@ implements ClienteService {
         cliente = this.clienteRepository.save(cliente);
         return cliente;
     }
-    
+
 }
