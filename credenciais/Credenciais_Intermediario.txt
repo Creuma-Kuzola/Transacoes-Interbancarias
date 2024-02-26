@@ -1,0 +1,48 @@
+Credencias Intemerdiario
+
+------------------------------------------------------ Clientes ---------------------------------------------------------
+
+{	
+	"login":"Ped$!!",
+    "password": "##ft12",
+    "role":"CLIENTE"
+}
+
+
+{
+  "login":"JMTy=?",
+    "password": "!df45&",
+    "role":"CLIENTE"
+}
+
+
+{
+	 "login":"Cr0dr=?",
+    "password": "@#$gdhf",
+    "role":"CLIENTE"
+}
+
+
+
+{
+  "login":"##Z0t&",
+    "password": "$%jsh/",
+    "role":"CLIENTE"
+}
+
+
+{
+ "login":"M@r0l#",
+    "password": "?e$%/Ma",
+    "role":"CLIENTE"
+}
+
+
+{
+ "login":"Nu#%&n",
+    "password": "$N%/k0",
+    "role":"CLIENTE"
+
+}
+
+------------------------------------------------ Funcionários-------------------------------------------------------------
