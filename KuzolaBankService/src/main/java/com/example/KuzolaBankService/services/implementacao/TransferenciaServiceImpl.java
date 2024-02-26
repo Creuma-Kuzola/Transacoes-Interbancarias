@@ -150,6 +150,7 @@ implements TransferenciaService {
 
         transferenciaCustomPOJO.setDatahora(new Date());
         transferenciaCustomPOJO.setFkContaBancariaOrigem(new BigInteger(userInfo.getUserInfo().get("accountNumber")));
+        transferenciaCustomPOJO.setIbanOrigem(userInfo.getUserInfo().get("iban"));
         transferenciaCustomPOJO.setDescricao(transferencia.getDescricao());
         transferenciaCustomPOJO.setMontante(transferencia.getMontante());
         transferenciaCustomPOJO.setIbanDestinatario(transferencia.getIbanDestinatario());
@@ -181,6 +182,7 @@ implements TransferenciaService {
         transferenciaItems.put("tipoTransferencia", transferencia.getTipoTransferencia());
         transferenciaItems.put("estadoTransferencia", transferencia.getEstadoTransferencia());
         transferenciaItems.put("codigoTransferencia", transferencia.getCodigoTransferencia());
+        transferenciaItems.put("ibanOrigem",transferencia.getIbanOrigem());
         transferenciaItems.put("bancoUdentifier",""+transferencia.getBancoUdentifier());
         transferenciaComponent.setTransferenciaResponse(transferenciaItems);
         System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
@@ -266,17 +268,11 @@ implements TransferenciaService {
         ContaBancaria contaBancaria = contaBancariaRepository.findByNumeroDeConta(numeroDeConta);
 
 
-       /* if (transferenciaComponent.getTransferenciaResponse().get("bancoUdentifie").equals("1003"))
-        {
-            BigInteger numeroDeConta = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
-            ContaBancaria contaBancaria = contaBancariaRepository.findByNumeroDeConta(numeroDeConta);
-        }
-        else
+       /*if (transferenciaComponent.getTransferenciaResponse().get("bancoUdentifier").equals("1003"))
         {
             BigInteger numeroDeConta = new BigInteger(transferenciaComponent.getTransferenciaResponse().get("fkContaBancariaOrigem"));
             ContaBancaria contaBancaria = contaBancariaRepository.findByNumeroDeConta(numeroDeConta);
         } */
-
         transferencia.setDescricao(transferenciaComponent.getTransferenciaResponse().get("descricao"));
         transferencia.setMontante(new BigDecimal(transferenciaComponent.getTransferenciaResponse().get("montante")));
         transferencia.setDatahora(localDateTime);
@@ -284,7 +280,7 @@ implements TransferenciaService {
         transferencia.setIbanOrigem(transferenciaComponent.getTransferenciaResponse().get("ibanOrigem"));
 
         transferencia.setTipoTransferencia(transferenciaComponent.getTransferenciaResponse().get("tipoTransferencia"));
-        transferencia.setEstadoTransferencia("REALIZADA COM SUCESSO");
+        transferencia.setEstadoTransferencia("Realizada com sucesso");
         transferencia.setCodigoTransferencia(transferenciaComponent.getTransferenciaResponse().get("codigoTransferencia"));
 
         if (transferenciaComponent.getTransferenciaResponse().get("bancoUdentifier").equals("1003"))

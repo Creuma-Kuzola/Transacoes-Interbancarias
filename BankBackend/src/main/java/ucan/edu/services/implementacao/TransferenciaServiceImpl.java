@@ -85,6 +85,7 @@ implements TransferenciaService{
     {
 
         transferencia.setFkContaBancariaOrigem(Integer.valueOf(userInfo.getUserInfo().get("accountNumber")));
+        transferencia.setIbanOrigem(userInfo.getUserInfo().get("iban"));
         transferencia.setDatahora(new Date());
         transferencia.setBancoUdentifier(4040);
         transferencia.setIbanOrigem(userInfo.getUserInfo().get("iban"));

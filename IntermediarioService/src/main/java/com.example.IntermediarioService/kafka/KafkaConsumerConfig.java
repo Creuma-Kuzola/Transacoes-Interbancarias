@@ -150,9 +150,14 @@ public class KafkaConsumerConfig
         identificadorBanco.put("UUID",obj.getBancoUdentifier());
         bancoComponent.setBancoComponent(identificadorBanco);
 
-       System.out.println("Data: " +transferenciaPOJO.getDatahora()+ "Data: " +obj.getDatahora());
-       String response = restTemplate.postForObject("http://localhost:8082/transferencia/publishTransferencia",transferenciaPOJO, String.class);
-       System.out.println("Resposta: -> to another bank kusola:-> " +response);
+        System.out.println("Data: " +transferenciaPOJO.getDatahora()+ "Data: " +obj.getDatahora());
+        CustomJsonPojos.saveTransferComponent(transferenciaPOJO, transferenciaPOJOComponent);
+
+        HttpEntity entity = Authorizarization.createBody();
+        HttpEntity entityResponse = restTemplate.exchange("http://localhost:8082/transferencia/publishTransferencia", HttpMethod.POST,entity, String.class);
+
+        System.out.println(" entityResponse:" +entityResponse);
+
     }
 
     @KafkaListener(topics = "tr-intrabancarias-kb-emis", groupId = "emisGroup")
