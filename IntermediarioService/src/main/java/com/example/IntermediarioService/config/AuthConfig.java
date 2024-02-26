@@ -31,13 +31,44 @@ public class AuthConfig
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/api/intermediario/auth/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/session").permitAll()
                         .requestMatchers(HttpMethod.POST.GET,"/deep").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/transferencia/publishTransferencia").hasAnyRole("ADMIN","CLIENTE")
-                        .requestMatchers(HttpMethod.POST,"/transferencia").hasAnyRole("ADMIN","CLIENTE")
+                        .requestMatchers(HttpMethod.POST,"/transferencia/publishTransferencia").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.POST,"/transferencia").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.POST,"/transferencia/response").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST,"/transferencia/responseTokuzola").hasRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.GET, "/transferencia/id/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/transferencia/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/transferencia/*").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/transferencia/historico/credito").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/transferencia/historico/debito").hasRole("CLIENTE")
+
+                        .requestMatchers(HttpMethod.POST,"/banco").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/banco/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/banco").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/banco/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/banco/*").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST,"/cliente").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/cliente/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/cliente").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/cliente/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/cliente/*").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST,"/funcionario").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/funcionario/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/funcionario").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/funcionario/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/funcionario/*").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST,"/user").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/user/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/user").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/user/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/user/*").hasRole("ADMIN")
 
                 .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

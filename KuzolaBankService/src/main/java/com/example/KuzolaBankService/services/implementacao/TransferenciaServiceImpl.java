@@ -136,7 +136,6 @@ implements TransferenciaService {
 
     public void fillingTransactionFields(Transferencia transferencia, String ibanOrigem){
 
-
         transferencia.setDatahora(formattingDateTime());
         transferencia.setEstadoTransferencia("Realizado");
         transferencia.setTipoTransferencia("Transferencia Intrabancaria");

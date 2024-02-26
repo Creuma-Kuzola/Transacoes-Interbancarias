@@ -178,8 +178,8 @@ public class KafkaConsumerConfig
         try {
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
 
-            Optional<ContaBancaria> contaBancaria = Optional.ofNullable(contaBancariServiceImpl.findContaBancaraByIban(transferenciaPOJO.getibanOrigem()));
-            contaBancariServiceImpl.debito(contaBancaria.get().getIban(), transferenciaPOJO.getMontante());
+            //Optional<ContaBancaria> contaBancaria = Optional.ofNullable(contaBancariServiceImpl.findContaBancaraByIban(transferenciaPOJO.getibanOrigem()));
+            contaBancariServiceImpl.debito(transferenciaPOJO.getibanOrigem(), transferenciaPOJO.getMontante());
             contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
 
             LOGGER.info(String.format(" Transferencia efectuada com sucesso ", message.toString()));
