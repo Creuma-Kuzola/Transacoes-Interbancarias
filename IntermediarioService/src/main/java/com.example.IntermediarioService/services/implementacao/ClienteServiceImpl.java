@@ -30,10 +30,6 @@ implements ClienteService {
        return clienteRepository.findById(idCliente);
     }
 
-
-
-    @Autowired
-    ClienteRepository clienteRepository;
     public Cliente createCliente(ClientePOJO clientePOJO)
     {
         Cliente cliente = new Cliente();
