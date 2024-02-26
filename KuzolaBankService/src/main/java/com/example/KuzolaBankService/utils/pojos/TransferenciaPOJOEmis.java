@@ -36,6 +36,21 @@ public class TransferenciaPOJOEmis {
     private String codigoTransferencia;
 
 
+    public static TransferenciaPOJOEmis convertingIntoTransferenciaEmis(TransferenciaPOJO transferenciaPOJO)
+    {
+        TransferenciaPOJOEmis transferenciaPOJOEmis = new TransferenciaPOJOEmis();
+        transferenciaPOJOEmis.setCodigoTransferencia(transferenciaPOJO.getCodigoTransferencia());
+        transferenciaPOJOEmis.setEstadoTransferencia(transferenciaPOJO.getEstadoTransferencia());
+        transferenciaPOJOEmis.setDatahora(transferenciaPOJO.getDatahora());
+        transferenciaPOJOEmis.setDescricao(transferenciaPOJO.getDescricao());
+        transferenciaPOJOEmis.setIbanDestinatario(transferenciaPOJO.getIbanDestinatario());
+        transferenciaPOJOEmis.setIbanOrigem(transferenciaPOJO.getibanOrigem());
+        transferenciaPOJOEmis.setTipoTransferencia(transferenciaPOJO.getTipoTransferencia());
+        transferenciaPOJOEmis.setMontante(transferenciaPOJO.getMontante());
+        return transferenciaPOJOEmis;
+    }
+
+
     // Getters and setters
     public Integer getPkTransferencia() {
         return pkTransferencia;
@@ -82,7 +97,7 @@ public class TransferenciaPOJOEmis {
         return ibanOrigem;
     }
 
-    public void setFkContaBancariaOrigem(String ibanOrigem) {
+    public void setIbanOrigem(String ibanOrigem) {
         this.ibanOrigem = ibanOrigem;
     }
 

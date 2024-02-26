@@ -126,8 +126,8 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
         contaBancaria.setSaldoContabilistico(contaBancaria.getSaldoContabilistico().add(montante));
         contaBancaria.setSaldoDisponivel(contaBancaria.getSaldoDisponivel().add(montante));
 
-        this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
-        return contaBancaria;
+        return this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
+
     }
 
 
@@ -151,7 +151,5 @@ public class ContaBancariaServiceImpl extends AbstractService<ContaBancaria, Int
        return this.editar(contaBancaria.getPkContaBancaria(), contaBancaria);
 
     }
-
-
 
 }

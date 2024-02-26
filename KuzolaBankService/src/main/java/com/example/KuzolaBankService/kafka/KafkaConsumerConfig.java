@@ -64,9 +64,12 @@ public class KafkaConsumerConfig
     Gson gson;
 
     @Autowired
-    private TransferenciaServiceImpl transferenciaServiceImpl;
+    TransferenciaServiceImpl transferenciaServiceImpl;
 
-   // @Autowired
+    @Autowired
+    KafkaTransferenciaProducer kafkaTransferenciaProducer;
+
+    // @Autowired
     //KafkaProducer kafkaProducer;
 
     public KafkaConsumerConfig()
@@ -184,6 +187,8 @@ public class KafkaConsumerConfig
             //Optional<ContaBancaria> contaBancaria = Optional.ofNullable(contaBancariServiceImpl.findContaBancaraByIban(transferenciaPOJO.getibanOrigem()));
             contaBancariServiceImpl.debito(transferenciaPOJO.getibanOrigem(), transferenciaPOJO.getMontante());
             contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
+
+            transferenciaServiceImpl.sendRespostaOfTransferenciaIntrabancariInEmis(transferenciaPOJO, kafkaTransferenciaProducer);
 
             LOGGER.info(String.format(" Transferencia efectuada com sucesso ", message.toString()));
 
