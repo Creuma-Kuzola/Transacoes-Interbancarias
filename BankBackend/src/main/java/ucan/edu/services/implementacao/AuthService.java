@@ -5,14 +5,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.auth0.jwt.exceptions.JWTVerificationException;
+import ucan.edu.config.component.ClienteComponent;
 import ucan.edu.dtos.SignUpDto;
 import ucan.edu.entities.Cliente;
-import ucan.edu.entities.Conta;
+import ucan.edu.entities.ContaBancaria;
 import ucan.edu.entities.User;
 import ucan.edu.exceptions.InvalidJwtException;
-import ucan.edu.repository.ContaRepository;
+import ucan.edu.kafka.KafkaTransferenciaProducer;
 import ucan.edu.repository.UserRepository;
+import ucan.edu.utils.enums.UserRole;
+import ucan.edu.utils.jsonUtils.CustomJsonPojos;
+import ucan.edu.utils.pojos.ClientePOJO;
+
+import java.util.Map;
 
 @Service
 public class AuthService implements UserDetailsService
@@ -20,6 +25,10 @@ public class AuthService implements UserDetailsService
 
     @Autowired
     UserRepository repository;
+    @Autowired
+    private ClienteComponent clienteComponent;
+    @Autowired
+    private KafkaTransferenciaProducer kafkaTransferenciaProducer;
 
     @Override
     public UserDetails loadUserByUsername(String username)
@@ -33,52 +42,31 @@ public class AuthService implements UserDetailsService
 
     public UserDetails signUp(SignUpDto data) throws InvalidJwtException
     {
-
         if (repository.findByLogin(data.login()) != null)
         {
             throw new InvalidJwtException("Username already exists");
         }
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User newUser = new User(data.login(), encryptedPassword, data.role(), data.fkCliente());
-        //System.out.println(" login:  " +newUser.getLogin() + " role" + newUser.getRole().getValue() + "Cliente: " +newUser.getFkCliente().getPkCliente());
+
+        ClientePOJO clientePOJO = createClientePOJO(clienteComponent.getClienteComponent(), data);
+        String dataStr = CustomJsonPojos.clientePOJOjson(clientePOJO);
+        kafkaTransferenciaProducer.sendClienteInfo(dataStr);
+
         return repository.save(newUser);
     }
-//
-//    @Autowired
-//    ContaRepository repository;
-//
-//    @Override
-//    public UserDetails loadUserByUsername(String username)
-//    {
-//        System.out.println(" username: " + username);
-//        var conta = repository.findContaByLogin(username);
-//
-//        Conta contaExist = (Conta) repository.findContaByLogin(username);
-//
-//        System.out.println("UserDetails");
-//        System.out.println(" Username: " + conta.getUsername() + "Password: " + conta.getPassword() + "Role: " + conta.getAuthorities());
-//
-//        System.out.println("Password: " + contaExist.getPassword() + "Username " + conta.getUsername());
-//        return conta;
-//    }
-//
-//    public UserDetails signUp(SignUpDto data)
-//    {
-//        if (repository.findContaByLogin(data.username()) != null)
-//        {
-//            throw new RuntimeException("Username already exists");
-//        }
-//        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-//        Conta newUser = new Conta();
-//
-//        newUser.setPassword(encryptedPassword);
-//        newUser.setLogin(data.username());
-//        newUser.setRole(data.role());
-//
-//        Cliente cliente = new Cliente();
-//        cliente.setPkCliente(data.fkCliente());
-//        newUser.setFkCliente(cliente);
-//
-//        return repository.save(newUser);
-//    }
+    private ClientePOJO createClientePOJO(Map<String, String> clienteComponent, SignUpDto data) {
+        ClientePOJO clientePOJO = new ClientePOJO();
+
+        clientePOJO.setPkCliente(Integer.parseInt(clienteComponent.get("pkCliente")));
+        clientePOJO.setNome(clienteComponent.get("nome"));
+        clientePOJO.setNumeroConta(""+clienteComponent.get("numeroConta"));
+        clientePOJO.setIban(""+clienteComponent.get("iban"));
+        clientePOJO.setLogin(data.login());
+        clientePOJO.setPassword(data.password());
+        clientePOJO.setRole(UserRole.CLIENTE.getValue());
+        clientePOJO.setFkBanco("2");
+        return clientePOJO;
+    }
+
 }

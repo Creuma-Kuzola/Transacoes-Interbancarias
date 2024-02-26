@@ -3,6 +3,7 @@ package ucan.edu.utils.jsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import ucan.edu.config.component.TransferenciaComponent;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
+import ucan.edu.utils.pojos.ClientePOJO;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
 import ucan.edu.utils.pojos.TransferenciaResponse;
 
@@ -44,6 +45,20 @@ public class CustomJsonPojos {
                 "\"status\": \"" +response.getStatus()+ "\" }";
     }
 
+
+    public  static String clientePOJOjson(ClientePOJO clientePOJO)
+    {
+        return "{ \"pkCliente\": \""+clientePOJO.getPkCliente()+"\", " +
+                "\"nome\": \"" +clientePOJO.getNome()+ "\"," +
+                "\"iban\": \"" +clientePOJO.getIban()+ "\"," +
+                "\"numeroConta\": \"" +clientePOJO.getNumeroConta()+ "\"," +
+                "\"fkBanco\": \"" +clientePOJO.getFkBanco()+ "\"," +
+                "\"login\": \"" +clientePOJO.getLogin()+ "\"," +
+                "\"password\": \"" +clientePOJO.getPassword()+ "\"," +
+                "\"role\": \"" +clientePOJO.getRole()+ "\"" +
+                " }";
+    }
+
     public static void saveTransferComponent(TransferenciaPOJO transferencia, TransferenciaComponent transferenciaComponent)  {
         Map<String, String> transferenciaItems = new HashMap<>();
 
@@ -63,6 +78,8 @@ public class CustomJsonPojos {
 
         System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
     }
+
+
 
 
 }

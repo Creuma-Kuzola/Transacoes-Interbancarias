@@ -42,13 +42,13 @@ public class Banco implements Serializable {
     public Banco() {
     }
 
-    public Banco(Integer codigoIdentificadorBanco) {
+    /*public Banco(Integer codigoIdentificadorBanco) {
         this.codigoIdentificadorBanco = codigoIdentificadorBanco;
-    }
+    }*/
 
-  /*public Banco(Integer pkBanco) {
+  public Banco(Integer pkBanco) {
         this.pkBanco = pkBanco;
-    } */
+    }
 
     public Integer getPkBanco() {
         return pkBanco;

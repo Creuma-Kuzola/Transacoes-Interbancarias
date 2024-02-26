@@ -35,10 +35,19 @@ public class ContaBancariaResponse {
         return saldoResponse;
     }
 
+    public String getIban() {
+        return iban;
+    }
 
+    public void setIban(String iban) {
+        this.iban = iban;
+    }
 
+    public Integer getNumeroDeConta() {
+        return numeroDeConta;
+    }
 
-
-
-
+    public void setNumeroDeConta(Integer numeroDeConta) {
+        this.numeroDeConta = numeroDeConta;
+    }
 }

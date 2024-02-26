@@ -39,4 +39,13 @@ public class KafkaTopicConfig {
                 .partitions(5)
                 .build();
     }
+
+    @Bean
+    public NewTopic wakandaClienteInfo()
+    {
+        return TopicBuilder
+                .name("clienteWakanda")
+                .partitions(5)
+                .build();
+    }
 }

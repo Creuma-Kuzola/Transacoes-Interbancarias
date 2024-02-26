@@ -5,7 +5,13 @@ import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.component.TransferenciaPojoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
 import com.example.IntermediarioService.dto.JwtDto;
+import com.example.IntermediarioService.dto.SignUpDto;
+import com.example.IntermediarioService.entities.Cliente;
+import com.example.IntermediarioService.repositories.ClienteRepository;
+import com.example.IntermediarioService.services.implementacao.AuthService;
+import com.example.IntermediarioService.services.implementacao.ClienteServiceImpl;
 import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
+import com.example.IntermediarioService.utils.pojos.ClientePOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJOEmis;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
@@ -39,6 +45,10 @@ public class KafkaConsumerConfig
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerConfig.class);
     private TransferenciaPOJO transferenciaPOJO;
 
+    @Autowired
+    private ClienteServiceImpl clienteImpl;
+    @Autowired
+    private AuthService authService;
     @Autowired
     private TransferenciaPojoComponent transferenciaPOJOComponent;
     @Autowired
@@ -170,6 +180,20 @@ public class KafkaConsumerConfig
         System.out.println("Converting into Transferencia"+ transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis).toString());
 
         transferenciaServiceImpl.salvarTransferencia(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis));
+    }
+
+    @KafkaListener(topics = "clienteWakanda", groupId = "myGroup")
+    public  void consumerWankadaClienteInfo(String message)
+    {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+
+        Gson gson = builder.create();
+        LOGGER.info(String.format("Message received -> %s", message.toString()));
+        ClientePOJO obj = gson.fromJson(message.toString(), ClientePOJO.class);
+
+        Cliente cliente = clienteImpl.saveCliente(obj);
+        authService.signUp(obj, cliente);
     }
 
 

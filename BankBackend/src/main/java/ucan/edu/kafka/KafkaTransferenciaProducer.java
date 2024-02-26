@@ -64,4 +64,14 @@ public class KafkaTransferenciaProducer
                 .build();
         kafkaTemplate.send(message);
     }
+
+    public void sendClienteInfo(String data)
+    {
+        LOGGER.info(String.format("info wakanda info sent ==> %s ", data.toString()));
+        Message<String> message = MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, "clienteWakanda")
+                .build();
+        kafkaTemplate.send(message);
+    }
 }
