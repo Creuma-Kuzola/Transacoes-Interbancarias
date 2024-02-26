@@ -54,6 +54,9 @@ public class Transferencia implements Serializable {
     private String codigoTransferencia;
     @Column(name = "operacao", length = 2147483647)
     private String operacao;
+
+    @Column(name = "iban_origem", length = 2147483647)
+    private String ibanOrigem;
     @OneToMany(mappedBy = "fkTransferencia")
     private List<TokenValidacao> tokenValidacaoList;
 
@@ -135,5 +138,13 @@ public class Transferencia implements Serializable {
 
     public void setOperacao(String operacao) {
         this.operacao = operacao;
+    }
+
+    public String getIbanOrigem() {
+        return ibanOrigem;
+    }
+
+    public void setIbanOrigem(String ibanOrigem) {
+        this.ibanOrigem = ibanOrigem;
     }
 }

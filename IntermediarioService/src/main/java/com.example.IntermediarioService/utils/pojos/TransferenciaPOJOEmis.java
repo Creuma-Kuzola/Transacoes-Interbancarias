@@ -64,15 +64,12 @@ public class TransferenciaPOJOEmis {
     public String getIbanDestinatario() {
         return ibanDestinatario;
     }
-
     public void setIbanDestinatario(String ibanDestinatario) {
         this.ibanDestinatario = ibanDestinatario;
     }
-
     public LocalDateTime getDatahora() {
         return datahora;
     }
-
     public void setDatahora(LocalDateTime datahora) {
         this.datahora = datahora;
     }

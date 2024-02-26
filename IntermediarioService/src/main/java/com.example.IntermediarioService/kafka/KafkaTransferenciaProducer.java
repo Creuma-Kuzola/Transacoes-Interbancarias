@@ -35,7 +35,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaTransferenciaProducer
 {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTransferenciaProducer.class);
 
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -66,6 +65,7 @@ public class KafkaTransferenciaProducer
 
         if (bankId == 1003)
         {
+            System.out.println("PASSOU AQUI: BANCO IDENTIFICADOR KUZOLA: " +bankId);
             message= MessageBuilder
                     .withPayload(data)
                     .setHeader(KafkaHeaders.TOPIC, "transferencia2")
@@ -73,7 +73,7 @@ public class KafkaTransferenciaProducer
         }
         else if (bankId == 4040)
         {
-            System.out.println("PASSOU AQUI: BANCO IDENTIFICADOR: " +bankId);
+            System.out.println("PASSOU AQUI: BANCO IDENTIFICADOR WAKANDA: " +bankId);
             message= MessageBuilder
                     .withPayload(data)
                     .setHeader(KafkaHeaders.TOPIC, "transferencia")
@@ -136,7 +136,6 @@ public class KafkaTransferenciaProducer
     public void sendMessageTransferenciaResponse2(String data)
     {
         //data = t(kafkaConsumerConfig.getTransferenciaPOJO());
-
         System.out.println("PASSOU AQUI");
         LOGGER.info(String.format("Message sent response2 ==> %s ", data.toString()));
         Message<String> message = MessageBuilder

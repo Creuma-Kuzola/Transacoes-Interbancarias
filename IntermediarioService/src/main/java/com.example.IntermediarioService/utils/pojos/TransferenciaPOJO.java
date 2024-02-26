@@ -4,6 +4,7 @@
  */
 package com.example.IntermediarioService.utils.pojos;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class TransferenciaPOJO
 {
     private Integer pkTransferencia;
     private String descricao;
-    private BigInteger montante;
+    private BigDecimal montante;
     private String ibanDestinatario;
     private Date datahora;
     private BigInteger fkContaBancariaOrigem;
@@ -31,6 +32,8 @@ public class TransferenciaPOJO
     private String estadoTransferencia;
     private String codigoTransferencia;
     private Integer bancoUdentifier;
+
+    private String ibanOrigem;
 
 
     public Integer getPkTransferencia() {
@@ -49,11 +52,11 @@ public class TransferenciaPOJO
         this.descricao = descricao;
     }
 
-    public BigInteger getMontante() {
+    public BigDecimal getMontante() {
         return montante;
     }
 
-    public void setMontante(BigInteger montante) {
+    public void setMontante(BigDecimal montante) {
         this.montante = montante;
     }
 
@@ -111,5 +114,12 @@ public class TransferenciaPOJO
 
     public void setBancoUdentifier(Integer bancoUdentifier) {
         this.bancoUdentifier = bancoUdentifier;
+    }
+
+    public String getIbanOrigem() {
+        return ibanOrigem;
+    }
+    public void setIbanOrigem(String ibanOrigem) {
+        this.ibanOrigem = ibanOrigem;
     }
 }
