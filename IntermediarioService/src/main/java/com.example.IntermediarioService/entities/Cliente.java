@@ -6,6 +6,8 @@ package com.example.IntermediarioService.entities;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 /**
@@ -14,12 +16,7 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(catalog = "transferencia_bd", schema = "public")
-@NamedQueries({
-    @NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c"),
-    @NamedQuery(name = "Cliente.findByPkCliente", query = "SELECT c FROM Cliente c WHERE c.pkCliente = :pkCliente"),
-    @NamedQuery(name = "Cliente.findByNome", query = "SELECT c FROM Cliente c WHERE c.nome = :nome"),
-    @NamedQuery(name = "Cliente.findByIban", query = "SELECT c FROM Cliente c WHERE c.iban = :iban"),
-    @NamedQuery(name = "Cliente.findByNumeroDeConta", query = "SELECT c FROM Cliente c WHERE c.numeroDeConta = :numeroDeConta")})
+
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,7 +34,8 @@ public class Cliente implements Serializable {
     @JoinColumn(name = "fk_banco", referencedColumnName = "pk_banco")
     @ManyToOne
     private Banco fkBanco;
-    @OneToMany(mappedBy = "fkCliente")
+    @OneToMany(mappedBy = "fkCliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<User> userList;
 
     public Cliente() {
@@ -96,28 +94,13 @@ public class Cliente implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (pkCliente != null ? pkCliente.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Cliente)) {
-            return false;
-        }
-        Cliente other = (Cliente) object;
-        if ((this.pkCliente == null && other.pkCliente != null) || (this.pkCliente != null && !this.pkCliente.equals(other.pkCliente))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "com.example.TransferenciaService.entities.Cliente[ pkCliente=" + pkCliente + " ]";
+        return "Cliente{" +
+                "pkCliente=" + pkCliente +
+                ", nome='" + nome + '\'' +
+                ", iban='" + iban + '\'' +
+                ", numeroDeConta='" + numeroDeConta + '\'' +
+                ", fkBanco=" + fkBanco +
+                '}';
     }
-    
 }

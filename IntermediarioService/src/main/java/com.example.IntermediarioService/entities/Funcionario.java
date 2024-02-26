@@ -6,6 +6,8 @@ package com.example.IntermediarioService.entities;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -15,11 +17,7 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(catalog = "transferencia_bd", schema = "public")
-@NamedQueries({
-    @NamedQuery(name = "Funcionario.findAll", query = "SELECT f FROM Funcionario f"),
-    @NamedQuery(name = "Funcionario.findByPkFuncionario", query = "SELECT f FROM Funcionario f WHERE f.pkFuncionario = :pkFuncionario"),
-    @NamedQuery(name = "Funcionario.findByNome", query = "SELECT f FROM Funcionario f WHERE f.nome = :nome"),
-    @NamedQuery(name = "Funcionario.findBySexo", query = "SELECT f FROM Funcionario f WHERE f.sexo = :sexo")})
+
 public class Funcionario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,7 +30,8 @@ public class Funcionario implements Serializable {
     private String nome;
     @Column(length = 2147483647)
     private String sexo;
-    @OneToMany(mappedBy = "fkFuncionario")
+    @OneToMany(mappedBy = "fkFuncionario", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<User> userList;
 
     public Funcionario() {
@@ -75,28 +74,11 @@ public class Funcionario implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (pkFuncionario != null ? pkFuncionario.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Funcionario)) {
-            return false;
-        }
-        Funcionario other = (Funcionario) object;
-        if ((this.pkFuncionario == null && other.pkFuncionario != null) || (this.pkFuncionario != null && !this.pkFuncionario.equals(other.pkFuncionario))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "com.example.TransferenciaService.entities.Funcionario[ pkFuncionario=" + pkFuncionario + " ]";
+        return "Funcionario{" +
+                "pkFuncionario=" + pkFuncionario +
+                ", nome='" + nome + '\'' +
+                ", sexo='" + sexo + '\'' +
+                '}';
     }
-    
 }

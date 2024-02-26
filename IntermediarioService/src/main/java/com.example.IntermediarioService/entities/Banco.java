@@ -6,6 +6,8 @@ package com.example.IntermediarioService.entities;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 /**
@@ -14,12 +16,7 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(catalog = "transferencia_bd", schema = "public")
-@NamedQueries({
-    @NamedQuery(name = "Banco.findAll", query = "SELECT b FROM Banco b"),
-    @NamedQuery(name = "Banco.findByPkBanco", query = "SELECT b FROM Banco b WHERE b.pkBanco = :pkBanco"),
-    @NamedQuery(name = "Banco.findByNome", query = "SELECT b FROM Banco b WHERE b.nome = :nome"),
-    @NamedQuery(name = "Banco.findByCodigoIdentificadorBanco", query = "SELECT b FROM Banco b WHERE b.codigoIdentificadorBanco = :codigoIdentificadorBanco"),
-    @NamedQuery(name = "Banco.findBySiglaBanco", query = "SELECT b FROM Banco b WHERE b.siglaBanco = :siglaBanco")})
+
 public class Banco implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,9 +31,11 @@ public class Banco implements Serializable {
     private Integer codigoIdentificadorBanco;
     @Column(name = "sigla_banco", length = 2147483647)
     private String siglaBanco;
-    @OneToMany(mappedBy = "fkBanco")
+    @OneToMany(mappedBy = "fkBanco", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Transferencia> transferenciaList;
-    @OneToMany(mappedBy = "fkBanco")
+    @OneToMany(mappedBy = "fkBanco", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Cliente> clienteList;
 
     public Banco() {
@@ -99,28 +98,12 @@ public class Banco implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (pkBanco != null ? pkBanco.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Banco)) {
-            return false;
-        }
-        Banco other = (Banco) object;
-        if ((this.pkBanco == null && other.pkBanco != null) || (this.pkBanco != null && !this.pkBanco.equals(other.pkBanco))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "com.example.TransferenciaService.entities.Banco[ pkBanco=" + pkBanco + " ]";
+        return "Banco{" +
+                "pkBanco=" + pkBanco +
+                ", nome='" + nome + '\'' +
+                ", codigoIdentificadorBanco=" + codigoIdentificadorBanco +
+                ", siglaBanco='" + siglaBanco + '\'' +
+                '}';
     }
-    
 }
