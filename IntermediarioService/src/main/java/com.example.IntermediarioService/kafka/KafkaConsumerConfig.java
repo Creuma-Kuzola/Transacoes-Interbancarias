@@ -12,16 +12,15 @@ import com.example.IntermediarioService.repositories.ClienteRepository;
 import com.example.IntermediarioService.services.implementacao.AuthService;
 import com.example.IntermediarioService.services.implementacao.ClienteServiceImpl;
 import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
-import com.example.IntermediarioService.utils.pojos.ClientePOJO;
-import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
-import com.example.IntermediarioService.utils.pojos.TransferenciaPOJOEmis;
-import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
+import com.example.IntermediarioService.utils.pojos.*;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import jakarta.validation.OverridesAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +35,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class KafkaConsumerConfig
@@ -246,5 +243,23 @@ public class KafkaConsumerConfig
     {
         return transferenciaPOJO;
     }
+
+    @KafkaListener(topics = "resposta-historico-debito-kb-emis", groupId = "emisGroup")
+    public void consumeMessageTransferenciaEmis(String message) throws JsonProcessingException {
+
+        System.out.println("Entrei resposta EMis");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        //objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+        TransferenciaPOJOEmis[] st = objectMapper.readValue(message, TransferenciaPOJOEmis[].class);
+        List<TransferenciaPOJOEmis> lista = new ArrayList<>(List.of(st));
+        System.out.println("Lista Resposta Emis: "+ Arrays.toString(st));
+        System.out.println("Lista Resposta Emis lista: "+ lista.get(0));
+
+
+
+    }
+
+
 
 }

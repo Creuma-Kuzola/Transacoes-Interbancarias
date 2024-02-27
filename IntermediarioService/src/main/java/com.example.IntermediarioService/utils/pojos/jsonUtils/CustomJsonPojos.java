@@ -1,10 +1,10 @@
 package com.example.IntermediarioService.utils.pojos.jsonUtils;
 
-import com.example.IntermediarioService.component.*;
+import com.example.IntermediarioService.component.TransferenciaPojoComponent;
+import com.example.IntermediarioService.component.TransferenciaResponseComponent;
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -100,6 +100,16 @@ public class CustomJsonPojos {
         return formattingDateTime(ldt);
     }
 
+
+    public static String criarStrToJson(ClientePojoMini cliente)
+    {
+        String str = "{\n"
+                + "  \"iban\": " + cliente.getIban() + ",\n"
+                + "   \"numeroDeConta\": \"" + cliente.getNumeroDeConta() + "\"\n"
+                + "}";
+        return str;
+    }
+
     public String criarStrToJson(Transferencia transferencia)
     {
         String str = "{\n"
@@ -114,6 +124,8 @@ public class CustomJsonPojos {
                 + "}";
         return str;
     }
+
+
 
     public static String criarStrToJson2(Transferencia transferencia, TransferenciaComponent transferenciaComponent)
     {
@@ -200,4 +212,5 @@ public class CustomJsonPojos {
 
         return  transferenciaPOJO;
     }
+
 }

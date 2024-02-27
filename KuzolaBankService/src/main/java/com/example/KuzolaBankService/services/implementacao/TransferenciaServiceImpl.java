@@ -134,6 +134,23 @@ implements TransferenciaService {
         //System.out.println("tranferencias:---::  "+transferencia);
     }
 
+    public Transferencia convertingIntoTransferencia(TransferenciaPOJO transferenciaPOJO)
+    {
+        Transferencia transferencia = new Transferencia();
+        transferencia.setDatahora(transferenciaPOJO.getDatahora());
+        transferencia.setDescricao(transferenciaPOJO.getDescricao());
+        transferencia.setIbanDestinatario(transferenciaPOJO.getIbanDestinatario());
+        transferencia.setMontante(transferenciaPOJO.getMontante());
+        transferencia.setIbanOrigem(transferenciaPOJO.getibanOrigem());
+        transferencia.setCodigoTransferencia(transferenciaPOJO.getCodigoTransferencia());
+        transferencia.setTipoTransferencia("Intrabancaria");
+        transferencia.setEstadoTransferencia("Realizado");
+        return  transferencia;
+
+        //System.out.println("tranferencias:---::  "+transferencia);
+    }
+
+
     public void fillingTransactionFields(Transferencia transferencia, String ibanOrigem){
 
         transferencia.setDatahora(formattingDateTime());
@@ -266,6 +283,13 @@ implements TransferenciaService {
         return  transferenciaJsonEmis;
     }
 
+    public String convertingTransferenciaPOJOEmisInJson( TransferenciaPOJOEmis transferenciaPOJOEmis){
+
+        String transferenciaJsonEmis = CustomJsonPojos.criarStrToJson(transferenciaPOJOEmis);
+        System.out.println("Data Json" + transferenciaJsonEmis);
+        return  transferenciaJsonEmis;
+    }
+
     public Transferencia buildTransferencia(TransferenciaComponent transferenciaComponent) throws ParseException
     {
         Transferencia transferencia = new Transferencia();
@@ -317,11 +341,50 @@ implements TransferenciaService {
         return transferenciaCreated;
     }
 
-    public void sendRespostaOfTransferenciaIntrabancariInEmis(TransferenciaPOJO transferenciaPOJO, KafkaTransferenciaProducer kafkaTransferenciaProducer)
+    public void sendRespostaOfTransferenciaIntrabancariInEmis(TransferenciaPOJO transferenciaPOJO)
     {
           String jsonEmis =  convertingTransferenciaInJsonEmis(transferenciaPOJO);
           kafkaTransferenciaProducer.sendRespostaTransferenciaIntraBancariaInEmis(jsonEmis);
     }
+
+    public List<TransferenciaPOJOEmis> convertingIntoListaTransferenciaEmis(List<Transferencia> listTransferencia){
+
+        List<TransferenciaPOJOEmis> listaTransferenciaEmis = new ArrayList<>();
+
+        for (Transferencia transferencia : listTransferencia) {
+
+            TransferenciaPOJOEmis transferenciaPOJOEmis = TransferenciaPOJOEmis.convertingIntoTransferenciaEmis(transferencia);
+            listaTransferenciaEmis.add(transferenciaPOJOEmis);
+        }
+
+        return listaTransferenciaEmis;
+
+    }
+
+    public List<String> convertingIntoListTransferenciaEmisJson(List<TransferenciaPOJOEmis> listaEmis){
+
+        List<String> listaString = new ArrayList<>();
+        for (TransferenciaPOJOEmis transferenciaPOJOEmis: listaEmis)
+        {
+            String st = " [ ";
+            st = convertingTransferenciaPOJOEmisInJson(transferenciaPOJOEmis);
+            listaString.add(st);
+        }
+        return listaString;
+    }
+
+    public List<String> findHistoricoDeDebitoInEmis(String ibanOrigem){
+
+      List<TransferenciaPOJOEmis> listaEmis = this.convertingIntoListaTransferenciaEmis(findAllTransacoesDebitadas(ibanOrigem));
+      List<String> listaJsonEmis = convertingIntoListTransferenciaEmisJson(listaEmis);
+      System.out.println("Lista: "+ listaEmis.toString());
+
+        return listaJsonEmis;
+    }
+
+
+
+
 
 
 

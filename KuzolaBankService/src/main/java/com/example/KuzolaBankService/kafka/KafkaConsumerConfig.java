@@ -7,9 +7,12 @@ import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.entities.Transferencia;
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
 import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
+import com.example.KuzolaBankService.utils.pojos.ClientePojoMini;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
@@ -37,10 +40,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class KafkaConsumerConfig
@@ -184,11 +184,15 @@ public class KafkaConsumerConfig
         try {
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
             System.out.println("Transferencia POjo in Kuzola Bank"+ transferenciaPOJO.toString());
-            //Optional<ContaBancaria> contaBancaria = Optional.ofNullable(contaBancariServiceImpl.findContaBancaraByIban(transferenciaPOJO.getibanOrigem()));
+
+            if(transferenciaPOJO.getEstadoTransferencia() == null){
+                transferenciaServiceImpl.criar(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJO));
+            }
+
             contaBancariServiceImpl.debito(transferenciaPOJO.getibanOrigem(), transferenciaPOJO.getMontante());
             contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
 
-            transferenciaServiceImpl.sendRespostaOfTransferenciaIntrabancariInEmis(transferenciaPOJO, kafkaTransferenciaProducer);
+            transferenciaServiceImpl.sendRespostaOfTransferenciaIntrabancariInEmis(transferenciaPOJO);
 
             LOGGER.info(String.format(" Transferencia efectuada com sucesso ", message.toString()));
 
@@ -261,5 +265,21 @@ public class KafkaConsumerConfig
     {
         LOGGER.info(String.format("Message received Emis -> %s", message.toString()));
     }*/
+    @KafkaListener(topics = "historico-debito-kb-emis")
+    public void consumeMessageTransferenciaEmis(String message) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ClientePojoMini clientePojoMini = objectMapper.readValue(message, ClientePojoMini.class);
+        System.out.println("Cliente POjo in Kuzola Bank"+ clientePojoMini.toString());
+
+        List<String> lista = transferenciaServiceImpl.findHistoricoDeDebitoInEmis(clientePojoMini.getIban());
+        LOGGER.info(String.format("Message received Emis -> %s", message));
+        System.out.println("Cheguei historico");
+        System.out.println("Lista de Historico Debito"+ lista);
+        kafkaTransferenciaProducer.sendRespostaOfHistoricoDebito(lista.toString());
+    }
+
+
 
 }

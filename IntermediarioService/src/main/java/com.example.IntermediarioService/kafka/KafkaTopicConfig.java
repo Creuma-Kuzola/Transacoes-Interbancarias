@@ -97,4 +97,46 @@ public class KafkaTopicConfig
 
 
 
+
+    @Bean
+    public NewTopic historicoDeCreditoKuzolaBank()
+    {
+        return TopicBuilder
+                .name("historico-credito-kb-emis")
+                .partitions(3)
+                .build();
+    }
+
+
+    @Bean
+    public NewTopic historicoDeDebitoKuzolaBank()
+    {
+        return TopicBuilder
+                .name("historico-debito-kb-emis")
+                .partitions(3)
+                .build();
+    }
+
+    @Bean
+    public NewTopic historicoDeCreditoWakandaBank()
+    {
+        return TopicBuilder
+                .name("historico-credito-wb-emis")
+                .partitions(3)
+                .build();
+    }
+
+
+    @Bean
+    public NewTopic historicoDeDebitoWakandaBank()
+    {
+        return TopicBuilder
+                .name("historico-debito-wb-emis")
+                .partitions(3)
+                .build();
+    }
+
+
+
+
 }

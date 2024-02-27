@@ -1,5 +1,6 @@
 package com.example.KuzolaBankService.utils.pojos;
 
+import com.example.KuzolaBankService.entities.Transferencia;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -47,6 +48,20 @@ public class TransferenciaPOJOEmis {
         transferenciaPOJOEmis.setIbanOrigem(transferenciaPOJO.getibanOrigem());
         transferenciaPOJOEmis.setTipoTransferencia(transferenciaPOJO.getTipoTransferencia());
         transferenciaPOJOEmis.setMontante(transferenciaPOJO.getMontante());
+        return transferenciaPOJOEmis;
+    }
+
+    public static TransferenciaPOJOEmis convertingIntoTransferenciaEmis(Transferencia transferencia)
+    {
+        TransferenciaPOJOEmis transferenciaPOJOEmis = new TransferenciaPOJOEmis();
+        transferenciaPOJOEmis.setCodigoTransferencia(transferencia.getCodigoTransferencia());
+        transferenciaPOJOEmis.setEstadoTransferencia(transferencia.getEstadoTransferencia());
+        transferenciaPOJOEmis.setDatahora(transferencia.getDatahora());
+        transferenciaPOJOEmis.setDescricao(transferencia.getDescricao());
+        transferenciaPOJOEmis.setIbanDestinatario(transferencia.getIbanDestinatario());
+        transferenciaPOJOEmis.setIbanOrigem(transferencia.getIbanOrigem());
+        transferenciaPOJOEmis.setTipoTransferencia(transferencia.getTipoTransferencia());
+        transferenciaPOJOEmis.setMontante(transferencia.getMontante());
         return transferenciaPOJOEmis;
     }
 
