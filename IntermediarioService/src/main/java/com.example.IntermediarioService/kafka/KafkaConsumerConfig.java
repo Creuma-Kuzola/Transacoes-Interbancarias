@@ -216,4 +216,6 @@ public class KafkaConsumerConfig
         return transferenciaPOJO;
     }
 
+
+
 }

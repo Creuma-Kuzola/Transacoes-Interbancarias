@@ -134,6 +134,23 @@ implements TransferenciaService {
         //System.out.println("tranferencias:---::  "+transferencia);
     }
 
+    public Transferencia convertingIntoTransferencia(TransferenciaPOJO transferenciaPOJO)
+    {
+        Transferencia transferencia = new Transferencia();
+        transferencia.setDatahora(transferenciaPOJO.getDatahora());
+        transferencia.setDescricao(transferenciaPOJO.getDescricao());
+        transferencia.setIbanDestinatario(transferenciaPOJO.getIbanDestinatario());
+        transferencia.setMontante(transferenciaPOJO.getMontante());
+        transferencia.setIbanOrigem(transferenciaPOJO.getibanOrigem());
+        transferencia.setCodigoTransferencia(transferenciaPOJO.getCodigoTransferencia());
+        transferencia.setTipoTransferencia("Intrabancaria");
+        transferencia.setEstadoTransferencia("Realizado");
+        return  transferencia;
+
+        //System.out.println("tranferencias:---::  "+transferencia);
+    }
+
+
     public void fillingTransactionFields(Transferencia transferencia, String ibanOrigem){
 
         transferencia.setDatahora(formattingDateTime());
@@ -322,6 +339,29 @@ implements TransferenciaService {
           String jsonEmis =  convertingTransferenciaInJsonEmis(transferenciaPOJO);
           kafkaTransferenciaProducer.sendRespostaTransferenciaIntraBancariaInEmis(jsonEmis);
     }
+
+    public List<TransferenciaPOJOEmis> convertingIntoListaTransferenciaEmis(List<Transferencia> listTransferencia){
+
+        List<TransferenciaPOJOEmis> listaTransferenciaEmis = new ArrayList<>();
+
+        for (Transferencia transferencia : listTransferencia) {
+
+            TransferenciaPOJOEmis transferenciaPOJOEmis = TransferenciaPOJOEmis.convertingIntoTransferenciaEmis(transferencia);
+            listaTransferenciaEmis.add(transferenciaPOJOEmis);
+        }
+
+        return listaTransferenciaEmis;
+
+    }
+
+    public String findHistoricoDeDebitoInEmis(String ibanOrigem){
+
+      List <TransferenciaPOJOEmis> listaEmis = this.convertingIntoListaTransferenciaEmis(findAllTransacoesDebitadas(ibanOrigem));
+        System.out.println("Lista: "+ listaEmis.toString());
+        return listaEmis.toString();
+    }
+
+
 
 
 

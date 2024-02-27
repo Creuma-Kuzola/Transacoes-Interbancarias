@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -58,6 +59,9 @@ public class TransferenciaController extends BaseController {
     @Autowired
     UserInfo userInfo;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencias()
     {
@@ -74,6 +78,24 @@ public class TransferenciaController extends BaseController {
             return this.ok("Transferencia encontrada com sucesso.", consulta.get());
         }
         return this.naoEncontrado("Transferencia não encontrada", null);
+    }
+
+    @GetMapping("/historico/debito")
+    public ResponseEntity<ResponseBody> findHistoricoTransacoesDebito() throws JsonProcessingException {
+       // List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesDebitadas(userInfo.getUserInfo().get("iban"));
+
+        kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoDebito(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+
+        return this.ok("Transações de Débito encontradas com sucesso!", null);
+    }
+
+    @GetMapping("/historico/credito")
+    public ResponseEntity<ResponseBody> findHistoricoTransacoesCreditadas()
+    {
+        //String ibanDestino = userInfo.getUserInfo().get("iban");
+
+        //List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesCreditadas(ibanDestino);
+        return this.ok("Transações de Crédito encontradas com sucesso!", null);
     }
 
     @PostMapping("/publishTransferencia")

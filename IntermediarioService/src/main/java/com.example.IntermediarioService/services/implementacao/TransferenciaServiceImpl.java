@@ -8,9 +8,11 @@ import com.example.IntermediarioService.component.UserInfo;
 import com.example.IntermediarioService.entities.Cliente;
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.services.TransferenciaService;
+import com.example.IntermediarioService.utils.pojos.ClientePojoMini;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJOEmis;
 //import com.example.IntermediarioService.utils.pojos.TransferenciaPojo;
+import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.IntermediarioService.services.implementacao.AbstractService;
@@ -44,7 +46,7 @@ implements TransferenciaService{
     UserInfo userInfo;
 
     private final String kuzolaBankIdentificador = "1003";
-    private final String waBankIdentificador = "404";
+    private final String waBankIdentificador = "4040";
 
     public static LocalDateTime formattingDateTime() {
 
@@ -97,7 +99,7 @@ implements TransferenciaService{
     public Transferencia convertingIntoTransferencia(TransferenciaPOJOEmis transferenciaPOJOEmis){
 
         Transferencia transferencia = new Transferencia();
-        transferencia.setEstadoTransferencia("REALIZADO");
+        transferencia.setEstadoTransferencia("Realizado");
         transferencia.setTipoTransferencia(transferenciaPOJOEmis.getTipoTransferencia());
         transferencia.setDescricao(transferenciaPOJOEmis.getDescricao());
         transferencia.setCanal("Banco Kuzola");
@@ -161,5 +163,22 @@ implements TransferenciaService{
         System.out.println("IBAN:"+userInfo.getUserInfo().get("iban"));
         System.out.println("numeroDaConta:"+userInfo.getUserInfo().get("accountNumber"));
     }
+
+    public ClientePojoMini getClientePojoMini(){
+
+        ClientePojoMini clientePojoMini = new ClientePojoMini();
+        clientePojoMini.setIban(userInfo.getUserInfo().get("iban"));
+        clientePojoMini.setNumeroDeConta(userInfo.getUserInfo().get("accountNumber"));
+        return  clientePojoMini;
+    }
+
+    public String convertingIntoClientePojoMiniJson(){
+
+        String clientePojoMiniJson = CustomJsonPojos.criarStrToJson(getClientePojoMini());
+        System.out.println("Data Json" + clientePojoMiniJson);
+        return  clientePojoMiniJson;
+    }
+
+
 
 }
