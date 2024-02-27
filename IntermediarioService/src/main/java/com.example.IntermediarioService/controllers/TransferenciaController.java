@@ -4,10 +4,7 @@
  */
 package com.example.IntermediarioService.controllers;
 
-import com.example.IntermediarioService.component.BancoComponent;
-import com.example.IntermediarioService.component.TransferenciaPojoComponent;
-import com.example.IntermediarioService.component.TransferenciaResponseComponent;
-import com.example.IntermediarioService.component.UserInfo;
+import com.example.IntermediarioService.component.*;
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.entities.User;
 import com.example.IntermediarioService.https.utils.ResponseBody;
@@ -47,8 +44,11 @@ public class TransferenciaController extends BaseController {
     TransferenciaServiceImpl transferenciaServiceImpl;
     @Autowired
     BancoComponent bancoComponent;
+
     @Autowired
-    KafkaTransferenciaProducer kafkaTransferenciaProducer;
+    TransferenciaComponent transferenciaComponent;
+    @Autowired
+    private KafkaTransferenciaProducer kafkaTransferenciaProducer;
 
     @Autowired
     TransferenciaPojoComponent transferenciaPOJOComponent;
@@ -103,6 +103,40 @@ public class TransferenciaController extends BaseController {
 
         //return this.created("Transferencia adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
         return ok("sjdfkjggh", transferencia);
+    }
+
+    @PostMapping("/interbancaria")
+    public  ResponseEntity createTransferenciaInterbancariaEmis(@RequestBody Transferencia transferencia)
+    {
+        String ibanOrigem = userInfo.getUserInfo().get("iban");
+        String accountNumber = userInfo.getUserInfo().get("accountNumber");
+        transferencia = transferenciaServiceImpl.fillingTransferenciaFields(transferencia, ibanOrigem);
+        CustomJsonPojos.saveTransferComponent(transferencia, transferenciaComponent, ibanOrigem, accountNumber);
+        String data = CustomJsonPojos.criarStrToJson2(transferencia, transferenciaComponent);
+        kafkaTransferenciaProducer.sendMessageTransferenciaFromEmis(data);
+        try {
+            Thread.sleep(200);
+            return this.ok("Ok tudo bem...", this);
+            //return this.ok(""+transferenciaMessage.getMessage().get("message"),transferenciaComponent.getTransferenciaResponse().values()) ;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/sendSolicitacaoTransferenciaKuzola")
+    public ResponseEntity sendSolicitacaoTransferenciaKuzola(@RequestBody Transferencia transferencia)
+    {
+        String data = CustomJsonPojos.convertTransfereciComponentString(transferenciaComponent);
+
+        if(transferenciaComponent.getTransferencia().get("bancoUdentifier").equals("4040"))
+        {
+            kafkaTransferenciaProducer.sendSolicitacaoTransferenciaKuzola(data);
+        }
+        else if(transferenciaComponent.getTransferencia().get("bancoUdentifier").equals("1003"))
+        {
+            kafkaTransferenciaProducer.sendSolicitacaoTransferenciaWakanda(data);
+        }
+        return this.ok("Envida com sucesso! ",this);
     }
 
     @DeleteMapping("/{id}")

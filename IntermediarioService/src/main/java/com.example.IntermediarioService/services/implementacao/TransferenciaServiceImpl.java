@@ -4,7 +4,9 @@
  */
 package com.example.IntermediarioService.services.implementacao;
 
+import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.component.UserInfo;
+import com.example.IntermediarioService.entities.Banco;
 import com.example.IntermediarioService.entities.Cliente;
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.services.TransferenciaService;
@@ -21,6 +23,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -42,6 +45,9 @@ implements TransferenciaService{
 
     @Autowired
     UserInfo userInfo;
+
+    @Autowired
+    BancoComponent bancoComponent;
 
     private final String kuzolaBankIdentificador = "1003";
     private final String waBankIdentificador = "404";
@@ -109,6 +115,37 @@ implements TransferenciaService{
 
         return  transferencia;
 
+    }
+
+    public Transferencia fillingTransferenciaFields(Transferencia transferencia, String ibanOrigem)
+    {
+        transferencia.setDataHora(new Date());
+        transferencia.setEstadoTransferencia("EM PROCESSAMENTO");
+        transferencia.setCanal("emis");
+        transferencia.setTipoTransferencia("Transferencia Interbancaria");
+        transferencia.setibanOrigem(ibanOrigem);
+
+        Banco banco = null;
+
+        Map<String,Integer> identificadorBanco = new HashMap<>();
+
+
+        if (ibanOrigem.substring(0,4).equals("4040"))
+        {
+            banco = new Banco(2);
+            banco.setCodigoIdentificadorBanco(Integer.parseInt(ibanOrigem.substring(0,4)));
+            identificadorBanco.put("UUID",banco.getCodigoIdentificadorBanco());
+            bancoComponent.setBancoComponent(identificadorBanco);
+        }
+        else if (ibanOrigem.substring(0,4).equals("1003"))
+        {
+            banco =new Banco(1);
+            banco.setCodigoIdentificadorBanco(Integer.parseInt(ibanOrigem.substring(0,4)));
+            identificadorBanco.put("UUID",banco.getCodigoIdentificadorBanco());
+            bancoComponent.setBancoComponent(identificadorBanco);
+        }
+        transferencia.setFkBanco(banco);
+        return  transferencia;
     }
 
     public Transferencia salvarTransferencia(Transferencia transferencia){

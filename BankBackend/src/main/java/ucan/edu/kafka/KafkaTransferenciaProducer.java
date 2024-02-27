@@ -74,4 +74,14 @@ public class KafkaTransferenciaProducer
                 .build();
         kafkaTemplate.send(message);
     }
+
+    public void sendResponseToIntermediario(String data)
+    {
+        LOGGER.info(String.format("wakandaResponseToIntermdiario ==> %s ", data.toString()));
+        Message<String> message = MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, "wakandaResponseToIntermdiario")
+                .build();
+        kafkaTemplate.send(message);
+    }
 }

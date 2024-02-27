@@ -35,9 +35,15 @@ public class AuthConfig
                         .requestMatchers(HttpMethod.GET,"/session").permitAll()
                         .requestMatchers(HttpMethod.POST.GET,"/deep").permitAll()
                         .requestMatchers(HttpMethod.POST,"/transferencia").hasRole("CLIENTE")
-                      //  .requestMatchers(HttpMethod.POST,"/transferencia/publishTransferencia").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.POST,"/transferencia/interbancaria").hasRole("CLIENTE")
+
+                        .requestMatchers(HttpMethod.POST,"/transferencia/sendSolicitacaoTransferenciaKuzola").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST,"/transferencia/publishTransferencia").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.POST,"/transferencia/response").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST,"/transferencia/responseTokuzola").hasRole("ADMIN")
+
+
 
                         .requestMatchers(HttpMethod.GET, "/transferencia/id/").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/transferencia/*").hasRole("ADMIN")

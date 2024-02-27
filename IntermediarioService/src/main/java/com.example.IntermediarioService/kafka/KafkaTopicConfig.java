@@ -76,4 +76,25 @@ public class KafkaTopicConfig
                 .partitions(3)
                 .build();
     }
+
+    @Bean
+    public NewTopic transferenciaIntrabancariaWakandaKuzolaBankEmis()
+    {
+        return TopicBuilder
+                .name("transferenciaEmis2")
+                .partitions(3)
+                .build();
+    }
+
+    @Bean
+    public NewTopic intermediarioTransferToKuzolaEmis()
+    {
+        return TopicBuilder
+                .name("intermediarioTransferToKuzola")
+                .partitions(3)
+                .build();
+    }
+
+
+
 }

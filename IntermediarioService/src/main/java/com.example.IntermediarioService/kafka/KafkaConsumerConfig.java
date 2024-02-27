@@ -2,6 +2,7 @@ package com.example.IntermediarioService.kafka;
 
 import com.example.IntermediarioService.authoriazation.Authorizarization;
 import com.example.IntermediarioService.component.BancoComponent;
+import com.example.IntermediarioService.component.TransferenciaComponent;
 import com.example.IntermediarioService.component.TransferenciaPojoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
 import com.example.IntermediarioService.dto.JwtDto;
@@ -44,13 +45,14 @@ public class KafkaConsumerConfig
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerConfig.class);
     private TransferenciaPOJO transferenciaPOJO;
-
     @Autowired
     private ClienteServiceImpl clienteImpl;
     @Autowired
     private AuthService authService;
     @Autowired
     private TransferenciaPojoComponent transferenciaPOJOComponent;
+    @Autowired
+    TransferenciaComponent transferenciaComponent;
     @Autowired
     private BancoComponent bancoComponent;
     @Autowired
@@ -117,7 +119,6 @@ public class KafkaConsumerConfig
         HttpEntity entityResponse = restTemplate.exchange("http://localhost:8082/transferencia/response", HttpMethod.POST,entity, String.class);
 
         System.out.println("Response transfer-kuzolabank:"+entityResponse);
-
     }
 
     @KafkaListener(topics = "responseWakanda", groupId = "myGroup")
@@ -165,7 +166,6 @@ public class KafkaConsumerConfig
         HttpEntity entityResponse = restTemplate.exchange("http://localhost:8082/transferencia/publishTransferencia", HttpMethod.POST,entity, String.class);
 
         System.out.println(" entityResponse:" +entityResponse);
-
     }
 
     @KafkaListener(topics ={"tr-intrabancarias-kb-emis", "resposta-tr-intrabancarias-kb-emis"}, groupId = "emisGroup")
@@ -208,6 +208,37 @@ public class KafkaConsumerConfig
 
         Cliente cliente = clienteImpl.saveCliente(obj);
         authService.signUp(obj, cliente);
+    }
+
+    @KafkaListener(topics = "wakandaResponseToIntermdiario", groupId = "myGroup")
+    public void consumerResponseFromWakandaTransferEmis(String message)
+    {
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson gson = builder.create();
+
+        LOGGER.info(String.format("Message received - Response: -> %s", message.toString()));
+
+        TransferenciaResponse response = gson.fromJson(message.toString(), TransferenciaResponse.class);
+        CustomJsonPojos.saveTransferResponseComponent(response, transferenciaResponseComponent);
+
+        if(response.getStatus())
+        {
+            String data = CustomJsonPojos.convertTransfereciComponentString(transferenciaComponent);
+            System.out.println("transferenciaComponent: " +transferenciaComponent.getTransferencia().values());
+            System.out.println(data);
+
+            HttpEntity entity = Authorizarization.createBody();
+            HttpEntity entityResponse = restTemplate.exchange("http://localhost:8082/transferencia/sendSolicitacaoTransferenciaKuzola", HttpMethod.POST,entity, String.class);
+
+            System.out.println(data);
+        }
+        else
+        {
+            System.out.println();
+        }
+        LOGGER.info(String.format("Message received from wakandaResponseToIntermdiario -> %s", message.toString()));
     }
 
 

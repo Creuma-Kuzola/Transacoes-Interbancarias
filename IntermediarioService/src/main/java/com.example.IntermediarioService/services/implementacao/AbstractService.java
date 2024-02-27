@@ -4,6 +4,7 @@
  */
 package com.example.IntermediarioService.services.implementacao;
 
+import com.example.IntermediarioService.entities.Transferencia;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -61,4 +62,6 @@ public abstract class AbstractService<E, K>
         this.repository.deleteById(id);
         return entidade.get();
     }
+
+
 }
