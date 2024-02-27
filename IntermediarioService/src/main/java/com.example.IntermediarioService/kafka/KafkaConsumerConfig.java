@@ -5,36 +5,26 @@ import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.component.TransferenciaComponent;
 import com.example.IntermediarioService.component.TransferenciaPojoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
-import com.example.IntermediarioService.dto.JwtDto;
-import com.example.IntermediarioService.dto.SignUpDto;
 import com.example.IntermediarioService.entities.Cliente;
-import com.example.IntermediarioService.repositories.ClienteRepository;
 import com.example.IntermediarioService.services.implementacao.AuthService;
 import com.example.IntermediarioService.services.implementacao.ClienteServiceImpl;
 import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 import com.example.IntermediarioService.utils.pojos.*;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import jakarta.validation.OverridesAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -60,7 +50,10 @@ public class KafkaConsumerConfig
     TransferenciaServiceImpl transferenciaServiceImpl;
 
     @Autowired
-    TransferenciaHistoricoComponent transferenciaHistoricoComponent;
+    TransferenciaHistoricoDebitoComponent transferenciaHistoricoDebitoComponent;
+
+    @Autowired
+    TransferenciaHistoricoCreditoComponent TransferenciaHistoricoCreditoComponent;
 
     public KafkaConsumerConfig()
     {
@@ -248,7 +241,7 @@ public class KafkaConsumerConfig
     }
 
     @KafkaListener(topics = "resposta-historico-debito-kb-emis", groupId = "emisGroup")
-    public void consumeMessageTransferenciaEmis(String message) throws JsonProcessingException {
+    public void consumeMessageTransferenciaEmisDebito(String message) throws JsonProcessingException {
 
         System.out.println("Entrei resposta EMis");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -256,10 +249,26 @@ public class KafkaConsumerConfig
         TransferenciaPOJOEmis[] st = objectMapper.readValue(message, TransferenciaPOJOEmis[].class);
         List<TransferenciaPOJOEmis> lista = new ArrayList<>(List.of(st));
 
-        transferenciaHistoricoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistorico.convertingIntoListTransferenciaHistorico(List.of(st)));
+        transferenciaHistoricoDebitoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistoricoDebito.convertingIntoListTransferenciaHistorico(List.of(st)));
 
         System.out.println("Lista Resposta Emis: "+ Arrays.toString(st));
-        System.out.println("Lista Resposta Emis lista: "+ lista.get(0));
+        System.out.println("Lista Resposta Emis lista: "+ lista.toString());
+
+    }
+
+    @KafkaListener(topics = "resposta-historico-credito-kb-emis", groupId = "emisGroup")
+    public void consumeMessageTransferenciaEmisCredito(String message) throws JsonProcessingException {
+
+        System.out.println("Entrei resposta EMis");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        TransferenciaPOJOEmis[] st = objectMapper.readValue(message, TransferenciaPOJOEmis[].class);
+        List<TransferenciaPOJOEmis> lista = new ArrayList<>(List.of(st));
+
+        TransferenciaHistoricoCreditoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistoricoCredito.convertingIntoListTransferenciaHistorico(List.of(st)));
+
+        System.out.println("Lista Credito Resposta Emis: "+ Arrays.toString(st));
+        System.out.println("Lista Credito Resposta Emis lista: "+ lista.toString());
 
     }
 }

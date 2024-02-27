@@ -1,10 +1,11 @@
 package com.example.IntermediarioService.utils.pojos.jsonUtils;
 
-import com.example.IntermediarioService.component.TransferenciaPojoComponent;
-import com.example.IntermediarioService.component.TransferenciaResponseComponent;
+import com.example.IntermediarioService.component.*;
 import com.example.IntermediarioService.entities.Transferencia;
+import com.example.IntermediarioService.utils.pojos.ClientePojoMini;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

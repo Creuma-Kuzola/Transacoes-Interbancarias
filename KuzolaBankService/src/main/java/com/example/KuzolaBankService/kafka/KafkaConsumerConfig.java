@@ -288,7 +288,7 @@ public class KafkaConsumerConfig
         ClientePojoMini clientePojoMini = objectMapper.readValue(message, ClientePojoMini.class);
         System.out.println("Cliente POjo in Kuzola Bank"+ clientePojoMini.toString());
 
-        List<String> lista = transferenciaServiceImpl.findHistoricoDeDebitoInEmis(clientePojoMini.getIban());
+        List<String> lista = transferenciaServiceImpl.findHistoricoDeCreditoInEmis(clientePojoMini.getIban());
         LOGGER.info(String.format("Message received Emis -> %s", message));
         System.out.println("Cheguei historico");
         System.out.println("Lista de Historico Credito"+ lista);

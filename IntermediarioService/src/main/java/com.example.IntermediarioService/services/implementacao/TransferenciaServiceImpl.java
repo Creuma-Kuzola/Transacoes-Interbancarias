@@ -11,22 +11,17 @@ import com.example.IntermediarioService.entities.Cliente;
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.services.TransferenciaService;
 import com.example.IntermediarioService.utils.pojos.ClientePojoMini;
-import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJOEmis;
 //import com.example.IntermediarioService.utils.pojos.TransferenciaPojo;
-import com.example.IntermediarioService.utils.pojos.TransferenciaResponseHistorico;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.IntermediarioService.services.implementacao.AbstractService;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

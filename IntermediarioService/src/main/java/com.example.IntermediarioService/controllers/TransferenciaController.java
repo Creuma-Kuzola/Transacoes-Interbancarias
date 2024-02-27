@@ -6,17 +6,16 @@ package com.example.IntermediarioService.controllers;
 
 import com.example.IntermediarioService.component.*;
 import com.example.IntermediarioService.entities.Transferencia;
-import com.example.IntermediarioService.entities.User;
 import com.example.IntermediarioService.https.utils.ResponseBody;
 import com.example.IntermediarioService.kafka.KafkaTransferenciaProducer;
 import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.IntermediarioService.utils.pojos.TransferenciaHistoricoComponent;
+import com.example.IntermediarioService.utils.pojos.TransferenciaHistoricoCreditoComponent;
+import com.example.IntermediarioService.utils.pojos.TransferenciaHistoricoDebitoComponent;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
@@ -64,7 +63,10 @@ public class TransferenciaController extends BaseController {
     RestTemplate restTemplate;
 
     @Autowired
-    TransferenciaHistoricoComponent transferenciaHistoricoComponent;
+    TransferenciaHistoricoDebitoComponent transferenciaHistoricoDebitoComponent;
+
+    @Autowired
+    TransferenciaHistoricoCreditoComponent transferenciaHistoricoCreditoComponent;
 
 
     @GetMapping
@@ -91,19 +93,23 @@ public class TransferenciaController extends BaseController {
         kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoDebito(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
         try {
             Thread.sleep(3000);
-            return this.historicoDebito(transferenciaHistoricoComponent.getTransferenciaResponseHistoricoList());
+            return this.historicoDebito(transferenciaHistoricoDebitoComponent.getTransferenciaResponseHistoricoList());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
     @GetMapping("/historico/credito")
-    public ResponseEntity<ResponseBody> findHistoricoTransacoesCreditadas()
-    {
-        //String ibanDestino = userInfo.getUserInfo().get("iban");
+    public ResponseEntity<ResponseBody> findHistoricoTransacoesCreditadas() throws JsonProcessingException {
 
-        //List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesCreditadas(ibanDestino);
-        return this.ok("Transações de Crédito encontradas com sucesso!", null);
+        kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCredito(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+
+        try {
+            Thread.sleep(3000);
+            return this.historicoCredito(transferenciaHistoricoCreditoComponent.getTransferenciaResponseHistoricoList());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping("/publishTransferencia")
