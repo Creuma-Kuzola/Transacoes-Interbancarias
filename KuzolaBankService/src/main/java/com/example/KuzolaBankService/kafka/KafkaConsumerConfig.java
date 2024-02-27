@@ -269,6 +269,21 @@ public class KafkaConsumerConfig
         kafkaTransferenciaProducer.sendRespostaOfHistoricoDebito(lista.toString());
     }
 
+    @KafkaListener(topics = "historico-credito-kb-emis")
+    public void consumeHistoricoCredito(String message) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ClientePojoMini clientePojoMini = objectMapper.readValue(message, ClientePojoMini.class);
+        System.out.println("Cliente POjo in Kuzola Bank"+ clientePojoMini.toString());
+
+        List<String> lista = transferenciaServiceImpl.findHistoricoDeDebitoInEmis(clientePojoMini.getIban());
+        LOGGER.info(String.format("Message received Emis -> %s", message));
+        System.out.println("Cheguei historico");
+        System.out.println("Lista de Historico Credito"+ lista);
+        kafkaTransferenciaProducer.sendRespostaOfHistoricoDebito(lista.toString());
+    }
+
 
 
 }

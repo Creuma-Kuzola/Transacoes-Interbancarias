@@ -155,6 +155,40 @@ public class KafkaTransferenciaProducer
 
     }
 
+    public  void sendClientePojoMiniOfHistoricoCredito(String clienteJson) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ClientePojoMini clientePojoMini = objectMapper.readValue(clienteJson, ClientePojoMini.class);
+
+        System.out.println("ClienteJson: "+ clienteJson);
+        System.out.println("ClientePOJOMini: "+ clientePojoMini);
+
+        if(transferenciaServiceImpl.isKuzolaBankIban(clientePojoMini.getIban()))
+        {
+            System.out.println("Entrei no Kuzola Bank");
+            Message<String> message = MessageBuilder
+                    .withPayload(clienteJson)
+                    .setHeader(KafkaHeaders.TOPIC, "historico-credito-kb-emis")
+                    .build();
+
+            kafkaTemplate.send(message);
+
+        }
+        else if(transferenciaServiceImpl.isWakandaBankIban(clientePojoMini.getIban()))
+        {
+            Message<String> message = MessageBuilder
+                    .withPayload(clienteJson)
+                    .setHeader(KafkaHeaders.TOPIC, "historico-credito-wb-emis")
+                    .build();
+
+            kafkaTemplate.send(message);
+        }
+
+
+    }
+
+
     public void sendMessageTransferenciaResponse(String data)
     {
         //data = t(kafkaConsumerConfig.getTransferenciaPOJO());

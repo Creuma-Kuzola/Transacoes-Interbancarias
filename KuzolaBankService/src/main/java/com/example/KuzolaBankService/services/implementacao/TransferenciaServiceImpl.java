@@ -382,6 +382,15 @@ implements TransferenciaService {
         return listaJsonEmis;
     }
 
+    public List<String> findHistoricoDeCreditoInEmis(String ibanOrigem){
+
+        List<TransferenciaPOJOEmis> listaEmis = this.convertingIntoListaTransferenciaEmis(findAllTransacoesCreditadas(ibanOrigem));
+        List<String> listaJsonEmis = convertingIntoListTransferenciaEmisJson(listaEmis);
+        System.out.println("Lista: "+ listaEmis.toString());
+
+        return listaJsonEmis;
+    }
+
 
 
 
