@@ -4,8 +4,14 @@
  */
 package com.example.KuzolaBankService.kafka;
 
+import com.example.KuzolaBankService.services.implementacao.TransferenciaServiceImpl;
+import com.example.KuzolaBankService.utils.pojos.ClientePojoMini;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
@@ -89,5 +95,17 @@ public class KafkaTransferenciaProducer
                 .setHeader(KafkaHeaders.TOPIC, "clienteKuzola")
                 .build();
         kafkaTemplate.send(message);
+    }
+
+    public  void sendRespostaOfHistoricoDebito(String clienteJson) throws JsonProcessingException {
+
+            System.out.println("Entrei no Kuzola Bank");
+            Message<String> message = MessageBuilder
+                    .withPayload(clienteJson)
+                    .setHeader(KafkaHeaders.TOPIC, "resposta-historico-debito-kb-emis")
+                    .build();
+
+            kafkaTemplate.send(message);
+
     }
 }

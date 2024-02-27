@@ -40,10 +40,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class KafkaConsumerConfig
@@ -195,7 +192,7 @@ public class KafkaConsumerConfig
             contaBancariServiceImpl.debito(transferenciaPOJO.getibanOrigem(), transferenciaPOJO.getMontante());
             contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
 
-            transferenciaServiceImpl.sendRespostaOfTransferenciaIntrabancariInEmis(transferenciaPOJO, kafkaTransferenciaProducer);
+            transferenciaServiceImpl.sendRespostaOfTransferenciaIntrabancariInEmis(transferenciaPOJO);
 
             LOGGER.info(String.format(" Transferencia efectuada com sucesso ", message.toString()));
 
@@ -260,15 +257,16 @@ public class KafkaConsumerConfig
     @KafkaListener(topics = "historico-debito-kb-emis")
     public void consumeMessageTransferenciaEmis(String message) throws JsonProcessingException {
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            ClientePojoMini clientePojoMini = objectMapper.readValue(message, ClientePojoMini.class);
-            System.out.println("Cliente POjo in Kuzola Bank"+ clientePojoMini.toString());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ClientePojoMini clientePojoMini = objectMapper.readValue(message, ClientePojoMini.class);
+        System.out.println("Cliente POjo in Kuzola Bank"+ clientePojoMini.toString());
 
-            LOGGER.info(String.format("Message received Emis -> %s", message));
-            System.out.println("Cheguei historico");
-        System.out.println("Lista de Historico Debito"+ transferenciaServiceImpl.findHistoricoDeDebitoInEmis(clientePojoMini.getIban()));
-
+        List<String> lista = transferenciaServiceImpl.findHistoricoDeDebitoInEmis(clientePojoMini.getIban());
+        LOGGER.info(String.format("Message received Emis -> %s", message));
+        System.out.println("Cheguei historico");
+        System.out.println("Lista de Historico Debito"+ lista);
+        kafkaTransferenciaProducer.sendRespostaOfHistoricoDebito(lista.toString());
     }
 
 

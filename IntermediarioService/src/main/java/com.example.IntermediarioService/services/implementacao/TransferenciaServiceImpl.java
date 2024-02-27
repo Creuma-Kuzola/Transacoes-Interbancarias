@@ -179,6 +179,4 @@ implements TransferenciaService{
         return  clientePojoMiniJson;
     }
 
-
-
 }

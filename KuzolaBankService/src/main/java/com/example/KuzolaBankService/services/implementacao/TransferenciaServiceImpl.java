@@ -283,6 +283,13 @@ implements TransferenciaService {
         return  transferenciaJsonEmis;
     }
 
+    public String convertingTransferenciaPOJOEmisInJson( TransferenciaPOJOEmis transferenciaPOJOEmis){
+
+        String transferenciaJsonEmis = CustomJsonPojos.criarStrToJson(transferenciaPOJOEmis);
+        System.out.println("Data Json" + transferenciaJsonEmis);
+        return  transferenciaJsonEmis;
+    }
+
     public Transferencia buildTransferencia(TransferenciaComponent transferenciaComponent) throws ParseException
     {
         Transferencia transferencia = new Transferencia();
@@ -334,7 +341,7 @@ implements TransferenciaService {
         return transferenciaCreated;
     }
 
-    public void sendRespostaOfTransferenciaIntrabancariInEmis(TransferenciaPOJO transferenciaPOJO, KafkaTransferenciaProducer kafkaTransferenciaProducer)
+    public void sendRespostaOfTransferenciaIntrabancariInEmis(TransferenciaPOJO transferenciaPOJO)
     {
           String jsonEmis =  convertingTransferenciaInJsonEmis(transferenciaPOJO);
           kafkaTransferenciaProducer.sendRespostaTransferenciaIntraBancariaInEmis(jsonEmis);
@@ -354,12 +361,28 @@ implements TransferenciaService {
 
     }
 
-    public String findHistoricoDeDebitoInEmis(String ibanOrigem){
+    public List<String> convertingIntoListTransferenciaEmisJson(List<TransferenciaPOJOEmis> listaEmis){
 
-      List <TransferenciaPOJOEmis> listaEmis = this.convertingIntoListaTransferenciaEmis(findAllTransacoesDebitadas(ibanOrigem));
-        System.out.println("Lista: "+ listaEmis.toString());
-        return listaEmis.toString();
+        List<String> listaString = new ArrayList<>();
+        for (TransferenciaPOJOEmis transferenciaPOJOEmis: listaEmis)
+        {
+            String st = " [ ";
+            st = convertingTransferenciaPOJOEmisInJson(transferenciaPOJOEmis);
+            listaString.add(st);
+        }
+        return listaString;
     }
+
+    public List<String> findHistoricoDeDebitoInEmis(String ibanOrigem){
+
+      List<TransferenciaPOJOEmis> listaEmis = this.convertingIntoListaTransferenciaEmis(findAllTransacoesDebitadas(ibanOrigem));
+      List<String> listaJsonEmis = convertingIntoListTransferenciaEmisJson(listaEmis);
+      System.out.println("Lista: "+ listaEmis.toString());
+
+        return listaJsonEmis;
+    }
+
+
 
 
 
