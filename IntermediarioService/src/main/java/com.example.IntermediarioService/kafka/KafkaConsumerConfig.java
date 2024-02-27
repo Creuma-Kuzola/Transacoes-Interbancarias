@@ -57,6 +57,9 @@ public class KafkaConsumerConfig
     @Autowired
     TransferenciaServiceImpl transferenciaServiceImpl;
 
+    @Autowired
+    TransferenciaHistoricoComponent transferenciaHistoricoComponent;
+
     public KafkaConsumerConfig()
     {
         transferenciaPOJO = new TransferenciaPOJO();
@@ -219,16 +222,13 @@ public class KafkaConsumerConfig
         System.out.println("Entrei resposta EMis");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        //objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
         TransferenciaPOJOEmis[] st = objectMapper.readValue(message, TransferenciaPOJOEmis[].class);
         List<TransferenciaPOJOEmis> lista = new ArrayList<>(List.of(st));
+
+        transferenciaHistoricoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistorico.convertingIntoListTransferenciaHistorico(List.of(st)));
+
         System.out.println("Lista Resposta Emis: "+ Arrays.toString(st));
         System.out.println("Lista Resposta Emis lista: "+ lista.get(0));
 
-
-
     }
-
-
-
 }

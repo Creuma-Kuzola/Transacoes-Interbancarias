@@ -12,6 +12,7 @@ import com.example.IntermediarioService.utils.pojos.ClientePojoMini;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJOEmis;
 //import com.example.IntermediarioService.utils.pojos.TransferenciaPojo;
+import com.example.IntermediarioService.utils.pojos.TransferenciaResponseHistorico;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -171,12 +173,14 @@ implements TransferenciaService{
         clientePojoMini.setNumeroDeConta(userInfo.getUserInfo().get("accountNumber"));
         return  clientePojoMini;
     }
-
     public String convertingIntoClientePojoMiniJson(){
 
         String clientePojoMiniJson = CustomJsonPojos.criarStrToJson(getClientePojoMini());
         System.out.println("Data Json" + clientePojoMiniJson);
         return  clientePojoMiniJson;
     }
+
+
+
 
 }

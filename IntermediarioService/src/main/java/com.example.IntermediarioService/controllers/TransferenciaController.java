@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.IntermediarioService.utils.pojos.TransferenciaHistoricoComponent;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
@@ -62,6 +63,10 @@ public class TransferenciaController extends BaseController {
     @Autowired
     RestTemplate restTemplate;
 
+    @Autowired
+    TransferenciaHistoricoComponent transferenciaHistoricoComponent;
+
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencias()
     {
@@ -82,11 +87,14 @@ public class TransferenciaController extends BaseController {
 
     @GetMapping("/historico/debito")
     public ResponseEntity<ResponseBody> findHistoricoTransacoesDebito() throws JsonProcessingException {
-       // List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesDebitadas(userInfo.getUserInfo().get("iban"));
 
         kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoDebito(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
-
-        return this.ok("Transações de Débito encontradas com sucesso!", null);
+        try {
+            Thread.sleep(3000);
+            return this.historicoDebito(transferenciaHistoricoComponent.getTransferenciaResponseHistoricoList());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @GetMapping("/historico/credito")

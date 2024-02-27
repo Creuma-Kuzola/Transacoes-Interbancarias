@@ -60,8 +60,6 @@ public class TransferenciaController extends BaseController
     @Autowired
     TransferenciaComponent transferenciaComponent;
 
-    Transferencia transferenciaCreated;
-
     public TransferenciaController(KafkaTransferenciaProducer kafkaTransferenciaProducer)
     {
         this.kafkaTransferenciaProducer = kafkaTransferenciaProducer;
