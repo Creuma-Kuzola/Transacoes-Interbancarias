@@ -4,9 +4,13 @@
  */
 package com.example.KuzolaBankService.controllers;
 
+import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.https.utils.ResponseBody;
 import com.example.KuzolaBankService.services.implementacao.ClienteServiceImpl;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.example.KuzolaBankService.services.implementacao.ContaBancariaServiceImpl;
@@ -60,10 +64,14 @@ public class ClienteController extends BaseController {
     @Transactional
     public ResponseEntity<ResponseBody> createCliente(@RequestBody Cliente cliente)
     {
-        ResponseEntity<ResponseBody> clienteResponse = this.created("Cliente adicionado com sucesso.", this.clienteServiceImpl.criar(cliente));
-        contaBancariServiceImpl.criar(contaBancariServiceImpl.creatingContaBancariaByFkCliente(cliente));
+        Cliente clienteCreated = this.clienteServiceImpl.criar(cliente);
+        ResponseEntity<ResponseBody> clienteResponse = this.created("Cliente adicionado com sucesso.", clienteCreated);
+        ContaBancaria contaBancaria = contaBancariServiceImpl.criar(contaBancariServiceImpl.creatingContaBancariaByFkCliente(cliente));
+        clienteServiceImpl.saveClientPOJO(contaBancaria,clienteCreated);
         return clienteResponse;
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseBody> deleteCliente(@PathVariable("id") Integer id)

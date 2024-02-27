@@ -41,5 +41,13 @@ public class KafkaTopicConfig {
                 .build();
     }
 
+    @Bean NewTopic clienteKuzola()
+    {
+        return  TopicBuilder
+                .name("clienteKuzola")
+                .partitions(3)
+                .build();
+    }
+
 
 }

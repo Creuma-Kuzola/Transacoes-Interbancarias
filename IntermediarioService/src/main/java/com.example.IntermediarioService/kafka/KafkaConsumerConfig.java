@@ -196,6 +196,20 @@ public class KafkaConsumerConfig
         authService.signUp(obj, cliente);
     }
 
+    @KafkaListener(topics = "clienteKuzola", groupId = "kuzolaGroup")
+    public  void consumerKuzolaClienteInfo(String message)
+    {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+
+        Gson gson = builder.create();
+        LOGGER.info(String.format("Message received from kuzola -> %s", message.toString()));
+        ClientePOJO obj = gson.fromJson(message.toString(), ClientePOJO.class);
+
+        Cliente cliente = clienteImpl.saveCliente(obj);
+        authService.signUp(obj, cliente);
+    }
+
 
     public TransferenciaPOJO getTransferenciaPOJO()
     {

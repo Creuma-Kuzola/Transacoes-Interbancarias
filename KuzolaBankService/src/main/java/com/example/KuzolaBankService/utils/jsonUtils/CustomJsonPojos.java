@@ -1,10 +1,7 @@
 package com.example.KuzolaBankService.utils.jsonUtils;
 
 
-import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
-import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
-import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJOEmis;
-import com.example.KuzolaBankService.utils.pojos.TransferenciaResponse;
+import com.example.KuzolaBankService.utils.pojos.*;
 
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -67,5 +64,18 @@ public class CustomJsonPojos {
     {
         return "{ \"descricao\": \""+response.getDescricao()+"\", " +
                 "\"status\": \"" +response.getStatus()+ "\" }";
+    }
+
+    public  static String clientePOJOjson(ClientePOJO clientePOJO)
+    {
+        return "{ \"pkCliente\": \""+clientePOJO.getPkCliente()+"\", " +
+                "\"nome\": \"" +clientePOJO.getNome()+ "\"," +
+                "\"iban\": \"" +clientePOJO.getIban()+ "\"," +
+                "\"numeroConta\": \"" +clientePOJO.getNumeroConta()+ "\"," +
+                "\"fkBanco\": \"" +clientePOJO.getFkBanco()+ "\"," +
+                "\"login\": \"" +clientePOJO.getLogin()+ "\"," +
+                "\"password\": \"" +clientePOJO.getPassword()+ "\"," +
+                "\"role\": \"" +clientePOJO.getRole()+ "\"" +
+                " }";
     }
 }

@@ -80,4 +80,14 @@ public class KafkaTransferenciaProducer
                 .build();
         kafkaTemplate.send(message);
     }
+
+    public void sendClienteInfo(String data)
+    {
+        LOGGER.info(String.format("info kuzola info sent ==> %s ", data.toString()));
+        Message<String> message = MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, "clienteKuzola")
+                .build();
+        kafkaTemplate.send(message);
+    }
 }
