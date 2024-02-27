@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ucan.edu.config.component.TransferenciaComponent;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
 import ucan.edu.utils.pojos.ClientePOJO;
+import ucan.edu.utils.pojos.TransferenciaCustomPOJO;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
 import ucan.edu.utils.pojos.TransferenciaResponse;
 
@@ -78,6 +79,7 @@ public class CustomJsonPojos {
 
         System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
     }
+
 
 
 

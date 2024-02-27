@@ -3,7 +3,6 @@ package com.example.IntermediarioService.utils.pojos.jsonUtils;
 import com.example.IntermediarioService.component.TransferenciaPojoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
 import com.example.IntermediarioService.entities.Transferencia;
-import com.example.IntermediarioService.utils.pojos.ClientePojoMini;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
 
@@ -19,6 +18,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CustomJsonPojos {
+
+    @Autowired
+    private static UserInfo userInfo;
+    @Autowired
+    private static BancoComponent bancoComponent;
+    @Autowired
+    private static TransferenciaPojoComponent transferenciaPojoComponent;
+
+    @Autowired
+    private static TransferenciaComponent transferenciaComponent;
 
       //userInfo.getUserInfo().get("accountNumber") +
     public static String criarStrToJson(TransferenciaPOJO transferenciaPOJO)
@@ -52,6 +61,29 @@ public class CustomJsonPojos {
         transferenciaResponse.setDescricao(transferenciaResponseComponent.getTransferenciaResponse().get("descricao"));
         transferenciaResponse.setStatus(transferenciaResponseComponent.getTransferenciaResponse().get("status").equals("true") ? true : false);
         return  transferenciaResponse;
+    }
+
+    public static String convertTransfereciComponentString(TransferenciaComponent transferenciaComponent) {
+
+
+        System.out.println(" transferenciaComponent: " +transferenciaComponent.getTransferencia().values());
+
+        String str = "{\n"
+                + "  \"pkTransferencia\": " + transferenciaComponent.getTransferencia().get("pkTransferencia") + ",\n"
+                + "   \"descricao\": \"" + transferenciaComponent.getTransferencia().get("descricao") + "\",\n"
+                + "    \"montante\": " + transferenciaComponent.getTransferencia().get("montante") + ",\n"
+                + "    \"ibanDestinatario\": \"" + transferenciaComponent.getTransferencia().get("ibanDestinatario") + "\",\n"
+                + "    \"datahora\":\"" + transferenciaComponent.getTransferencia().get("datahora") + "\",\n"
+                + "    \"fkContaBancariaOrigem\": " +transferenciaComponent.getTransferencia().get("fkContaBancariaOrigem") +",\n"
+                + "    \"ibanOrigem\": " +transferenciaComponent.getTransferencia().get("ibanOrigem") +",\n"
+                + "    \"tipoTransferencia\": \"" + transferenciaComponent.getTransferencia().get("tipoTransferencia") + "\",\n"
+                + "    \"estadoTransferencia\": \"" + transferenciaComponent.getTransferencia().get("estadoTransferencia")+ "\",\n"
+                + "    \"codigoTransferencia\": \"" + transferenciaComponent.getTransferencia().get("codigoTransferencia")  + "\",\n"
+                + "    \"bancoUdentifier\":"+transferenciaComponent.getTransferencia().get("bancoUdentifier")+"\n"
+                + "}";
+
+        System.out.println(str);
+        return str;
     }
 
     public LocalDateTime formattingDateTime(LocalDateTime localDateTime) {
@@ -95,6 +127,27 @@ public class CustomJsonPojos {
 
 
 
+    public static String criarStrToJson2(Transferencia transferencia, TransferenciaComponent transferenciaComponent)
+    {
+        String str = "{\n"
+                + "  \"pkTransferencia\": " + transferencia.getPkTransferencia() + ",\n"
+                + "   \"descricao\": \"" + transferencia.getDescricao() + "\",\n"
+                + "    \"montante\": " + transferencia.getMontante() + ",\n"
+                + "    \"ibanDestinatario\": \"" + transferencia.getIbanDestinatario() + "\",\n"
+                + "    \"datahora\":\"" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferencia.getDataHora()) + "\",\n"
+                + "    \"fkContaBancariaOrigem\": " +transferenciaComponent.getTransferencia().get("fkContaBancariaOrigem") +",\n"
+                + "    \"ibanOrigem\": " +transferencia.getibanOrigem() +",\n"
+                + "    \"tipoTransferencia\": \"" + transferencia.getTipoTransferencia() + "\",\n"
+                + "    \"estadoTransferencia\": \"" + transferencia.getEstadoTransferencia() + "\",\n"
+                + "    \"codigoTransferencia\": \"" + transferenciaComponent.getTransferencia().get("codigoTransferencia")  + "\",\n"
+                + "    \"bancoUdentifier\":"+transferenciaComponent.getTransferencia().get("bancoUdentifier")+"\n"
+                + "}";
+
+        System.out.println("str" +str);
+        return str;
+    }
+
+
     public  static String TransferenciaResponse(TransferenciaResponse response)
     {
         return "{ \"descricao\": \""+response.getDescricao()+"\", " +
@@ -114,9 +167,33 @@ public class CustomJsonPojos {
         transferenciaItems.put("tipoTransferencia", transferencia.getTipoTransferencia());
         transferenciaItems.put("estadoTransferencia", transferencia.getEstadoTransferencia());
         transferenciaItems.put("codigoTransferencia",""+transferencia.getCodigoTransferencia());
-        transferenciaItems.put("bancoUdentifier",""+transferencia.getCodigoTransferencia());
+        transferenciaItems.put("bancoUdentifier",""+transferencia.getBancoUdentifier());
         transferenciaItems.put("ibanOrigem",transferencia.getIbanOrigem());
         transferenciaPOJOComponent.setTransferencia(transferenciaItems);
+    }
+
+    public static void  saveTransferComponent(Transferencia transferencia, TransferenciaComponent transferenciaComponent, String ibanOrigem, String accountNumber)  {
+        Map<String, String> transferenciaItems = new HashMap<>();
+
+
+        transferenciaItems.put("descricao", transferencia.getDescricao());
+        transferenciaItems.put("montante", transferencia.getMontante().toString());
+        transferenciaItems.put("ibanDestinatario", transferencia.getIbanDestinatario());
+        transferenciaItems.put("datahora","" +
+                "" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transferencia.getDataHora()));
+        transferenciaItems.put("fkContaBancariaOrigem",""+accountNumber);
+        transferenciaItems.put("tipoTransferencia", transferencia.getTipoTransferencia());
+        transferenciaItems.put("estadoTransferencia", transferencia.getEstadoTransferencia());
+        transferenciaItems.put("codigoTransferencia","2982");
+        transferenciaItems.put("bancoUdentifier",""+transferencia.getFkBanco().getCodigoIdentificadorBanco());
+        transferenciaItems.put("ibanOrigem",ibanOrigem);
+        transferenciaItems.put("canal",transferencia.getCanal());
+        transferenciaItems.put("fkBanco",""+transferencia.getFkBanco());
+        transferenciaComponent.setTransferencia(transferenciaItems);
+
+        System.out.println("UUID:" +transferenciaItems.get("bancoUdentifier"));
+        System.out.println("aa:" +transferencia.getFkBanco().getCodigoIdentificadorBanco());
+        System.out.println(" "+transferenciaComponent.getTransferencia().values());
     }
 
     public  static  TransferenciaPOJO convertToTransferenciaPOJO(TransferenciaPojoComponent transferenciaPOJOComponent) throws ParseException {

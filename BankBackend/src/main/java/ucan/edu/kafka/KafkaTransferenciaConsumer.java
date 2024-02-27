@@ -54,6 +54,9 @@ public class KafkaTransferenciaConsumer
     private final TransferenciaServiceImpl transferenciaServiceImpl;
     @Autowired
     private TransferenciaComponent transferenciaComponent;
+
+    @Autowired
+    private KafkaTransferenciaProducer kafkaTransferenciaProducer;
     @Autowired
     ContaBancariaServiceImpl contaBancariServiceImpl;
     private TransferenciaPOJO transferenciaPOJO;
@@ -264,7 +267,6 @@ public class KafkaTransferenciaConsumer
         objectMapper.registerModule(new JavaTimeModule());
 
         try {
-
             System.out.println("Entrei Try Catch");
 
             TransferenciaPOJO transferenciaPOJO = objectMapper.readValue(message, TransferenciaPOJO.class);
@@ -287,6 +289,47 @@ public class KafkaTransferenciaConsumer
         }
 
     }
+
+
+    @KafkaListener(topics = "transferenciaEmis2", groupId = "transferenciaGroup")
+    public void consumerMessageFromIntermediarioTransfer(String message)
+    {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
+        Gson gson = builder.create();
+        LOGGER.info(String.format("Message received -> %s", message.toString()));
+
+        TransferenciaPOJO  obj = gson.fromJson(message.toString(), TransferenciaPOJO.class);
+        System.out.println("Descricao " + obj.getDescricao());
+        transferenciaPOJO = obj;
+
+        CustomJsonPojos.saveTransferComponent(obj,transferenciaComponent);
+
+        System.out.println("saved: " + transferenciaComponent.getTransferenciaResponse().values());
+
+        boolean isValidIban = contaBancariServiceImpl.existsIban(obj.getIbanOrigem());
+        ContaBancaria isActiva = contaBancariServiceImpl.isAccountStatus(obj.getIbanOrigem(), StatusContaBancaria.ACTIVO);
+
+        TransferenciaResponse transferenciaResponse = new TransferenciaResponse();
+        String data = " ";
+
+        if (isValidIban && isActiva != null)
+        {
+            transferenciaResponse.setStatus(true);
+            transferenciaResponse.setDescricao("Disponivel para efectuar a operação");
+            data = CustomJsonPojos.TransferenciaResponse(transferenciaResponse);
+        }
+        else
+        {
+            transferenciaResponse.setStatus(false);
+            transferenciaResponse.setDescricao("Conta indisponivel para efectuar operação");
+            data = CustomJsonPojos.TransferenciaResponse(transferenciaResponse);
+        }
+        kafkaTransferenciaProducer.sendResponseToIntermediario(data);
+    }
+
+
 
 
     public void consumer()

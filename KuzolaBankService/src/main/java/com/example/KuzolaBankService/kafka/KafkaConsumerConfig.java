@@ -254,6 +254,17 @@ public class KafkaConsumerConfig
         LOGGER.info(String.format("Message received response transferencia status from transferencia topic-> %s", message.toString()));
     }
 
+    @KafkaListener(topics = "intermediarioTransferToKuzola", groupId = "transferenciaGroup")
+    public void consumerSolicitacaoEmisTransfer(String message)
+    {
+        LOGGER.info(String.format("intermediarioTransferToKuzola topic-> %s", message.toString()));
+    }
+
+    /*@KafkaListener(topics = "tr-intrabancarias-kb-emis", groupId = "emisGroup")
+    public void consumeMessageTransferenciaEmis(String message)
+    {
+        LOGGER.info(String.format("Message received Emis -> %s", message.toString()));
+    }*/
     @KafkaListener(topics = "historico-debito-kb-emis")
     public void consumeMessageTransferenciaEmis(String message) throws JsonProcessingException {
 

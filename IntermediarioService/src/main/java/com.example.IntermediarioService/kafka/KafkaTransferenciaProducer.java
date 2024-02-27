@@ -83,6 +83,34 @@ public class KafkaTransferenciaProducer
         kafkaTemplate.send(message);
     }
 
+    public void sendMessageTransferenciaFromEmis(String data)
+    {
+        ///data = CustomJsonPojos.criarStrToJson(kafkaConsumerConfig.getTransferenciaPOJO());
+        LOGGER.info(String.format("Message sent from emis to cliente ==> %s ", data.toString()));
+        Integer bankId = bancoComponent.geBancoComponent().get("UUID");
+        Message<String> message = null;
+
+        if (bankId == 1003)
+        {
+            System.out.println("PASSOU AQUI: BANCO IDENTIFICADOR KUZOLA: " +bankId);
+            message= MessageBuilder
+                    .withPayload(data)
+                    .setHeader(KafkaHeaders.TOPIC, "transferenciaEmis1")
+                    .build();
+            kafkaTemplate.send(message);
+        }
+        else if (bankId == 4040)
+        {
+            System.out.println("PASSOU AQUI: BANCO IDENTIFICADOR WAKANDA: " +bankId);
+            message= MessageBuilder
+                    .withPayload(data)
+                    .setHeader(KafkaHeaders.TOPIC, "transferenciaEmis2")
+                    .build();
+            kafkaTemplate.send(message);
+        }
+
+    }
+
     public  void sendMessageTransferenciaInEmis(String transferencia) throws JsonProcessingException {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -212,5 +240,20 @@ public class KafkaTransferenciaProducer
                 .build();
 
         kafkaTemplate.send(message);
+    }
+
+    public void sendSolicitacaoTransferenciaKuzola(String data)
+    {
+        System.out.println("sendSolicitacaoTransferenciaKuzola AQUI");
+        LOGGER.info(String.format("intermediarioTransferToKuzola ==> %s ", data.toString()));
+        Message<String> message = MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, "intermediarioTransferToKuzola")
+                .build();
+
+        kafkaTemplate.send(message);
+    }
+
+    public void sendSolicitacaoTransferenciaWakanda(String data) {
     }
 }
