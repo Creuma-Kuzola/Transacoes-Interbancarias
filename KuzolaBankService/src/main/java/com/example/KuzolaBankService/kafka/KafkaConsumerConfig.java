@@ -186,23 +186,50 @@ public class KafkaConsumerConfig
             System.out.println("Transferencia POjo in Kuzola Bank"+ transferenciaPOJO.toString());
 
             if(transferenciaPOJO.getEstadoTransferencia() == null){
-                transferenciaServiceImpl.criar(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJO));
+
+               if (transferenciaServiceImpl.isTransferenciaInformationValid(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante(), transferenciaPOJO.getibanOrigem())) {
+
+                   transferenciaServiceImpl.criar(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJO));
+
+                   contaBancariServiceImpl.debito(transferenciaPOJO.getibanOrigem(), transferenciaPOJO.getMontante());
+                   contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
+
+                   transferenciaServiceImpl.sendRespostaOfTransferenciaIntrabancariInEmis(transferenciaPOJO);
+
+                   LOGGER.info(String.format(" Transferencia efectuada com sucesso ", message.toString()));
+
+                   System.out.println("\nTransferencia efectuada com sucesso: "+
+                           "\n"+ "Data-Hora: "+ transferenciaPOJO.getDatahora()+ "\n"+
+                           "Montante (Kz): "+ transferenciaPOJO.getMontante()+ "\n"+
+                           "Estado: "+ transferenciaPOJO.getEstadoTransferencia()+ "\n"+
+                           "Iban do Destinatario: "+ transferenciaPOJO.getIbanDestinatario()+"\n"+
+                           "IBAn Origem: "+ transferenciaPOJO.getibanOrigem()
+                   );
+               }
+               else{
+
+                   transferenciaPOJO.setEstadoTransferencia("ERRO: Informação Invalida");
+                   transferenciaServiceImpl.sendRespostaOfTransferenciaIntrabancariInEmis(transferenciaPOJO);
+               }
             }
+            else {
 
-            contaBancariServiceImpl.debito(transferenciaPOJO.getibanOrigem(), transferenciaPOJO.getMontante());
-            contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
+                contaBancariServiceImpl.debito(transferenciaPOJO.getibanOrigem(), transferenciaPOJO.getMontante());
+                contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
 
-            transferenciaServiceImpl.sendRespostaOfTransferenciaIntrabancariInEmis(transferenciaPOJO);
+                transferenciaServiceImpl.sendRespostaOfTransferenciaIntrabancariInEmis(transferenciaPOJO);
 
-            LOGGER.info(String.format(" Transferencia efectuada com sucesso ", message.toString()));
+                LOGGER.info(String.format(" Transferencia efectuada com sucesso ", message.toString()));
 
-            System.out.println("\nTransferencia efectuada com sucesso: "+
-                    "\n"+ "Data-Hora: "+ transferenciaPOJO.getDatahora()+ "\n"+
-                    "Montante (Kz): "+ transferenciaPOJO.getMontante()+ "\n"+
-                    "Estado: "+ transferenciaPOJO.getEstadoTransferencia()+ "\n"+
-                    "Iban do Destinatario: "+ transferenciaPOJO.getIbanDestinatario()+"\n"+
-                    "IBAn Origem: "+ transferenciaPOJO.getibanOrigem()
-            );
+                System.out.println("\nTransferencia efectuada com sucesso: "+
+                        "\n"+ "Data-Hora: "+ transferenciaPOJO.getDatahora()+ "\n"+
+                        "Montante (Kz): "+ transferenciaPOJO.getMontante()+ "\n"+
+                        "Estado: "+ transferenciaPOJO.getEstadoTransferencia()+ "\n"+
+                        "Iban do Destinatario: "+ transferenciaPOJO.getIbanDestinatario()+"\n"+
+                        "IBAn Origem: "+ transferenciaPOJO.getibanOrigem()
+                );
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

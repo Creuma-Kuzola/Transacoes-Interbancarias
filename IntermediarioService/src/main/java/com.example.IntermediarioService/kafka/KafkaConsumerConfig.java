@@ -58,6 +58,9 @@ public class KafkaConsumerConfig
     @Autowired
     SaldoResponseComponent saldoResponseComponent;
 
+    @Autowired
+    TransferenciaComponentResponse transferenciaComponentResponse;
+
     public KafkaConsumerConfig()
     {
         transferenciaPOJO = new TransferenciaPOJO();
@@ -171,11 +174,18 @@ public class KafkaConsumerConfig
 
         TransferenciaPOJOEmis transferenciaPOJOEmis = objectMapper.readValue(message, TransferenciaPOJOEmis.class);
 
-        LOGGER.info(String.format("Message received in emis -> %s", message.toString()));
-        System.out.println("Mensagem Recebida TransferenciaPOJOEmis: "+ transferenciaPOJOEmis.toString());
-        System.out.println("Converting into Transferencia"+ transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis).toString());
+        if(!Objects.equals(transferenciaPOJOEmis.getEstadoTransferencia(), "ERRO: Informação Invalida")) {
+            LOGGER.info(String.format("Message received in emis -> %s", message.toString()));
+            System.out.println("Mensagem Recebida TransferenciaPOJOEmis: " + transferenciaPOJOEmis.toString());
+            System.out.println("Converting into Transferencia" + transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis).toString());
+            transferenciaPOJOEmis.setEstadoTransferencia("Realizado");
+            transferenciaComponentResponse.setTransferencia(transferenciaServiceImpl.salvarTransferencia(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis)));
+        }
+        else {
 
-        transferenciaServiceImpl.salvarTransferencia(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis));
+            transferenciaComponentResponse.setTransferencia(TransferenciaPOJOEmis.convertingIntoTransferencia(transferenciaPOJOEmis));
+
+        }
     }
 
     @KafkaListener(topics = "clienteWakanda", groupId = "myGroup")

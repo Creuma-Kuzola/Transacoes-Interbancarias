@@ -12,6 +12,7 @@ import com.example.IntermediarioService.services.implementacao.TransferenciaServ
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.example.IntermediarioService.utils.pojos.*;
@@ -67,6 +68,10 @@ public class TransferenciaController extends BaseController {
 
     @Autowired
     SaldoResponseComponent saldoResponseComponent;
+
+    @Autowired
+    TransferenciaComponentResponse transferenciaComponentResponse;
+
 
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencias()
@@ -191,6 +196,21 @@ public class TransferenciaController extends BaseController {
         if (responseVerification == 1) {
             transferenciaServiceImpl.fillingTransactionFields(transferencia, ibanOrigem);
             kafkaTransferenciaProducer.sendMessageTransferenciaInEmis(customJsonPojos.criarStrToJson(transferencia).toString());
+
+            try {
+                Thread.sleep(400);
+                if(Objects.equals(transferenciaComponentResponse.getTransferencia().getEstadoTransferencia(), "ERRO: Informação Invalida"))
+                {
+                    return this.erro("ERRO: Informação Invalida");
+                }
+                else {
+                    return this.ok("Transferencia Efectuada com sucesso", transferenciaComponentResponse.getTransferencia());
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+
         } else if (responseVerification == 2) {
             return erro("O iban de Origem e o iban destinatario não podem ser iguais");
         } else if (responseVerification == 3){

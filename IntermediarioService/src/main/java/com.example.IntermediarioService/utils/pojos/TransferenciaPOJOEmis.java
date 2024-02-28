@@ -1,5 +1,7 @@
 package com.example.IntermediarioService.utils.pojos;
 
+import com.example.IntermediarioService.entities.Transferencia;
+import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -35,6 +37,21 @@ public class TransferenciaPOJOEmis {
     @JsonProperty("codigoTransferencia")
     private String codigoTransferencia;
 
+
+    public static Transferencia convertingIntoTransferencia(TransferenciaPOJOEmis transferenciaPOJO)
+    {
+        Transferencia transferenciaPOJOEmis = new Transferencia();
+        transferenciaPOJOEmis.setEstadoTransferencia(transferenciaPOJO.getEstadoTransferencia());
+        transferenciaPOJOEmis.setDataHora(TransferenciaServiceImpl.convertingLocalDateTimeIntoDate(transferenciaPOJO.getDatahora()));
+        transferenciaPOJOEmis.setDescricao(transferenciaPOJO.getDescricao());
+        transferenciaPOJOEmis.setIbanDestinatario(transferenciaPOJO.getIbanDestinatario());
+        transferenciaPOJOEmis.setibanOrigem(transferenciaPOJO.getIbanOrigem());
+        transferenciaPOJOEmis.setTipoTransferencia(transferenciaPOJO.getTipoTransferencia());
+        transferenciaPOJOEmis.setMontante(transferenciaPOJO.getMontante());
+        transferenciaPOJOEmis.setPkTransferencia(transferenciaPOJO.getPkTransferencia());
+
+        return transferenciaPOJOEmis;
+    }
 
     // Getters and setters
     public Integer getPkTransferencia() {
@@ -79,7 +96,7 @@ public class TransferenciaPOJOEmis {
         return ibanOrigem;
     }
 
-    public void setFkContaBancariaOrigem(String ibanOrigem) {
+    public void setIbanOrigem(String ibanOrigem) {
         this.ibanOrigem = ibanOrigem;
     }
 

@@ -33,13 +33,6 @@ import java.util.Map;
 public class TransferenciaServiceImpl extends AbstractService<Transferencia, Integer>
 implements TransferenciaService{
 
-    /*public LocalDateTime convertingToLocalDateTime(Date date){
-        LocalDateTime ldt = LocalDateTime.ofInstant(date,
-                ZoneId.systemDefault());
-        LocalDateTime.
-        return  ldt;
-    }*/
-
     @Autowired
     BancoServiceImpl bancoServiceImpl;
 
@@ -79,13 +72,6 @@ implements TransferenciaService{
         String idBancoValido = waBankIdentificador;
         return codigoBanco.equals(idBancoValido);
     }
-
-    /*public Integer findingTheTypeOfTransferencia(TransferenciaPojo transferenciaPojo){
-
-        if(isWakandaBankIban(transferenciaPojo.))
-
-
-    }*/
 
     public static Date convertingLocalDateTimeIntoDate( LocalDateTime localDateTime){
 
