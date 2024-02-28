@@ -1,5 +1,6 @@
 package com.example.IntermediarioService.https.utils;
 
+import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponseHistoricoCredito;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponseHistoricoDebito;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,26 @@ public class ResponseControllerUtils
         responseBody.setStatus(HttpStatus.OK);
         responseBody.setMensagem( "Historico de Credito" );
         responseBody.setData(Objects.requireNonNullElse(listaEmis, "Não existem transações de credito"));
+        return ResponseEntity.status( HttpStatus.OK).body(responseBody );
+    }
+
+    public ResponseEntity<ResponseBody> erro (String message) {
+
+        ResponseBody responseBody = new ResponseBody();
+        responseBody.setTimestamp(LocalDateTime.now() );
+        responseBody.setStatus(HttpStatus.BAD_REQUEST);
+        responseBody.setMensagem( message);
+
+        return ResponseEntity.status( HttpStatus.BAD_REQUEST).body(responseBody );
+    }
+
+    public ResponseEntity<ResponseBody> transferenciaEfectuada(Transferencia transferencia) {
+
+        ResponseBody responseBody = new ResponseBody();
+        responseBody.setTimestamp(LocalDateTime.now() );
+        responseBody.setStatus(HttpStatus.OK);
+        responseBody.setMensagem( "Transferencia efectuada com sucesso" );
+        responseBody.setData(TransferenciaResponseHistoricoDebito.convertingIntoTransferenciaKuzolaBank(transferencia));
         return ResponseEntity.status( HttpStatus.OK).body(responseBody );
     }
 

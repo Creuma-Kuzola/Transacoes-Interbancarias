@@ -109,7 +109,7 @@ public class TransferenciaController extends BaseController
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)
     {
         //System.out.println("Transferencia"+ transferencia);
-        Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario());
+        Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario(), transferencia.getMontante());
         String ibanOrigem = userInfo.getUserInfo().get("iban");
         Integer isSaldoEnought = contaBancariaServiceImpl
                 .isSaldoPositiveToTransfer(new BigInteger(userInfo.getUserInfo().get("accountNumber")), transferencia.getMontante());
@@ -139,14 +139,15 @@ public class TransferenciaController extends BaseController
             }
             else
             {
-                return this.ok("Voce não possui saldo suficiente para efectuar esta operção!: " + transferenciaMessage.getMessage().get("message"), this.transferenciaComponent.getTransferenciaResponse());
+                return this.ok("Voce não possui saldo suficiente para efectuar esta operação!: " + transferenciaMessage.getMessage().get("message"), this.transferenciaComponent.getTransferenciaResponse());
             }
         }
-        else{
-            return this.erro("ERRO: IBAN inválido");
+        else if(responseVerification == 3){
+            return this.erro("ERRO: O iban deve ter 17 digitos");
+        } else if (responseVerification == 4 ) {
+            return this.erro("ERRO: O montante deve ser um numero > 0");
         }
-
-        //return this.erro("Erro!!");
+        return this.erro("Erro!!");
     }
 
 

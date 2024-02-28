@@ -73,11 +73,17 @@ implements TransferenciaService {
         return codigo;
     }
 
-    public  Integer isValidInformationIban(String iban){
+    public  Integer isValidInformationIban(String iban, BigDecimal montante){
 
         if(contaBancariaService.isValidTheSizeOfIban(iban)){
-            if (contaBancariaService.isKuzolaBankIban(iban)){
-                return 1;
+            if(montante.compareTo(BigDecimal.ZERO) > 0) {
+                if (contaBancariaService.isKuzolaBankIban(iban)){
+                    return 1;
+                }
+            }
+            else if(montante.compareTo(BigDecimal.ZERO) <= 0)
+            {
+                return 4;
             }
             return 2;
         }

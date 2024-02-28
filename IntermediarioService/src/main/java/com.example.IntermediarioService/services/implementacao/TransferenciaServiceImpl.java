@@ -17,6 +17,7 @@ import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -86,14 +87,14 @@ implements TransferenciaService{
 
     }*/
 
-    public Date convertingLocalDateTimeIntoDate( LocalDateTime localDateTime){
+    public static Date convertingLocalDateTimeIntoDate( LocalDateTime localDateTime){
 
         Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
         System.out.println(date);
         return date;
     }
 
-    public LocalDateTime convertingDateIntoLocalDateTime( Date date){
+    public static LocalDateTime convertingDateIntoLocalDateTime( Date date){
 
         LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
         return ldt;
@@ -211,6 +212,27 @@ implements TransferenciaService{
         String clientePojoMiniJson = CustomJsonPojos.criarStrToJson(getClientePojoMini());
         System.out.println("Data Json" + clientePojoMiniJson);
         return  clientePojoMiniJson;
+    }
+
+
+
+    public  Integer isValidInformationIban(String ibanDestinatario, String ibanOrigem, BigDecimal montante){
+
+        //-1, 0, or 1 as this BigDecimal is numerically less than, equal to, or greater than val.
+        if(isValidTheSizeOfIban(ibanDestinatario)){
+            if (!ibanDestinatario.equals(ibanOrigem)){
+
+                if(montante.compareTo(BigDecimal.ZERO) > 0) {
+                    return 1;
+                }
+                else if(montante.compareTo(BigDecimal.ZERO) <= 0)
+                {
+                    return 4;
+                }
+            }
+            return 2;
+        }
+        return 3;
     }
 
 

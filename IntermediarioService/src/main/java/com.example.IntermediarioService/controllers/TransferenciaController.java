@@ -134,11 +134,20 @@ public class TransferenciaController extends BaseController {
         System.out.println("Transferencia no metodo"+ transferencia);
         String ibanOrigem = userInfo.getUserInfo().get("iban");
 
-        transferenciaServiceImpl.fillingTransactionFields(transferencia, ibanOrigem);
-        kafkaTransferenciaProducer.sendMessageTransferenciaInEmis(customJsonPojos.criarStrToJson(transferencia).toString());
+        Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario(), ibanOrigem, transferencia.getMontante());
+        if (responseVerification == 1) {
+            transferenciaServiceImpl.fillingTransactionFields(transferencia, ibanOrigem);
+            kafkaTransferenciaProducer.sendMessageTransferenciaInEmis(customJsonPojos.criarStrToJson(transferencia).toString());
+        } else if (responseVerification == 2) {
+            return erro("O iban de Origem e o iban destinatario não podem ser iguais");
+        } else if (responseVerification == 3){
+            return erro("O iban destinatario deve ter 17 digitos");
+        } else if (responseVerification == 4){
+            return erro("O montante deve ser um numero > 0");
+        }
 
-        //return this.created("Transferencia adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
         return ok("sjdfkjggh", transferencia);
+        //return this.created("Transferencia adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
     }
 
     @PostMapping("/interbancaria")

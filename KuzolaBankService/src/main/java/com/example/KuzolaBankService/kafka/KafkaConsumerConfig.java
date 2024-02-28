@@ -292,7 +292,7 @@ public class KafkaConsumerConfig
         LOGGER.info(String.format("Message received Emis -> %s", message));
         System.out.println("Cheguei historico");
         System.out.println("Lista de Historico Credito"+ lista);
-        kafkaTransferenciaProducer.sendRespostaOfHistoricoDebito(lista.toString());
+        kafkaTransferenciaProducer.sendRespostaOfHistoricoCredito(lista.toString());
     }
 
 

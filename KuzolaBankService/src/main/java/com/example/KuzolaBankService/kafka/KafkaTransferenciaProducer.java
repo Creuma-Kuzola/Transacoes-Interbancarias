@@ -111,7 +111,7 @@ public class KafkaTransferenciaProducer
 
     public  void sendRespostaOfHistoricoCredito(String clienteJson) throws JsonProcessingException {
 
-        System.out.println("Entrei no Kuzola Bank");
+        System.out.println("Entrei no Credito Kuzola Bank");
         Message<String> message = MessageBuilder
                 .withPayload(clienteJson)
                 .setHeader(KafkaHeaders.TOPIC, "resposta-historico-credito-kb-emis")

@@ -1,6 +1,8 @@
 package com.example.IntermediarioService.utils.pojos;
 
 
+import com.example.IntermediarioService.entities.Transferencia;
+import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -21,6 +23,8 @@ public class TransferenciaResponseHistoricoDebito {
    private String ibanDestinatario;
    private Integer pkTransferencia;
 
+
+
     public static TransferenciaResponseHistoricoDebito convertingIntoTransferenciaKuzolaBank(TransferenciaPOJOEmis transferenciaPOJOEmis){
 
         TransferenciaResponseHistoricoDebito transferenciaResponseHistoricoDebito = new TransferenciaResponseHistoricoDebito();
@@ -29,6 +33,18 @@ public class TransferenciaResponseHistoricoDebito {
         transferenciaResponseHistoricoDebito.setMontante(transferenciaPOJOEmis.getMontante());
         transferenciaResponseHistoricoDebito.setIbanDestinatario(transferenciaPOJOEmis.getIbanDestinatario());
         transferenciaResponseHistoricoDebito.setEstadoTransferencia(transferenciaPOJOEmis.getEstadoTransferencia());
+
+        return  transferenciaResponseHistoricoDebito;
+    }
+
+    public static TransferenciaResponseHistoricoDebito convertingIntoTransferenciaKuzolaBank(Transferencia transferencia){
+
+        TransferenciaResponseHistoricoDebito transferenciaResponseHistoricoDebito = new TransferenciaResponseHistoricoDebito();
+        transferenciaResponseHistoricoDebito.setPkTransferencia(transferencia.getPkTransferencia());
+        transferenciaResponseHistoricoDebito.setDataHora(TransferenciaServiceImpl.convertingDateIntoLocalDateTime(transferencia.getDataHora()));
+        transferenciaResponseHistoricoDebito.setMontante(transferencia.getMontante());
+        transferenciaResponseHistoricoDebito.setIbanDestinatario(transferencia.getIbanDestinatario());
+        transferenciaResponseHistoricoDebito.setEstadoTransferencia(transferencia.getEstadoTransferencia());
 
         return  transferenciaResponseHistoricoDebito;
     }
