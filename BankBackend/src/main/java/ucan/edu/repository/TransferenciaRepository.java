@@ -24,4 +24,10 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, In
     @Query("SELECT t FROM Transferencia t ORDER BY t.pkTransferencia DESC ")
     public List<Transferencia> findAllDesc();
 
+    @Query("SELECT t FROM Transferencia t WHERE t.ibanOrigem = :ibanOrigem" )
+    public List<Transferencia> findAllTransacoesDebitadas(String ibanOrigem);
+
+    @Query("SELECT t FROM Transferencia t where t.ibanDestinatario = :ibanDestino")
+    public List<Transferencia> findAllTransacoesCreditadas(String ibanDestino);
+
 }

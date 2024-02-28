@@ -4,6 +4,7 @@
  */
 package ucan.edu.kafka;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
@@ -34,6 +35,7 @@ import ucan.edu.services.implementacao.ContaBancariaServiceImpl;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
 import ucan.edu.utils.enums.StatusContaBancaria;
 import ucan.edu.utils.jsonUtils.CustomJsonPojos;
+import ucan.edu.utils.pojos.ClientePojoMini;
 import ucan.edu.utils.pojos.TransferenciaCustomPOJO;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
 import ucan.edu.utils.pojos.TransferenciaResponse;
@@ -366,5 +368,21 @@ public class KafkaTransferenciaConsumer
 
 
     }*/
+
+
+    @KafkaListener(topics = "historico-debito-wb-emis")
+    public void consumeMessageTransferenciaEmis(String message) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ClientePojoMini clientePojoMini = objectMapper.readValue(message, ClientePojoMini.class);
+        System.out.println("Cliente POjo in Wakanda Bank"+ clientePojoMini.toString());
+
+        List<String> lista = transferenciaServiceImpl.findHistoricoDeDebitoInEmis(clientePojoMini.getIban());
+        LOGGER.info(String.format("Message received Emis -> %s", message));
+        System.out.println("Cheguei historico");
+        System.out.println("Lista de Historico Debito"+ lista);
+        kafkaTransferenciaProducer.sendRespostaOfHistoricoDebito(lista.toString());
+    }
 
 }

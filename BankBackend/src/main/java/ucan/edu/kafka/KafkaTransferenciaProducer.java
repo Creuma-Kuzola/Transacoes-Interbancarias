@@ -4,6 +4,7 @@
  */
 package ucan.edu.kafka;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ucan.edu.config.component.TransferenciaComponent;
@@ -83,5 +84,17 @@ public class KafkaTransferenciaProducer
                 .setHeader(KafkaHeaders.TOPIC, "wakandaResponseToIntermdiario")
                 .build();
         kafkaTemplate.send(message);
+    }
+
+    public  void sendRespostaOfHistoricoDebito(String clienteJson) throws JsonProcessingException {
+
+        System.out.println("Entrei no Kuzola Bank");
+        Message<String> message = MessageBuilder
+                .withPayload(clienteJson)
+                .setHeader(KafkaHeaders.TOPIC, "resposta-historico-debito-wb-emis")
+                .build();
+
+        kafkaTemplate.send(message);
+
     }
 }

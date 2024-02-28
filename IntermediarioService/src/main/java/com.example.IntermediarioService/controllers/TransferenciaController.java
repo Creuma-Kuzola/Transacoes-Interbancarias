@@ -14,10 +14,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.IntermediarioService.utils.pojos.TransferenciaHistoricoCreditoComponent;
-import com.example.IntermediarioService.utils.pojos.TransferenciaHistoricoDebitoComponent;
-import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
-import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
+import com.example.IntermediarioService.utils.pojos.*;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +65,6 @@ public class TransferenciaController extends BaseController {
     @Autowired
     TransferenciaHistoricoCreditoComponent transferenciaHistoricoCreditoComponent;
 
-
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencias()
     {
@@ -90,19 +86,31 @@ public class TransferenciaController extends BaseController {
     @GetMapping("/historico/debito")
     public ResponseEntity<ResponseBody> findHistoricoTransacoesDebito() throws JsonProcessingException {
 
-        kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoDebito(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
-        try {
-            Thread.sleep(3000);
-            return this.historicoDebito(transferenciaHistoricoDebitoComponent.getTransferenciaResponseHistoricoList());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if(transferenciaServiceImpl.isKuzolaBankIban(userInfo.getUserInfo().get("iban"))) {
+            kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoDebitoKuzolaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+            try {
+                Thread.sleep(3000);
+                return this.historicoDebito(transferenciaHistoricoDebitoComponent.getTransferenciaResponseHistoricoList());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (transferenciaServiceImpl.isWakandaBankIban(userInfo.getUserInfo().get("iban"))) {
+            kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoDebitoWakandaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+            try {
+                Thread.sleep(3000);
+                return this.historicoDebito(transferenciaHistoricoDebitoComponent.getTransferenciaResponseHistoricoList());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
+
+        return this.ok("hsdjkf", null);
     }
 
     @GetMapping("/historico/credito")
     public ResponseEntity<ResponseBody> findHistoricoTransacoesCreditadas() throws JsonProcessingException {
 
-        kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCredito(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+        kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCreditoKuzolaBak(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
 
         try {
             Thread.sleep(3000);

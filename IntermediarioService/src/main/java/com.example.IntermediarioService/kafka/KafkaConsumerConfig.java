@@ -271,4 +271,20 @@ public class KafkaConsumerConfig
         System.out.println("Lista Credito Resposta Emis lista: "+ lista.toString());
 
     }
+
+    @KafkaListener(topics = "resposta-historico-debito-wb-emis", groupId = "emisGroup")
+    public void consumeMessageTransferenciaEmisDebitoWakanda(String message) throws JsonProcessingException {
+
+        System.out.println("Entrei resposta EMis");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        TransferenciaPOJOEmis[] st = objectMapper.readValue(message, TransferenciaPOJOEmis[].class);
+        List<TransferenciaPOJOEmis> lista = new ArrayList<>(List.of(st));
+
+        TransferenciaHistoricoCreditoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistoricoCredito.convertingIntoListTransferenciaHistorico(List.of(st)));
+
+        System.out.println("Lista Debito Resposta Emis: "+ Arrays.toString(st));
+        System.out.println("Lista Debito Resposta Emis lista: "+ lista.toString());
+
+    }
 }

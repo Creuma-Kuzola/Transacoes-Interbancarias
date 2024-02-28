@@ -10,10 +10,16 @@ import ucan.edu.entities.*;
 import ucan.edu.repository.TransferenciaRepository;
 import ucan.edu.services.*;
 import org.springframework.stereotype.Service;
+import ucan.edu.utils.jsonUtils.CustomJsonPojos;
 import ucan.edu.utils.pojos.TransferenciaPOJO;
+import ucan.edu.utils.pojos.TransferenciaPOJOEmis;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -117,7 +123,74 @@ implements TransferenciaService{
 
     public void transferenciaIntrabancaria(){
 
+    }
 
+    public static Date convertingLocalDateTimeIntoDate( LocalDateTime localDateTime){
+
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        System.out.println(date);
+        return date;
+    }
+
+    public static LocalDateTime convertingDateIntoLocalDateTime( Date date){
+
+        LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        return ldt;
+    }
+
+
+    public List<TransferenciaPOJOEmis> convertingIntoListaTransferenciaEmis(List<Transferencia> listTransferencia){
+
+        List<TransferenciaPOJOEmis> listaTransferenciaEmis = new ArrayList<>();
+
+        for (Transferencia transferencia : listTransferencia) {
+
+            TransferenciaPOJOEmis transferenciaPOJOEmis = TransferenciaPOJOEmis.convertingIntoTransferenciaEmis(transferencia);
+            listaTransferenciaEmis.add(transferenciaPOJOEmis);
+        }
+
+        return listaTransferenciaEmis;
+
+    }
+
+    public List<Transferencia> findAllTransacoesDebitadas(String ibanOrigem){
+
+        return  transferenciaRepository.findAllTransacoesDebitadas(ibanOrigem);
+    }
+
+    public List<Transferencia> findAllTransacoesCreditadas(String ibanDestino){
+
+        return transferenciaRepository.findAllTransacoesCreditadas(ibanDestino);
+    }
+
+
+
+
+    public String convertingTransferenciaPOJOEmisInJson( TransferenciaPOJOEmis transferenciaPOJOEmis){
+
+        String transferenciaJsonEmis = CustomJsonPojos.criarStrToJson(transferenciaPOJOEmis);
+        System.out.println("Data Json" + transferenciaJsonEmis);
+        return  transferenciaJsonEmis;
+    }
+    public List<String> convertingIntoListTransferenciaEmisJson(List<TransferenciaPOJOEmis> listaEmis){
+
+        List<String> listaString = new ArrayList<>();
+        for (TransferenciaPOJOEmis transferenciaPOJOEmis: listaEmis)
+        {
+            String st = " [ ";
+            st = convertingTransferenciaPOJOEmisInJson(transferenciaPOJOEmis);
+            listaString.add(st);
+        }
+        return listaString;
+    }
+
+    public List<String> findHistoricoDeDebitoInEmis(String ibanOrigem){
+
+        List<TransferenciaPOJOEmis> listaEmis = this.convertingIntoListaTransferenciaEmis(findAllTransacoesDebitadas(ibanOrigem));
+        List<String> listaJsonEmis = convertingIntoListTransferenciaEmisJson(listaEmis);
+        System.out.println("Lista: "+ listaEmis.toString());
+
+        return listaJsonEmis;
     }
 
 
