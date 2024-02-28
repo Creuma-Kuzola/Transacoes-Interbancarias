@@ -198,7 +198,7 @@ public class TransferenciaController extends BaseController {
             kafkaTransferenciaProducer.sendMessageTransferenciaInEmis(customJsonPojos.criarStrToJson(transferencia).toString());
 
             try {
-                Thread.sleep(400);
+                Thread.sleep(900);
                 if(Objects.equals(transferenciaComponentResponse.getTransferencia().getEstadoTransferencia(), "ERRO: Informação Invalida"))
                 {
                     return this.erro("ERRO: Informação Invalida");
