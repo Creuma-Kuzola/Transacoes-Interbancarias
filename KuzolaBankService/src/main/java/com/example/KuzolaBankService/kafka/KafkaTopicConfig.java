@@ -70,6 +70,14 @@ public class KafkaTopicConfig {
     }
 
 
+    @Bean
+    public NewTopic respostaInfoSaldoContaBancaria()
+    {
+        return TopicBuilder
+                .name("resposta-info-saldo-kb-emis")
+                .partitions(3)
+                .build();
+    }
 
 
 }

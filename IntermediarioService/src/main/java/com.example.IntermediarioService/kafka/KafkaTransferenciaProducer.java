@@ -192,6 +192,29 @@ public class KafkaTransferenciaProducer
 
     }
 
+
+    public  void sendClientePojoMiniOfSaldoKuzolaBank(String clienteJson) throws JsonProcessingException {
+
+        System.out.println("Entrei no Kuzola Bank");
+        Message<String> message = MessageBuilder
+                .withPayload(clienteJson)
+                .setHeader(KafkaHeaders.TOPIC, "info-saldo-kb-emis")
+                .build();
+
+        kafkaTemplate.send(message);
+    }
+
+    public  void sendClientePojoMiniOfSaldoWakandaBank(String clienteJson) throws JsonProcessingException {
+
+        System.out.println("Entrei no Wakanda Bank");
+        Message<String> message = MessageBuilder
+                .withPayload(clienteJson)
+                .setHeader(KafkaHeaders.TOPIC, "info-saldo-wb-emis")
+                .build();
+
+        kafkaTemplate.send(message);
+    }
+
     public void sendMessageTransferenciaResponse(String data)
     {
         //data = t(kafkaConsumerConfig.getTransferenciaPOJO());

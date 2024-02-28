@@ -137,6 +137,23 @@ public class KafkaTopicConfig
     }
 
 
+    @Bean
+    public NewTopic saldoDaContaKuzolaBank()
+    {
+        return TopicBuilder
+                .name("info-saldo-kb-emis")
+                .partitions(3)
+                .build();
+    }
 
+
+    @Bean
+    public NewTopic saldoDaContaWakandaBank()
+    {
+        return TopicBuilder
+                .name("info-saldo-wb-emis")
+                .partitions(3)
+                .build();
+    }
 
 }

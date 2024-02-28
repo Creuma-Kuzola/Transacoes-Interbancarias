@@ -55,6 +55,9 @@ public class KafkaConsumerConfig
     @Autowired
     TransferenciaHistoricoCreditoComponent TransferenciaHistoricoCreditoComponent;
 
+    @Autowired
+    SaldoResponseComponent saldoResponseComponent;
+
     public KafkaConsumerConfig()
     {
         transferenciaPOJO = new TransferenciaPOJO();
@@ -301,6 +304,21 @@ public class KafkaConsumerConfig
 
         System.out.println("Lista Debito Resposta Emis: "+ Arrays.toString(st));
         System.out.println("Lista Debito Resposta Emis lista: "+ lista.toString());
+
+    }
+
+    @KafkaListener(topics = "resposta-info-saldo-kb-emis", groupId = "emisGroup")
+    public void consumeMessageRespostaInfoSaldoKuzolaBank(String message) throws JsonProcessingException {
+
+        System.out.println("Entrei resposta EMis");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        SaldoResponse st = objectMapper.readValue(message, SaldoResponse.class);
+
+        saldoResponseComponent.setSaldoResponse(st);
+        //TransferenciaHistoricoCreditoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistoricoCredito.convertingIntoListTransferenciaHistorico(List.of(st)));
+
+        System.out.println("Saldo Intermediario info "+ st.toString());
 
     }
 

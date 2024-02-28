@@ -1,6 +1,7 @@
 package com.example.KuzolaBankService.utils.jsonUtils;
 
 
+import com.example.KuzolaBankService.entities.ContaBancaria;
 import com.example.KuzolaBankService.utils.pojos.*;
 
 import java.text.SimpleDateFormat;
@@ -58,6 +59,12 @@ public class CustomJsonPojos {
                 + "    \"codigoTransferencia\": " + transferenciaPOJOEmis.getCodigoTransferencia() + "\n"
                 + "}";
         return str;
+    }
+
+    public static String criarStrToJson(ContaBancaria contaBancaria)
+    {
+        return "{ \"saldoContabilistico\": \""+contaBancaria.getSaldoContabilistico()+"\", " +
+                "\"saldoDisponivel\": \"" +contaBancaria.getSaldoDisponivel()+ "\" }";
     }
 
     public  static String TransferenciaResponse(TransferenciaResponse response)

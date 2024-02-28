@@ -65,6 +65,9 @@ public class TransferenciaController extends BaseController {
     @Autowired
     TransferenciaHistoricoCreditoComponent transferenciaHistoricoCreditoComponent;
 
+    @Autowired
+    SaldoResponseComponent saldoResponseComponent;
+
     @GetMapping
     public ResponseEntity<ResponseBody> findAllTransferencias()
     {
@@ -132,6 +135,34 @@ public class TransferenciaController extends BaseController {
 
         }
         return  this.erro("ERRO");
+    }
+
+    @GetMapping("/saldo")
+    public ResponseEntity<ResponseBody> findSaldoDoUser() throws JsonProcessingException {
+
+        if(transferenciaServiceImpl.isKuzolaBankIban(userInfo.getUserInfo().get("iban"))) {
+            kafkaTransferenciaProducer.sendClientePojoMiniOfSaldoKuzolaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+
+            try {
+                Thread.sleep(3000);
+                return this.ok("Informações do seu saldo",saldoResponseComponent.getSaldoResponse());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else if(transferenciaServiceImpl.isWakandaBankIban(userInfo.getUserInfo().get("iban"))) {
+
+            /*kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCreditoWakandaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+
+            try {
+                Thread.sleep(3000);
+                return this.historicoCredito(transferenciaHistoricoCreditoComponent.getTransferenciaResponseHistoricoList());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }*/
+
+        }
+        return  this.erro("ERRO");
+
     }
 
     @PostMapping("/publishTransferencia")

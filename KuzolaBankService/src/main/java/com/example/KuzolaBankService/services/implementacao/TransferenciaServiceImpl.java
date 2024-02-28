@@ -18,6 +18,7 @@ import com.example.KuzolaBankService.utils.jsonUtils.CustomJsonPojos;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaCustomPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJO;
 import com.example.KuzolaBankService.utils.pojos.TransferenciaPOJOEmis;
+import com.example.KuzolaBankService.utils.response.SaldoResponse;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
@@ -272,7 +273,7 @@ implements TransferenciaService {
     public String convertingTransferenciaInJsonEmis( Transferencia transferenciaCreated, String ibanOrigem){
 
         TransferenciaPOJOEmis transferenciaPOJOEmis = new TransferenciaPOJOEmis();
-        transferenciaPOJOEmis = this.convertingIntoTransferenciaPOJOEmis(transferenciaCreated, ibanOrigem);
+        transferenciaPOJOEmis = convertingIntoTransferenciaPOJOEmis(transferenciaCreated, ibanOrigem);
 
         String transferenciaJsonEmis = CustomJsonPojos.criarStrToJson(transferenciaPOJOEmis);
 
@@ -294,6 +295,12 @@ implements TransferenciaService {
         String transferenciaJsonEmis = CustomJsonPojos.criarStrToJson(transferenciaPOJOEmis);
         System.out.println("Data Json" + transferenciaJsonEmis);
         return  transferenciaJsonEmis;
+    }
+
+    public String convertingIntoSaldoResponseJson(String iban){
+
+       ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(iban);
+        return CustomJsonPojos.criarStrToJson(contaBancaria);
     }
 
     public Transferencia buildTransferencia(TransferenciaComponent transferenciaComponent) throws ParseException
@@ -396,6 +403,8 @@ implements TransferenciaService {
 
         return listaJsonEmis;
     }
+
+
 
 
 
