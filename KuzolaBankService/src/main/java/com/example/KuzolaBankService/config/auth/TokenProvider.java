@@ -13,12 +13,21 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Service
 public class TokenProvider {
   @Value("${security.jwt.token.secret-key}")
   private String JWT_SECRET;
+
+  private Set<String> invalidTokens = new HashSet<>();
+
+  public void invalidateToken(String token) {
+    // Adicione o token à lista de tokens inválidos
+    invalidTokens.add(token);
+  }
 
   public String generateAccessToken(User user) {
     try {
@@ -36,7 +45,9 @@ public class TokenProvider {
   public String validateToken(String token) {
     try {
       Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
-      return JWT.require(algorithm)
+      boolean isTrue = invalidTokens.contains(token);
+      String str =""+isTrue;
+      return str.equals("true") ? "invalido" : JWT.require(algorithm)
           .build()
           .verify(token)
           .getSubject();

@@ -257,7 +257,32 @@ public class KafkaConsumerConfig
     @KafkaListener(topics = "intermediarioTransferToKuzola", groupId = "transferenciaGroup")
     public void consumerSolicitacaoEmisTransfer(String message)
     {
-        LOGGER.info(String.format("intermediarioTransferToKuzola topic-> %s", message.toString()));
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        builder.setDateFormat("yyyy-MM-dd HH:mm:ss");
+        Gson gson = builder.create();
+        LOGGER.info(String.format("Message received -> %s", message.toString()));
+        TransferenciaCustomPOJO obj = gson.fromJson(message.toString(), TransferenciaCustomPOJO.class);
+        System.out.println("Descricao " + obj.getDescricao());
+        transferenciaCustomPOJO = obj;
+
+        //verify the iban and account status
+        boolean isValidIban = contaBancariServiceImpl.existsIban(obj.getIbanDestinatario());
+        ContaBancaria isActiva = contaBancariServiceImpl.isAccountStatus(obj.getIbanDestinatario(), "Activo");
+
+        TransferenciaResponse transferenciaResponse = new TransferenciaResponse();
+        if (isValidIban && isActiva != null)
+        {
+              transferenciaResponse.setStatus(true);
+
+            ContaBancaria contaBancaria = contaBancariServiceImpl.credito(obj.getIbanDestinatario(),obj.getMontante());
+            LOGGER.info(String.format("intermediarioTransferToKuzola topic-> %s", message.toString()));
+        }
+        else
+        {
+
+        }
+
     }
 
     /*@KafkaListener(topics = "tr-intrabancarias-kb-emis", groupId = "emisGroup")

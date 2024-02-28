@@ -16,12 +16,13 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.IntermediarioService.utils.pojos.TransferenciaHistoricoComponent;
+
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.example.IntermediarioService.utils.pojos.TransferenciaHistoricoComponent;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

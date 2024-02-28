@@ -32,6 +32,8 @@ public class AuthConfig {
 
             .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
 
+                .requestMatchers(HttpMethod.GET, "/api/v1/auth/logout").hasAnyRole("ADMIN","CLIENTE")
+
                 .requestMatchers(HttpMethod.POST,"/pessoa").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/pessoa/*").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/pessoa").hasRole("ADMIN")

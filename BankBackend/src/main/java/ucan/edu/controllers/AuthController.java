@@ -8,10 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ucan.edu.config.auth.TokenProvider;
 import ucan.edu.config.component.UserInfo;
 import ucan.edu.dtos.JwtDto;
@@ -71,7 +68,7 @@ public class AuthController
 
             ContaBancaria contaBancaria = contaBancarioRepository.findByCliente(Math.toIntExact(clienteId));
             String username = ((User) authUser.getPrincipal()).getUsername();
-            saveUserInfoTemporary(contaBancaria, username);
+            saveUserInfoTemporary(contaBancaria, username, accessToken);
             jwtdto = new JwtDto(accessToken);
         }
         else {
@@ -80,16 +77,29 @@ public class AuthController
 
         return ResponseEntity.ok(jwtdto);
     }
-    private void saveUserInfoTemporary(ContaBancaria contaBancaria, String username) {
-        Map<String, String> map = new HashMap<>();
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout()
+    {
+        tokenService.invalidateToken(userInfo.getUserInfo().get("token"));
+        return ResponseEntity.ok("Logout feito com sucesso!");
+    }
+
+
+
+    private void saveUserInfoTemporary(ContaBancaria contaBancaria, String username, String accessToken) {
+        HashMap<String, String> map = new HashMap<>();
 
         map.put("username", username);
         map.put("iban",contaBancaria.getIban());
-        map.put("accountNumber","" +contaBancaria.getNumeroDeConta());
+        map.put("accountNumber",""+contaBancaria.getNumeroDeConta());
         map.put("pkCliente",""+contaBancaria.getFkCliente().getPkCliente());
+        map.put("token",accessToken);
         userInfo.setUserInfo(map);
 
         System.out.println("IBAN:"+userInfo.getUserInfo().get("iban"));
-        System.out.println("accountNumber:"+userInfo.getUserInfo().get("accountNumber"));
+        System.out.println("numeroDaConta:"+userInfo.getUserInfo().get("accountNumber"));
     }
+
+
+
 }

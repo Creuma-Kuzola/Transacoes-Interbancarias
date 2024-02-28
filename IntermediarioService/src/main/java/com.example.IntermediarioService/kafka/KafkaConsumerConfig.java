@@ -7,7 +7,9 @@ import com.example.IntermediarioService.component.TransferenciaPojoComponent;
 import com.example.IntermediarioService.component.TransferenciaResponseComponent;
 import com.example.IntermediarioService.dto.JwtDto;
 import com.example.IntermediarioService.dto.SignUpDto;
+import com.example.IntermediarioService.entities.Banco;
 import com.example.IntermediarioService.entities.Cliente;
+import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.repositories.ClienteRepository;
 import com.example.IntermediarioService.services.implementacao.AuthService;
 import com.example.IntermediarioService.services.implementacao.ClienteServiceImpl;
@@ -34,6 +36,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -111,9 +115,24 @@ public class KafkaConsumerConfig
 
         TransferenciaResponse response = gson.fromJson(message.toString(), TransferenciaResponse.class);
         CustomJsonPojos.saveTransferResponseComponent(response, transferenciaResponseComponent);
-        System.out.println(" --------------- TRANSFERENCIAS RESPONSE ----------------------");
-        System.out.println("Descricao " + response.getDescricao());
-        System.out.println("Status " + response.getStatus());
+
+        if(response.getStatus())
+        {
+            System.out.println("TransferInfo:"+transferenciaPOJOComponent.getTransferencia().values());
+            Transferencia transferencia = new Transferencia();
+            transferencia.setCanal("wakanda bank");
+            transferencia.setDescricao(transferenciaPOJOComponent.getTransferencia().get("descricao"));
+            transferencia.setTipoTransferencia(transferenciaPOJOComponent.getTransferencia().get("tipoTransferencia"));
+            transferencia.setEstadoTransferencia("REALIZADO");
+            transferencia.setIbanDestinatario(transferenciaPOJOComponent.getTransferencia().get("ibanDestinatario"));
+            transferencia.setDataHora(new Date());
+            transferencia.setibanOrigem(transferenciaPOJOComponent.getTransferencia().get("ibanOrigem"));
+            transferencia.setFkBanco( new Banco(2));
+            transferencia.setMontante(new BigDecimal(transferenciaPOJOComponent.getTransferencia().get("montante")));
+            transferencia = transferenciaServiceImpl.criar(transferencia);
+            System.out.println("Transferencia salva no intermediario: " +transferencia.toString());
+            //persistir a transferencia
+        }
 
         HttpEntity entity = Authorizarization.createBody();
         HttpEntity entityResponse = restTemplate.exchange("http://localhost:8082/transferencia/response", HttpMethod.POST,entity, String.class);
@@ -137,10 +156,25 @@ public class KafkaConsumerConfig
         System.out.println("Descricao " + response.getDescricao());
         System.out.println("Status " + response.getStatus());
 
+        if(response.getStatus())
+        {
+            System.out.println("TransferInfo:"+transferenciaPOJOComponent.getTransferencia().values());
+            Transferencia transferencia = new Transferencia();
+            transferencia.setCanal("banco kuzola");
+            transferencia.setDescricao(transferenciaPOJOComponent.getTransferencia().get("descricao"));
+            transferencia.setTipoTransferencia(transferenciaPOJOComponent.getTransferencia().get("tipoTransferencia"));
+            transferencia.setEstadoTransferencia("REALIZADO");
+            transferencia.setIbanDestinatario(transferenciaPOJOComponent.getTransferencia().get("ibanDestinatario"));
+            transferencia.setDataHora(new Date());
+            transferencia.setibanOrigem(transferenciaPOJOComponent.getTransferencia().get("ibanOrigem"));
+            transferencia.setFkBanco( new Banco(1));
+            transferencia.setMontante(new BigDecimal(transferenciaPOJOComponent.getTransferencia().get("montante")));
+            transferencia = transferenciaServiceImpl.criar(transferencia);
+            //System.out.println("Transferencia salva no intermediario: " +transferencia.toString());
+            //persistir a transferencia
+        }
         HttpEntity entity = Authorizarization.createBody();
         HttpEntity entityResponse = restTemplate.exchange("http://localhost:8082/transferencia/responseTokuzola", HttpMethod.POST,entity, String.class);
-
-        System.out.println("DELCIA:"+entityResponse);
     }
 
    @KafkaListener(topics = "intra-transfer-kuzola", groupId = "kuzolaGroup")

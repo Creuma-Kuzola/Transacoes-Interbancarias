@@ -33,7 +33,10 @@ public class AuthConfig
                 .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/session").permitAll()
+
                         .requestMatchers(HttpMethod.POST.GET,"/deep").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/api/v1/auth/logout").hasAnyRole("ADMIN","CLIENTE")
 
                         .requestMatchers(HttpMethod.POST, "/transferencia").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.POST, "/transferencia/publishTransferencia").hasRole("CLIENTE")

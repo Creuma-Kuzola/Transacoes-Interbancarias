@@ -70,8 +70,6 @@ public class TransferenciaController extends BaseController
     }
 
 
-
-
     @PostMapping("/publishTransferencia")
     public ResponseEntity<ResponseBody> publishTranasferencia(@RequestBody TransferenciaPOJO transferencia) {
 
