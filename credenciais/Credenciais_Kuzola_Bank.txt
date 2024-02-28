@@ -30,3 +30,6 @@ Credenciais Kuzola_Bank
     "role":"ADMIN"
 }
 
+IBAN valido:
+
+10036191737412580

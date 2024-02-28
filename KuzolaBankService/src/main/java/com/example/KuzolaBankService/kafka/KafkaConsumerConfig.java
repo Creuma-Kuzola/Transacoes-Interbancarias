@@ -187,9 +187,10 @@ public class KafkaConsumerConfig
 
             if(transferenciaPOJO.getEstadoTransferencia() == null){
 
+                System.out.println("NO nulo"+ transferenciaPOJO.getEstadoTransferencia());
                if (transferenciaServiceImpl.isTransferenciaInformationValid(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante(), transferenciaPOJO.getibanOrigem())) {
 
-                   transferenciaServiceImpl.criar(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJO));
+                   transferenciaServiceImpl.criaTransferencia(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJO));
 
                    contaBancariServiceImpl.debito(transferenciaPOJO.getibanOrigem(), transferenciaPOJO.getMontante());
                    contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
@@ -214,6 +215,7 @@ public class KafkaConsumerConfig
             }
             else {
 
+                System.out.println("Não nulo"+ transferenciaPOJO.getEstadoTransferencia());
                 contaBancariServiceImpl.debito(transferenciaPOJO.getibanOrigem(), transferenciaPOJO.getMontante());
                 contaBancariServiceImpl.credito(transferenciaPOJO.getIbanDestinatario(), transferenciaPOJO.getMontante());
 

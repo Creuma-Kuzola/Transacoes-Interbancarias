@@ -339,7 +339,7 @@ implements TransferenciaService {
 
     public Transferencia transferenciaIntrabancaria(Transferencia transferencia, String ibanOrigem ){
 
-       Transferencia transferenciaCreated;
+        Transferencia transferenciaCreated;
         fillingTransactionFields(transferencia, ibanOrigem);
         transferenciaCreated = this.criar(transferencia);
 

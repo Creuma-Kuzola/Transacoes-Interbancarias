@@ -205,7 +205,7 @@ public class KafkaConsumerConfig
         System.out.println(" entityResponse:" +entityResponse);
     }
 
-    @KafkaListener(topics ={"tr-intrabancarias-kb-emis", "resposta-tr-intrabancarias-kb-emis"}, groupId = "emisGroup")
+    @KafkaListener(topics ={"tr-intrabancarias-kb-emis", "resposta-tr-intrabancarias-kb-emis", "transf-intrabancarias-kb-emis"}, groupId = "emisGroup")
     public void consumeMessageOfTransferenciaIntrabancaria(String message) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -217,11 +217,12 @@ public class KafkaConsumerConfig
             System.out.println("Mensagem Recebida TransferenciaPOJOEmis: " + transferenciaPOJOEmis.toString());
             System.out.println("Converting into Transferencia" + transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis).toString());
             transferenciaPOJOEmis.setEstadoTransferencia("Realizado");
-            transferenciaComponentResponse.setTransferencia(transferenciaServiceImpl.salvarTransferencia(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis)));
+            Transferencia t = transferenciaServiceImpl.salvarTransferencia(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis));
+            transferenciaComponentResponse.setTransferencia(t);
         }
         else {
 
-            transferenciaComponentResponse.setTransferencia(TransferenciaPOJOEmis.convertingIntoTransferencia(transferenciaPOJOEmis));
+            transferenciaComponentResponse.setTransferencia(null);
 
         }
     }

@@ -18,4 +18,6 @@ Credenciais Wakanda Bank
     "role":"ADMIN"
 }
 
-E 260 4292
+Iban valido
+40401167100011260
+
