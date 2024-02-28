@@ -104,20 +104,34 @@ public class TransferenciaController extends BaseController {
             }
         }
 
-        return this.ok("hsdjkf", null);
+        return this.erro("ERRO!");
     }
 
     @GetMapping("/historico/credito")
     public ResponseEntity<ResponseBody> findHistoricoTransacoesCreditadas() throws JsonProcessingException {
 
-        kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCreditoKuzolaBak(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+        if(transferenciaServiceImpl.isKuzolaBankIban(userInfo.getUserInfo().get("iban"))) {
+            kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCreditoKuzolaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
 
-        try {
-            Thread.sleep(3000);
-            return this.historicoCredito(transferenciaHistoricoCreditoComponent.getTransferenciaResponseHistoricoList());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            try {
+                Thread.sleep(3000);
+                return this.historicoCredito(transferenciaHistoricoCreditoComponent.getTransferenciaResponseHistoricoList());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else if(transferenciaServiceImpl.isWakandaBankIban(userInfo.getUserInfo().get("iban"))) {
+
+            kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCreditoWakandaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+
+            try {
+                Thread.sleep(3000);
+                return this.historicoCredito(transferenciaHistoricoCreditoComponent.getTransferenciaResponseHistoricoList());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
         }
+        return  this.erro("ERRO");
     }
 
     @PostMapping("/publishTransferencia")

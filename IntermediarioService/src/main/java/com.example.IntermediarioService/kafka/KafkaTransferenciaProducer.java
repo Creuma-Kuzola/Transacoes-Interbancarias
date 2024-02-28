@@ -149,77 +149,48 @@ public class KafkaTransferenciaProducer
 
     public  void sendClientePojoMiniOfHistoricoDebitoKuzolaBank(String clienteJson) throws JsonProcessingException {
 
-       ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        ClientePojoMini clientePojoMini = objectMapper.readValue(clienteJson, ClientePojoMini.class);
-
-        System.out.println("ClienteJson: "+ clienteJson);
-        System.out.println("ClientePOJOMini: "+ clientePojoMini);
-
-            System.out.println("Entrei no Kuzola Bank");
-            Message<String> message = MessageBuilder
+        Message<String> message = MessageBuilder
                     .withPayload(clienteJson)
                     .setHeader(KafkaHeaders.TOPIC, "historico-debito-kb-emis")
                     .build();
 
-            kafkaTemplate.send(message);
-
-
+        kafkaTemplate.send(message);
 
     }
 
     public  void sendClientePojoMiniOfHistoricoDebitoWakandaBank(String clienteJson) throws JsonProcessingException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        ClientePojoMini clientePojoMini = objectMapper.readValue(clienteJson, ClientePojoMini.class);
 
-        System.out.println("ClienteJson: "+ clienteJson);
-        System.out.println("ClientePOJOMini: "+ clientePojoMini);
-
-            Message<String> message = MessageBuilder
+        Message<String> message = MessageBuilder
                     .withPayload(clienteJson)
                     .setHeader(KafkaHeaders.TOPIC, "historico-debito-wb-emis")
                     .build();
 
-            kafkaTemplate.send(message);
-
+        kafkaTemplate.send(message);
 
     }
 
-    public  void sendClientePojoMiniOfHistoricoCreditoKuzolaBak(String clienteJson) throws JsonProcessingException {
+    public  void sendClientePojoMiniOfHistoricoCreditoKuzolaBank(String clienteJson) throws JsonProcessingException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        ClientePojoMini clientePojoMini = objectMapper.readValue(clienteJson, ClientePojoMini.class);
-
-        System.out.println("ClienteJson: "+ clienteJson);
-        System.out.println("ClientePOJOMini: "+ clientePojoMini);
-
-        if(transferenciaServiceImpl.isKuzolaBankIban(clientePojoMini.getIban()))
-        {
-            System.out.println("Entrei no Kuzola Bank");
-            Message<String> message = MessageBuilder
+        System.out.println("Entrei no Kuzola Bank");
+        Message<String> message = MessageBuilder
                     .withPayload(clienteJson)
                     .setHeader(KafkaHeaders.TOPIC, "historico-credito-kb-emis")
                     .build();
 
-            kafkaTemplate.send(message);
+        kafkaTemplate.send(message);
+    }
 
-        }
-        else if(transferenciaServiceImpl.isWakandaBankIban(clientePojoMini.getIban()))
-        {
-            Message<String> message = MessageBuilder
+    public  void sendClientePojoMiniOfHistoricoCreditoWakandaBank(String clienteJson) throws JsonProcessingException {
+
+        Message<String> message = MessageBuilder
                     .withPayload(clienteJson)
                     .setHeader(KafkaHeaders.TOPIC, "historico-credito-wb-emis")
                     .build();
 
-            kafkaTemplate.send(message);
-        }
-
+        kafkaTemplate.send(message);
 
     }
-
 
     public void sendMessageTransferenciaResponse(String data)
     {
