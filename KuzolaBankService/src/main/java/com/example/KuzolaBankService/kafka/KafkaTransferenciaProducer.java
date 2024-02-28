@@ -108,4 +108,28 @@ public class KafkaTransferenciaProducer
             kafkaTemplate.send(message);
 
     }
+
+    public  void sendRespostaOfHistoricoCredito(String clienteJson) throws JsonProcessingException {
+
+        System.out.println("Entrei no Credito Kuzola Bank");
+        Message<String> message = MessageBuilder
+                .withPayload(clienteJson)
+                .setHeader(KafkaHeaders.TOPIC, "resposta-historico-credito-kb-emis")
+                .build();
+
+        kafkaTemplate.send(message);
+
+    }
+
+    public  void sendRespostaOfSaldoInfo(String clienteJson) throws JsonProcessingException {
+
+        Message<String> message = MessageBuilder
+                .withPayload(clienteJson)
+                .setHeader(KafkaHeaders.TOPIC, "resposta-info-saldo-kb-emis")
+                .build();
+
+        kafkaTemplate.send(message);
+
+    }
+
 }

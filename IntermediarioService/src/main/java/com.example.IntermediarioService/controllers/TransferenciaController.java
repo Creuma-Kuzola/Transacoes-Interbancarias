@@ -6,19 +6,19 @@ package com.example.IntermediarioService.controllers;
 
 import com.example.IntermediarioService.component.*;
 import com.example.IntermediarioService.entities.Transferencia;
-import com.example.IntermediarioService.entities.User;
 import com.example.IntermediarioService.https.utils.ResponseBody;
 import com.example.IntermediarioService.kafka.KafkaTransferenciaProducer;
 import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaResponse;
+import com.example.IntermediarioService.utils.pojos.*;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,16 @@ public class TransferenciaController extends BaseController {
     RestTemplate restTemplate;
 
     @Autowired
-    TransferenciaHistoricoComponent transferenciaHistoricoComponent;
+    TransferenciaHistoricoDebitoComponent transferenciaHistoricoDebitoComponent;
+
+    @Autowired
+    TransferenciaHistoricoCreditoComponent transferenciaHistoricoCreditoComponent;
+
+    @Autowired
+    SaldoResponseComponent saldoResponseComponent;
+
+    @Autowired
+    TransferenciaComponentResponse transferenciaComponentResponse;
 
 
     @GetMapping
@@ -89,22 +98,80 @@ public class TransferenciaController extends BaseController {
     @GetMapping("/historico/debito")
     public ResponseEntity<ResponseBody> findHistoricoTransacoesDebito() throws JsonProcessingException {
 
-        kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoDebito(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
-        try {
-            Thread.sleep(3000);
-            return this.historicoDebito(transferenciaHistoricoComponent.getTransferenciaResponseHistoricoList());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if(transferenciaServiceImpl.isKuzolaBankIban(userInfo.getUserInfo().get("iban"))) {
+            kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoDebitoKuzolaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+            try {
+                Thread.sleep(3000);
+                return this.historicoDebito(transferenciaHistoricoDebitoComponent.getTransferenciaResponseHistoricoList());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (transferenciaServiceImpl.isWakandaBankIban(userInfo.getUserInfo().get("iban"))) {
+            kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoDebitoWakandaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+            try {
+                Thread.sleep(3000);
+                return this.historicoDebito(transferenciaHistoricoDebitoComponent.getTransferenciaResponseHistoricoList());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
+
+        return this.erro("ERRO!");
     }
 
     @GetMapping("/historico/credito")
-    public ResponseEntity<ResponseBody> findHistoricoTransacoesCreditadas()
-    {
-        //String ibanDestino = userInfo.getUserInfo().get("iban");
+    public ResponseEntity<ResponseBody> findHistoricoTransacoesCreditadas() throws JsonProcessingException {
 
-        //List<Transferencia> lista = transferenciaServiceImpl.findAllTransacoesCreditadas(ibanDestino);
-        return this.ok("Transações de Crédito encontradas com sucesso!", null);
+        if(transferenciaServiceImpl.isKuzolaBankIban(userInfo.getUserInfo().get("iban"))) {
+            kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCreditoKuzolaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+
+            try {
+                Thread.sleep(3000);
+                return this.historicoCredito(transferenciaHistoricoCreditoComponent.getTransferenciaResponseHistoricoList());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else if(transferenciaServiceImpl.isWakandaBankIban(userInfo.getUserInfo().get("iban"))) {
+
+            kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCreditoWakandaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+
+            try {
+                Thread.sleep(3000);
+                return this.historicoCredito(transferenciaHistoricoCreditoComponent.getTransferenciaResponseHistoricoList());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+        return  this.erro("ERRO");
+    }
+
+    @GetMapping("/saldo")
+    public ResponseEntity<ResponseBody> findSaldoDoUser() throws JsonProcessingException {
+
+        if(transferenciaServiceImpl.isKuzolaBankIban(userInfo.getUserInfo().get("iban"))) {
+            kafkaTransferenciaProducer.sendClientePojoMiniOfSaldoKuzolaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+
+            try {
+                Thread.sleep(3000);
+                return this.ok("Informações do seu saldo",saldoResponseComponent.getSaldoResponse());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else if(transferenciaServiceImpl.isWakandaBankIban(userInfo.getUserInfo().get("iban"))) {
+
+            kafkaTransferenciaProducer.sendClientePojoMiniOfSaldoWakandaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+
+            try {
+                Thread.sleep(3000);
+                return this.ok("Informações do seu saldo",saldoResponseComponent.getSaldoResponse());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+        return  this.erro("ERRO");
+
     }
 
     @PostMapping("/publishTransferencia")
@@ -129,11 +196,35 @@ public class TransferenciaController extends BaseController {
         System.out.println("Transferencia no metodo"+ transferencia);
         String ibanOrigem = userInfo.getUserInfo().get("iban");
 
-        transferenciaServiceImpl.fillingTransactionFields(transferencia, ibanOrigem);
-        kafkaTransferenciaProducer.sendMessageTransferenciaInEmis(customJsonPojos.criarStrToJson(transferencia).toString());
+        Integer responseVerification = transferenciaServiceImpl.isValidInformationIban(transferencia.getIbanDestinatario(), ibanOrigem, transferencia.getMontante());
+        if (responseVerification == 1) {
+            transferenciaServiceImpl.fillingTransactionFields(transferencia, ibanOrigem);
+            kafkaTransferenciaProducer.sendMessageTransferenciaInEmis(customJsonPojos.criarStrToJson(transferencia).toString());
 
-        //return this.created("Transferencia adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
+            try {
+                Thread.sleep(900);
+                if(Objects.equals(transferenciaComponentResponse.getTransferencia().getEstadoTransferencia(), "ERRO: Informação Invalida"))
+                {
+                    return this.erro("ERRO: Informação Invalida");
+                }
+                else {
+                    return this.ok("Transferencia Efectuada com sucesso", transferenciaComponentResponse.getTransferencia());
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        } else if (responseVerification == 2) {
+            return erro("O iban de Origem e o iban destinatario não podem ser iguais");
+        } else if (responseVerification == 3){
+            return erro("O iban destinatario deve ter 17 digitos");
+        } else if (responseVerification == 4){
+            return erro("O montante deve ser um numero > 0");
+        }
+
         return ok("sjdfkjggh", transferencia);
+        //return this.created("Transferencia adicionada com sucesso.", this.transferenciaServiceImpl.criar(transferencia));
     }
 
     @PostMapping("/interbancaria")

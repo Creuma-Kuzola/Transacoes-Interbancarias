@@ -1,7 +1,7 @@
-package ucan.edu.utils.response;
+package com.example.IntermediarioService.utils.pojos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ucan.edu.entities.ContaBancaria;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -13,15 +13,6 @@ public class SaldoResponse {
 
     @JsonProperty("saldoDisponivel")
     private BigDecimal saldoDisponivel;
-
-    public static SaldoResponse convertingIntoSaldoResponse(ContaBancaria contaBancaria){
-
-        SaldoResponse saldoResponse = new SaldoResponse();
-        saldoResponse.setSaldoDisponivel(contaBancaria.getSaldoDisponivel());
-        saldoResponse.setSaldoContabilistico(contaBancaria.getSaldoContabilistico());
-
-        return saldoResponse;
-    }
 
     public BigDecimal getSaldoContabilistico() {
         return saldoContabilistico;

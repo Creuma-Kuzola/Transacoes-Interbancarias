@@ -7,19 +7,16 @@ package com.example.IntermediarioService.kafka;
 import com.example.IntermediarioService.component.BancoComponent;
 import com.example.IntermediarioService.entities.Banco;
 import com.example.IntermediarioService.entities.Transferencia;
-import com.example.IntermediarioService.kafka.KafkaConsumerConfig;
 import com.example.IntermediarioService.services.implementacao.BancoServiceImpl;
 import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 import com.example.IntermediarioService.utils.pojos.ClientePojoMini;
-import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
-import java.text.SimpleDateFormat;
+
 import java.util.List;
 
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,72 +147,73 @@ public class KafkaTransferenciaProducer
 
     }
 
-    public  void sendClientePojoMiniOfHistoricoDebito(String clienteJson) throws JsonProcessingException {
+    public  void sendClientePojoMiniOfHistoricoDebitoKuzolaBank(String clienteJson) throws JsonProcessingException {
 
-       ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        ClientePojoMini clientePojoMini = objectMapper.readValue(clienteJson, ClientePojoMini.class);
-
-        System.out.println("ClienteJson: "+ clienteJson);
-        System.out.println("ClientePOJOMini: "+ clientePojoMini);
-
-        if(transferenciaServiceImpl.isKuzolaBankIban(clientePojoMini.getIban()))
-        {
-            System.out.println("Entrei no Kuzola Bank");
-            Message<String> message = MessageBuilder
+        Message<String> message = MessageBuilder
                     .withPayload(clienteJson)
                     .setHeader(KafkaHeaders.TOPIC, "historico-debito-kb-emis")
                     .build();
 
-            kafkaTemplate.send(message);
+        kafkaTemplate.send(message);
 
-        }
-        else if(transferenciaServiceImpl.isWakandaBankIban(clientePojoMini.getIban()))
-        {
-            Message<String> message = MessageBuilder
+    }
+
+    public  void sendClientePojoMiniOfHistoricoDebitoWakandaBank(String clienteJson) throws JsonProcessingException {
+
+
+        Message<String> message = MessageBuilder
                     .withPayload(clienteJson)
                     .setHeader(KafkaHeaders.TOPIC, "historico-debito-wb-emis")
                     .build();
 
-            kafkaTemplate.send(message);
-        }
-
+        kafkaTemplate.send(message);
 
     }
 
-    public  void sendClientePojoMiniOfHistoricoCredito(String clienteJson) throws JsonProcessingException {
+    public  void sendClientePojoMiniOfHistoricoCreditoKuzolaBank(String clienteJson) throws JsonProcessingException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        ClientePojoMini clientePojoMini = objectMapper.readValue(clienteJson, ClientePojoMini.class);
-
-        System.out.println("ClienteJson: "+ clienteJson);
-        System.out.println("ClientePOJOMini: "+ clientePojoMini);
-
-        if(transferenciaServiceImpl.isKuzolaBankIban(clientePojoMini.getIban()))
-        {
-            System.out.println("Entrei no Kuzola Bank");
-            Message<String> message = MessageBuilder
+        System.out.println("Entrei no Kuzola Bank");
+        Message<String> message = MessageBuilder
                     .withPayload(clienteJson)
                     .setHeader(KafkaHeaders.TOPIC, "historico-credito-kb-emis")
                     .build();
 
-            kafkaTemplate.send(message);
+        kafkaTemplate.send(message);
+    }
 
-        }
-        else if(transferenciaServiceImpl.isWakandaBankIban(clientePojoMini.getIban()))
-        {
-            Message<String> message = MessageBuilder
+    public  void sendClientePojoMiniOfHistoricoCreditoWakandaBank(String clienteJson) throws JsonProcessingException {
+
+        Message<String> message = MessageBuilder
                     .withPayload(clienteJson)
                     .setHeader(KafkaHeaders.TOPIC, "historico-credito-wb-emis")
                     .build();
 
-            kafkaTemplate.send(message);
-        }
-
+        kafkaTemplate.send(message);
 
     }
 
+
+    public  void sendClientePojoMiniOfSaldoKuzolaBank(String clienteJson) throws JsonProcessingException {
+
+        System.out.println("Entrei no Kuzola Bank");
+        Message<String> message = MessageBuilder
+                .withPayload(clienteJson)
+                .setHeader(KafkaHeaders.TOPIC, "info-saldo-kb-emis")
+                .build();
+
+        kafkaTemplate.send(message);
+    }
+
+    public  void sendClientePojoMiniOfSaldoWakandaBank(String clienteJson) throws JsonProcessingException {
+
+        System.out.println("Entrei no Wakanda Bank");
+        Message<String> message = MessageBuilder
+                .withPayload(clienteJson)
+                .setHeader(KafkaHeaders.TOPIC, "info-saldo-wb-emis")
+                .build();
+
+        kafkaTemplate.send(message);
+    }
 
     public void sendMessageTransferenciaResponse(String data)
     {

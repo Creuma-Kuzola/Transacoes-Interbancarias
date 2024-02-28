@@ -11,22 +11,18 @@ import com.example.IntermediarioService.entities.Cliente;
 import com.example.IntermediarioService.entities.Transferencia;
 import com.example.IntermediarioService.services.TransferenciaService;
 import com.example.IntermediarioService.utils.pojos.ClientePojoMini;
-import com.example.IntermediarioService.utils.pojos.TransferenciaPOJO;
 import com.example.IntermediarioService.utils.pojos.TransferenciaPOJOEmis;
 //import com.example.IntermediarioService.utils.pojos.TransferenciaPojo;
-import com.example.IntermediarioService.utils.pojos.TransferenciaResponseHistorico;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.IntermediarioService.services.implementacao.AbstractService;
 
-import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,13 +32,6 @@ import java.util.Map;
 @Service
 public class TransferenciaServiceImpl extends AbstractService<Transferencia, Integer>
 implements TransferenciaService{
-
-    /*public LocalDateTime convertingToLocalDateTime(Date date){
-        LocalDateTime ldt = LocalDateTime.ofInstant(date,
-                ZoneId.systemDefault());
-        LocalDateTime.
-        return  ldt;
-    }*/
 
     @Autowired
     BancoServiceImpl bancoServiceImpl;
@@ -84,21 +73,14 @@ implements TransferenciaService{
         return codigoBanco.equals(idBancoValido);
     }
 
-    /*public Integer findingTheTypeOfTransferencia(TransferenciaPojo transferenciaPojo){
-
-        if(isWakandaBankIban(transferenciaPojo.))
-
-
-    }*/
-
-    public Date convertingLocalDateTimeIntoDate( LocalDateTime localDateTime){
+    public static Date convertingLocalDateTimeIntoDate( LocalDateTime localDateTime){
 
         Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
         System.out.println(date);
         return date;
     }
 
-    public LocalDateTime convertingDateIntoLocalDateTime( Date date){
+    public static LocalDateTime convertingDateIntoLocalDateTime( Date date){
 
         LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
         return ldt;
@@ -216,6 +198,27 @@ implements TransferenciaService{
         String clientePojoMiniJson = CustomJsonPojos.criarStrToJson(getClientePojoMini());
         System.out.println("Data Json" + clientePojoMiniJson);
         return  clientePojoMiniJson;
+    }
+
+
+
+    public  Integer isValidInformationIban(String ibanDestinatario, String ibanOrigem, BigDecimal montante){
+
+        //-1, 0, or 1 as this BigDecimal is numerically less than, equal to, or greater than val.
+        if(isValidTheSizeOfIban(ibanDestinatario)){
+            if (!ibanDestinatario.equals(ibanOrigem)){
+
+                if(montante.compareTo(BigDecimal.ZERO) > 0) {
+                    return 1;
+                }
+                else if(montante.compareTo(BigDecimal.ZERO) <= 0)
+                {
+                    return 4;
+                }
+            }
+            return 2;
+        }
+        return 3;
     }
 
 

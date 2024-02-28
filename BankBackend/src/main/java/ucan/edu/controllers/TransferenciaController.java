@@ -7,6 +7,7 @@ package ucan.edu.controllers;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import ucan.edu.component.TransferenciaMessage;
 import ucan.edu.config.component.TransferenciaComponent;
 import ucan.edu.config.component.TransferenciaResponseComponent;
@@ -144,6 +145,31 @@ public class TransferenciaController extends BaseController
         }
         return this.naoEncontrado("Transferencia não encontrada", null);
     }
+
+    /*@GetMapping("/historico/debito")
+    public ResponseEntity<ResponseBody> findHistoricoTransacoesDebito() throws JsonProcessingException {
+
+        kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoDebito(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+        try {
+            Thread.sleep(3000);
+            return this.historicoDebito(transferenciaHistoricoDebitoComponent.getTransferenciaResponseHistoricoList());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /*@GetMapping("/historico/credito")
+    public ResponseEntity<ResponseBody> findHistoricoTransacoesCreditadas() throws JsonProcessingException {
+
+        kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCredito(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+
+        try {
+            Thread.sleep(3000);
+            return this.historicoCredito(transferenciaHistoricoCreditoComponent.getTransferenciaResponseHistoricoList());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
 
     @PostMapping
     public ResponseEntity<ResponseBody> createTransferencia(@RequestBody Transferencia transferencia)

@@ -1,9 +1,9 @@
-package com.example.IntermediarioService.utils.pojos;
+package ucan.edu.utils.pojos;
 
-import com.example.IntermediarioService.entities.Transferencia;
-import com.example.IntermediarioService.services.implementacao.TransferenciaServiceImpl;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ucan.edu.entities.Transferencia;
+import ucan.edu.services.implementacao.TransferenciaServiceImpl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,20 +38,34 @@ public class TransferenciaPOJOEmis {
     private String codigoTransferencia;
 
 
-    public static Transferencia convertingIntoTransferencia(TransferenciaPOJOEmis transferenciaPOJO)
+    public static TransferenciaPOJOEmis convertingIntoTransferenciaEmis(TransferenciaPOJO transferenciaPOJO)
     {
-        Transferencia transferenciaPOJOEmis = new Transferencia();
+        TransferenciaPOJOEmis transferenciaPOJOEmis = new TransferenciaPOJOEmis();
+        transferenciaPOJOEmis.setCodigoTransferencia(transferenciaPOJO.getCodigoTransferencia());
         transferenciaPOJOEmis.setEstadoTransferencia(transferenciaPOJO.getEstadoTransferencia());
-        transferenciaPOJOEmis.setDataHora(TransferenciaServiceImpl.convertingLocalDateTimeIntoDate(transferenciaPOJO.getDatahora()));
+        transferenciaPOJOEmis.setDatahora(TransferenciaServiceImpl.convertingDateIntoLocalDateTime(transferenciaPOJO.getDatahora()));
         transferenciaPOJOEmis.setDescricao(transferenciaPOJO.getDescricao());
         transferenciaPOJOEmis.setIbanDestinatario(transferenciaPOJO.getIbanDestinatario());
-        transferenciaPOJOEmis.setibanOrigem(transferenciaPOJO.getIbanOrigem());
+        transferenciaPOJOEmis.setIbanOrigem(transferenciaPOJO.getIbanOrigem());
         transferenciaPOJOEmis.setTipoTransferencia(transferenciaPOJO.getTipoTransferencia());
         transferenciaPOJOEmis.setMontante(transferenciaPOJO.getMontante());
-        transferenciaPOJOEmis.setPkTransferencia(transferenciaPOJO.getPkTransferencia());
-
         return transferenciaPOJOEmis;
     }
+
+    public static TransferenciaPOJOEmis convertingIntoTransferenciaEmis(Transferencia transferencia)
+    {
+        TransferenciaPOJOEmis transferenciaPOJOEmis = new TransferenciaPOJOEmis();
+        transferenciaPOJOEmis.setCodigoTransferencia(transferencia.getCodigoTransferencia());
+        transferenciaPOJOEmis.setEstadoTransferencia(transferencia.getEstadoTransferencia());
+        transferenciaPOJOEmis.setDatahora(TransferenciaServiceImpl.convertingDateIntoLocalDateTime(transferencia.getDatahora()));
+        transferenciaPOJOEmis.setDescricao(transferencia.getDescricao());
+        transferenciaPOJOEmis.setIbanDestinatario(transferencia.getIbanDestinatario());
+        transferenciaPOJOEmis.setIbanOrigem(transferencia.getIbanOrigem());
+        transferenciaPOJOEmis.setTipoTransferencia(transferencia.getTipoTransferencia());
+        transferenciaPOJOEmis.setMontante(transferencia.getMontante());
+        return transferenciaPOJOEmis;
+    }
+
 
     // Getters and setters
     public Integer getPkTransferencia() {
@@ -81,12 +95,15 @@ public class TransferenciaPOJOEmis {
     public String getIbanDestinatario() {
         return ibanDestinatario;
     }
+
     public void setIbanDestinatario(String ibanDestinatario) {
         this.ibanDestinatario = ibanDestinatario;
     }
+
     public LocalDateTime getDatahora() {
         return datahora;
     }
+
     public void setDatahora(LocalDateTime datahora) {
         this.datahora = datahora;
     }
@@ -138,7 +155,7 @@ public class TransferenciaPOJOEmis {
         sb.append("\"montante\": ").append(montante).append(",");
         sb.append("\"ibanDestinatario\": \"").append(ibanDestinatario).append("\",");
         sb.append("\"datahora\": \"").append(datahora).append("\",");
-        sb.append("\"fkContaBancariaOrigem\": ").append(ibanOrigem).append(",");
+        sb.append("\"ibanOrigem\": ").append(ibanOrigem).append(",");
         sb.append("\"tipoTransferencia\": \"").append(tipoTransferencia).append("\",");
         sb.append("\"estadoTransferencia\": \"").append(estadoTransferencia).append("\",");
         sb.append("\"codigoTransferencia\": \"").append(codigoTransferencia).append("\"");

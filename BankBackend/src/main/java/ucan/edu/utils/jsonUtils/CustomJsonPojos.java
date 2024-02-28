@@ -2,11 +2,9 @@ package ucan.edu.utils.jsonUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import ucan.edu.config.component.TransferenciaComponent;
+import ucan.edu.entities.ContaBancaria;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
-import ucan.edu.utils.pojos.ClientePOJO;
-import ucan.edu.utils.pojos.TransferenciaCustomPOJO;
-import ucan.edu.utils.pojos.TransferenciaPOJO;
-import ucan.edu.utils.pojos.TransferenciaResponse;
+import ucan.edu.utils.pojos.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,6 +58,23 @@ public class CustomJsonPojos {
                 " }";
     }
 
+
+    public static String criarStrToJson(TransferenciaPOJOEmis transferenciaPOJOEmis)
+    {
+        String str = "{\n"
+                + "  \"pkTransferencia\": " + transferenciaPOJOEmis.getPkTransferencia() + ",\n"
+                + "   \"descricao\": \"" + transferenciaPOJOEmis.getDescricao() + "\",\n"
+                + "    \"montante\": " + transferenciaPOJOEmis.getMontante() + ",\n"
+                + "    \"ibanDestinatario\": \"" + transferenciaPOJOEmis.getIbanDestinatario() + "\",\n"
+                + "    \"datahora\":\"" + transferenciaPOJOEmis.getDatahora() + "\",\n"
+                + "    \"ibanOrigem\": " +transferenciaPOJOEmis.getIbanOrigem() +",\n"
+                + "    \"tipoTransferencia\": \"" + transferenciaPOJOEmis.getTipoTransferencia() + "\",\n"
+                + "    \"estadoTransferencia\": \"" + transferenciaPOJOEmis.getEstadoTransferencia() + "\",\n"
+                + "    \"codigoTransferencia\": " + transferenciaPOJOEmis.getCodigoTransferencia() + "\n"
+                + "}";
+        return str;
+    }
+
     public static void saveTransferComponent(TransferenciaPOJO transferencia, TransferenciaComponent transferenciaComponent)  {
         Map<String, String> transferenciaItems = new HashMap<>();
 
@@ -80,7 +95,11 @@ public class CustomJsonPojos {
         System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
     }
 
-
+    public static String criarStrToJson(ContaBancaria contaBancaria)
+    {
+        return "{ \"saldoContabilistico\": \""+contaBancaria.getSaldoContabilistico()+"\", " +
+                "\"saldoDisponivel\": \"" +contaBancaria.getSaldoDisponivel()+ "\" }";
+    }
 
 
 

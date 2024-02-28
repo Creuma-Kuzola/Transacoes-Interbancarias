@@ -71,21 +71,13 @@ public class KafkaTopicConfig {
 
 
     @Bean
-    public NewTopic respostaHistoricoDeCreditoWakandaBank()
+    public NewTopic respostaInfoSaldoContaBancaria()
     {
         return TopicBuilder
-                .name("resposta-historico-credito-wb-emis")
+                .name("resposta-info-saldo-kb-emis")
                 .partitions(3)
                 .build();
     }
 
-    @Bean
-    public NewTopic respostaHistoricoDeDebitoWakandaBank()
-    {
-        return TopicBuilder
-                .name("resposta-historico-debito-wb-emis")
-                .partitions(3)
-                .build();
-    }
 
 }

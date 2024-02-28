@@ -17,23 +17,17 @@ import com.example.IntermediarioService.services.implementacao.TransferenciaServ
 import com.example.IntermediarioService.utils.pojos.*;
 import com.example.IntermediarioService.utils.pojos.jsonUtils.CustomJsonPojos;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import jakarta.validation.OverridesAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -64,7 +58,16 @@ public class KafkaConsumerConfig
     TransferenciaServiceImpl transferenciaServiceImpl;
 
     @Autowired
-    TransferenciaHistoricoComponent transferenciaHistoricoComponent;
+    TransferenciaHistoricoDebitoComponent transferenciaHistoricoDebitoComponent;
+
+    @Autowired
+    TransferenciaHistoricoCreditoComponent TransferenciaHistoricoCreditoComponent;
+
+    @Autowired
+    SaldoResponseComponent saldoResponseComponent;
+
+    @Autowired
+    TransferenciaComponentResponse transferenciaComponentResponse;
 
     public KafkaConsumerConfig()
     {
@@ -209,11 +212,18 @@ public class KafkaConsumerConfig
 
         TransferenciaPOJOEmis transferenciaPOJOEmis = objectMapper.readValue(message, TransferenciaPOJOEmis.class);
 
-        LOGGER.info(String.format("Message received in emis -> %s", message.toString()));
-        System.out.println("Mensagem Recebida TransferenciaPOJOEmis: "+ transferenciaPOJOEmis.toString());
-        System.out.println("Converting into Transferencia"+ transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis).toString());
+        if(!Objects.equals(transferenciaPOJOEmis.getEstadoTransferencia(), "ERRO: Informação Invalida")) {
+            LOGGER.info(String.format("Message received in emis -> %s", message.toString()));
+            System.out.println("Mensagem Recebida TransferenciaPOJOEmis: " + transferenciaPOJOEmis.toString());
+            System.out.println("Converting into Transferencia" + transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis).toString());
+            transferenciaPOJOEmis.setEstadoTransferencia("Realizado");
+            transferenciaComponentResponse.setTransferencia(transferenciaServiceImpl.salvarTransferencia(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis)));
+        }
+        else {
 
-        transferenciaServiceImpl.salvarTransferencia(transferenciaServiceImpl.convertingIntoTransferencia(transferenciaPOJOEmis));
+            transferenciaComponentResponse.setTransferencia(TransferenciaPOJOEmis.convertingIntoTransferencia(transferenciaPOJOEmis));
+
+        }
     }
 
     @KafkaListener(topics = "clienteWakanda", groupId = "myGroup")
@@ -282,7 +292,7 @@ public class KafkaConsumerConfig
     }
 
     @KafkaListener(topics = "resposta-historico-debito-kb-emis", groupId = "emisGroup")
-    public void consumeMessageTransferenciaEmis(String message) throws JsonProcessingException {
+    public void consumeMessageTransferenciaEmisDebito(String message) throws JsonProcessingException {
 
         System.out.println("Entrei resposta EMis");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -290,10 +300,87 @@ public class KafkaConsumerConfig
         TransferenciaPOJOEmis[] st = objectMapper.readValue(message, TransferenciaPOJOEmis[].class);
         List<TransferenciaPOJOEmis> lista = new ArrayList<>(List.of(st));
 
-        transferenciaHistoricoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistorico.convertingIntoListTransferenciaHistorico(List.of(st)));
+        transferenciaHistoricoDebitoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistoricoDebito.convertingIntoListTransferenciaHistorico(List.of(st)));
 
         System.out.println("Lista Resposta Emis: "+ Arrays.toString(st));
-        System.out.println("Lista Resposta Emis lista: "+ lista.get(0));
+        System.out.println("Lista Resposta Emis lista: "+ lista.toString());
 
     }
+
+    @KafkaListener(topics = "resposta-historico-credito-kb-emis", groupId = "emisGroup")
+    public void consumeMessageTransferenciaEmisCredito(String message) throws JsonProcessingException {
+
+        System.out.println("Entrei resposta EMis");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        TransferenciaPOJOEmis[] st = objectMapper.readValue(message, TransferenciaPOJOEmis[].class);
+        List<TransferenciaPOJOEmis> lista = new ArrayList<>(List.of(st));
+
+        TransferenciaHistoricoCreditoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistoricoCredito.convertingIntoListTransferenciaHistorico(List.of(st)));
+
+        System.out.println("Lista Credito Resposta Emis: "+ Arrays.toString(st));
+        System.out.println("Lista Credito Resposta Emis lista: "+ lista.toString());
+
+    }
+
+    @KafkaListener(topics = "resposta-historico-debito-wb-emis", groupId = "emisGroup")
+    public void consumeMessageTransferenciaEmisDebitoWakanda(String message) throws JsonProcessingException {
+
+        System.out.println("Entrei resposta EMis");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        TransferenciaPOJOEmis[] st = objectMapper.readValue(message, TransferenciaPOJOEmis[].class);
+        List<TransferenciaPOJOEmis> lista = new ArrayList<>(List.of(st));
+
+        TransferenciaHistoricoCreditoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistoricoCredito.convertingIntoListTransferenciaHistorico(List.of(st)));
+
+        System.out.println("Lista Debito Resposta Emis: "+ Arrays.toString(st));
+        System.out.println("Lista Debito Resposta Emis lista: "+ lista.toString());
+
+    }
+
+    @KafkaListener(topics = "resposta-historico-credito-wb-emis", groupId = "emisGroup")
+    public void consumeMessageTransferenciaEmisCreditoWakanda(String message) throws JsonProcessingException {
+
+        System.out.println("Entrei resposta EMis");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        TransferenciaPOJOEmis[] st = objectMapper.readValue(message, TransferenciaPOJOEmis[].class);
+        List<TransferenciaPOJOEmis> lista = new ArrayList<>(List.of(st));
+
+        TransferenciaHistoricoCreditoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistoricoCredito.convertingIntoListTransferenciaHistorico(List.of(st)));
+
+        System.out.println("Lista Debito Resposta Emis: "+ Arrays.toString(st));
+        System.out.println("Lista Debito Resposta Emis lista: "+ lista.toString());
+
+    }
+
+    @KafkaListener(topics = "resposta-info-saldo-kb-emis", groupId = "emisGroup")
+    public void consumeMessageRespostaInfoSaldoKuzolaBank(String message) throws JsonProcessingException {
+
+        System.out.println("Entrei resposta EMis");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        SaldoResponse st = objectMapper.readValue(message, SaldoResponse.class);
+
+        saldoResponseComponent.setSaldoResponse(st);
+        System.out.println("Saldo Intermediario info "+ st.toString());
+
+    }
+
+    @KafkaListener(topics = "resposta-info-saldo-wb-emis", groupId = "emisGroup")
+    public void consumeMessageRespostaInfoSaldoWakandaBank(String message) throws JsonProcessingException {
+
+        System.out.println("Entrei resposta EMis");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        SaldoResponse st = objectMapper.readValue(message, SaldoResponse.class);
+
+        saldoResponseComponent.setSaldoResponse(st);
+
+        System.out.println("Saldo Intermediario info "+ st.toString());
+
+    }
+
+
 }
