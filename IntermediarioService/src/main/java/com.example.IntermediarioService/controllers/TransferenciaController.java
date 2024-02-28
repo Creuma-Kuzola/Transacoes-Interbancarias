@@ -151,14 +151,14 @@ public class TransferenciaController extends BaseController {
             }
         } else if(transferenciaServiceImpl.isWakandaBankIban(userInfo.getUserInfo().get("iban"))) {
 
-            /*kafkaTransferenciaProducer.sendClientePojoMiniOfHistoricoCreditoWakandaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
+            kafkaTransferenciaProducer.sendClientePojoMiniOfSaldoWakandaBank(transferenciaServiceImpl.convertingIntoClientePojoMiniJson());
 
             try {
                 Thread.sleep(3000);
-                return this.historicoCredito(transferenciaHistoricoCreditoComponent.getTransferenciaResponseHistoricoList());
+                return this.ok("Informações do seu saldo",saldoResponseComponent.getSaldoResponse());
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
-            }*/
+            }
 
         }
         return  this.erro("ERRO");

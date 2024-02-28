@@ -204,5 +204,11 @@ implements TransferenciaService{
     }
 
 
+    public String convertingIntoSaldoResponseJson(String iban){
+
+        ContaBancaria contaBancaria = contaBancariaService.findContaBancaraByIban(iban);
+        return CustomJsonPojos.criarStrToJson(contaBancaria);
+    }
+
 
 }

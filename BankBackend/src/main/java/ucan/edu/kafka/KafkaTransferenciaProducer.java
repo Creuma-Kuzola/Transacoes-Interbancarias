@@ -107,4 +107,15 @@ public class KafkaTransferenciaProducer
         kafkaTemplate.send(message);
 
     }
+
+    public  void sendRespostaOfSaldoInfo(String clienteJson) throws JsonProcessingException {
+
+        Message<String> message = MessageBuilder
+                .withPayload(clienteJson)
+                .setHeader(KafkaHeaders.TOPIC, "resposta-info-saldo-wb-emis")
+                .build();
+
+        kafkaTemplate.send(message);
+
+    }
 }

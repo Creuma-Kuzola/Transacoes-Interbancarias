@@ -400,4 +400,19 @@ public class KafkaTransferenciaConsumer
         kafkaTransferenciaProducer.sendRespostaOfHistoricoDebito(lista.toString());
     }
 
+    @KafkaListener(topics = "info-saldo-wb-emis")
+    public void consumeSaldoInfo(String message) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ClientePojoMini clientePojoMini = objectMapper.readValue(message, ClientePojoMini.class);
+
+        String st = transferenciaServiceImpl.convertingIntoSaldoResponseJson(clientePojoMini.getIban());
+
+        LOGGER.info(String.format("Message received Emis -> %s", message));
+        System.out.println("St"+ st);
+
+        kafkaTransferenciaProducer.sendRespostaOfSaldoInfo(st.toString());
+    }
+
 }

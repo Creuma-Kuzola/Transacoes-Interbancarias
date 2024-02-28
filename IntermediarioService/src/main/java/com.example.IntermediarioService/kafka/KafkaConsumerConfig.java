@@ -316,7 +316,19 @@ public class KafkaConsumerConfig
         SaldoResponse st = objectMapper.readValue(message, SaldoResponse.class);
 
         saldoResponseComponent.setSaldoResponse(st);
-        //TransferenciaHistoricoCreditoComponent.setTransferenciaResponseHistoricoList(TransferenciaResponseHistoricoCredito.convertingIntoListTransferenciaHistorico(List.of(st)));
+        System.out.println("Saldo Intermediario info "+ st.toString());
+
+    }
+
+    @KafkaListener(topics = "resposta-info-saldo-wb-emis", groupId = "emisGroup")
+    public void consumeMessageRespostaInfoSaldoWakandaBank(String message) throws JsonProcessingException {
+
+        System.out.println("Entrei resposta EMis");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        SaldoResponse st = objectMapper.readValue(message, SaldoResponse.class);
+
+        saldoResponseComponent.setSaldoResponse(st);
 
         System.out.println("Saldo Intermediario info "+ st.toString());
 

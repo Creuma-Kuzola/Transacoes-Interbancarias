@@ -2,6 +2,7 @@ package ucan.edu.utils.jsonUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import ucan.edu.config.component.TransferenciaComponent;
+import ucan.edu.entities.ContaBancaria;
 import ucan.edu.services.implementacao.TransferenciaServiceImpl;
 import ucan.edu.utils.pojos.*;
 
@@ -94,7 +95,11 @@ public class CustomJsonPojos {
         System.out.println("data: " + transferenciaComponent.getTransferenciaResponse().get("datahora"));
     }
 
-
+    public static String criarStrToJson(ContaBancaria contaBancaria)
+    {
+        return "{ \"saldoContabilistico\": \""+contaBancaria.getSaldoContabilistico()+"\", " +
+                "\"saldoDisponivel\": \"" +contaBancaria.getSaldoDisponivel()+ "\" }";
+    }
 
 
 
